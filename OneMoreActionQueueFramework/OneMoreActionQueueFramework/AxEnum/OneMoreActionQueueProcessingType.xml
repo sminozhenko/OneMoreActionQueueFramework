@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingType</Name>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingType</Label>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>ReliableAsynchronous</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueReliableAsync</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Synchronous</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingTypeSync</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>ProcessAutomation</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingTypeProcessAutomation</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

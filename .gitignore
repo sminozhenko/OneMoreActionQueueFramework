@@ -1,0 +1,9 @@
+#x++
+BuildProjectResult.err.xml
+BuildProjectResult.xml
+BuildProjectResult.log
+XppMetadata/
+**/bin/*.md
+**/bin/Dynamics.AX.OneMoreActionQueueFramework*.*
+/OneMoreActionQueueFramework/Resources/
+/OneMoreActionQueueFramework/bin/GeneratedXppSource

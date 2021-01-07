@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <BuildTasksDirectory Condition=" '$(BuildTasksDirectory)' == ''">$(MSBuildProgramFiles32)\MSBuild\Microsoft\Dynamics\AX</BuildTasksDirectory>
+    <Model>OneMoreActionQueueFramework</Model>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin</OutputPath>
+    <SchemaVersion>2.0</SchemaVersion>
+    <GenerateCrossReferences>True</GenerateCrossReferences>
+    <ProjectGuid>{d9094d11-ac3e-4e7c-880a-2e77ce4e220f}</ProjectGuid>
+    <Name>OneMoreActionQueueFramework</Name>
+    <RootNamespace>OneMoreActionQueueFramework</RootNamespace>
+    <StartupObject>OneMoreActionQueueTypeTable</StartupObject>
+    <StartupType>Form</StartupType>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Configuration>Debug</Configuration>
+    <DBSyncInBuild>False</DBSyncInBuild>
+    <GenerateFormAdaptors>False</GenerateFormAdaptors>
+    <Company>
+    </Company>
+    <Partition>initial</Partition>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DataEntityExpandParentChildRelations>False</DataEntityExpandParentChildRelations>
+    <DataEntityUseLabelTextAsFieldName>False</DataEntityUseLabelTextAsFieldName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Action Menu Items\" />
+    <Folder Include="Base Enum Extensions\" />
+    <Folder Include="Base Enums\" />
+    <Folder Include="Classes\" />
+    <Folder Include="Data Entities\" />
+    <Folder Include="Display Menu Items\" />
+    <Folder Include="Extended Data Types\" />
+    <Folder Include="Form Extensions\" />
+    <Folder Include="Forms\" />
+    <Folder Include="Label Files\" />
+    <Folder Include="Menu Extensions\" />
+    <Folder Include="Menus\" />
+    <Folder Include="Security Duties\" />
+    <Folder Include="Security Privileges\" />
+    <Folder Include="Security Roles\" />
+    <Folder Include="Service Groups\" />
+    <Folder Include="Services\" />
+    <Folder Include="Simple Queries\" />
+    <Folder Include="Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AxClass\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueBusinessEventEndpointAdapter">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBusinessEventEndpointAdapter</Name>
+      <Link>Classes\OneMoreActionQueueBusinessEventEndpointAdapter</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueCleanUp">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueCleanUp</Name>
+      <Link>Classes\OneMoreActionQueueCleanUp</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueCleanUpContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueCleanUpContract</Name>
+      <Link>Classes\OneMoreActionQueueCleanUpContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueCleanUpService">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueCleanUpService</Name>
+      <Link>Classes\OneMoreActionQueueCleanUpService</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConstants">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConstants</Name>
+      <Link>Classes\OneMoreActionQueueConstants</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueContext">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueContext</Name>
+      <Link>Classes\OneMoreActionQueueContext</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueContract</Name>
+      <Link>Classes\OneMoreActionQueueContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueIMenuItemLookupCaller">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueIMenuItemLookupCaller</Name>
+      <Link>Classes\OneMoreActionQueueIMenuItemLookupCaller</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueLogShow">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogShow</Name>
+      <Link>Classes\OneMoreActionQueueLogShow</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemActionProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemActionProcessor</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemActionProcessor</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemBehavior">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemBehavior</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemBehavior</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemBehaviorAttribute">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemBehaviorAttribute</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemBehaviorAttribute</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemContract</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemLookupTreeBuilder">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemLookupTreeBuilder</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemLookupTreeBuilder</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemParameterContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParameterContract</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemParameterContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParameters</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemParameters</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemRunBaseBatchBehavior">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemRunBaseBatchBehavior</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemRunBaseBatchBehavior</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemRunBaseBehavior">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemRunBaseBehavior</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemRunBaseBehavior</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemSysOperationControllerBehavior">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemSysOperationControllerBehavior</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemSysOperationControllerBehavior</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessing">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessing</Name>
+      <Link>Classes\OneMoreActionQueueProcessing</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingBatchTaskBundleContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingBatchTaskBundleContract</Name>
+      <Link>Classes\OneMoreActionQueueProcessingBatchTaskBundleContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingProcessAutomationContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingProcessAutomationContract</Name>
+      <Link>Classes\OneMoreActionQueueProcessingProcessAutomationContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingProcessAutomationController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingProcessAutomationController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingProcessAutomationController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingProcessAutomationTask">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingProcessAutomationTask</Name>
+      <Link>Classes\OneMoreActionQueueProcessingProcessAutomationTask</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryContract</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryUIBuilder">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryUIBuilder</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryUIBuilder</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingService">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingService</Name>
+      <Link>Classes\OneMoreActionQueueProcessingService</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingSingleContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingSingleContract</Name>
+      <Link>Classes\OneMoreActionQueueProcessingSingleContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingSingleController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingSingleController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingSingleController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessor</Name>
+      <Link>Classes\OneMoreActionQueueProcessor</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessorAttribute">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessorAttribute</Name>
+      <Link>Classes\OneMoreActionQueueProcessorAttribute</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessScheduleTypeRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessScheduleTypeRegistration</Name>
+      <Link>Classes\OneMoreActionQueueProcessScheduleTypeRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueService">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueService</Name>
+      <Link>Classes\OneMoreActionQueueService</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueServiceRunActionResponse">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueServiceRunActionResponse</Name>
+      <Link>Classes\OneMoreActionQueueServiceRunActionResponse</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtilCopy">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSysQueryRangeUtilCopy</Name>
+      <Link>Classes\OneMoreActionQueueSysQueryRangeUtilCopy</Link>
+    </Content>
+    <Content Include="AxClass\RunBaseBatchOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>RunBaseBatchOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\RunBaseBatchOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\RunBaseOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>RunBaseOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\RunBaseOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SysOperationControllerOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>SysOperationControllerOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\SysOperationControllerOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SysOperationSandboxOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>SysOperationSandboxOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\SysOperationSandboxOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SysQueryRangeUtilOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>SysQueryRangeUtilOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\SysQueryRangeUtilOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxDataEntityView\OneMoreActionQueueEntity">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueEntity</Name>
+      <Link>Data Entities\OneMoreActionQueueEntity</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueActionId">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueActionId</Name>
+      <Link>Extended Data Types\OneMoreActionQueueActionId</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueEnabled">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueEnabled</Name>
+      <Link>Extended Data Types\OneMoreActionQueueEnabled</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueLogExceptionTypeName">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogExceptionTypeName</Name>
+      <Link>Extended Data Types\OneMoreActionQueueLogExceptionTypeName</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueMenuItemName">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemName</Name>
+      <Link>Extended Data Types\OneMoreActionQueueMenuItemName</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueMessage">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMessage</Name>
+      <Link>Extended Data Types\OneMoreActionQueueMessage</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueMessageExample">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMessageExample</Name>
+      <Link>Extended Data Types\OneMoreActionQueueMessageExample</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueuePackedParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePackedParameters</Name>
+      <Link>Extended Data Types\OneMoreActionQueuePackedParameters</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueProcessAutomationPollingInterval">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessAutomationPollingInterval</Name>
+      <Link>Extended Data Types\OneMoreActionQueueProcessAutomationPollingInterval</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueProcessingNotes">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingNotes</Name>
+      <Link>Extended Data Types\OneMoreActionQueueProcessingNotes</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueReliableAsyncBatchGroupId">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueReliableAsyncBatchGroupId</Name>
+      <Link>Extended Data Types\OneMoreActionQueueReliableAsyncBatchGroupId</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueRetryAttemptInterval">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueRetryAttemptInterval</Name>
+      <Link>Extended Data Types\OneMoreActionQueueRetryAttemptInterval</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueRetryAttemptNumber">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueRetryAttemptNumber</Name>
+      <Link>Extended Data Types\OneMoreActionQueueRetryAttemptNumber</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueRetryCount">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueRetryCount</Name>
+      <Link>Extended Data Types\OneMoreActionQueueRetryCount</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueRunAsUserId">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueRunAsUserId</Name>
+      <Link>Extended Data Types\OneMoreActionQueueRunAsUserId</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueTransformationJSON">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTransformationJSON</Name>
+      <Link>Extended Data Types\OneMoreActionQueueTransformationJSON</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueTransformedMessage">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTransformedMessage</Name>
+      <Link>Extended Data Types\OneMoreActionQueueTransformedMessage</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueTypeId">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeId</Name>
+      <Link>Extended Data Types\OneMoreActionQueueTypeId</Link>
+    </Content>
+    <Content Include="AxEnumExtension\BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension">
+      <SubType>Content</SubType>
+      <Name>BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension</Name>
+      <Link>Base Enum Extensions\BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueProcessingType">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingType</Name>
+      <Link>Base Enums\OneMoreActionQueueProcessingType</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueResponseType">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueResponseType</Name>
+      <Link>Base Enums\OneMoreActionQueueResponseType</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueStatus">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueStatus</Name>
+      <Link>Base Enums\OneMoreActionQueueStatus</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueType">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueType</Name>
+      <Link>Base Enums\OneMoreActionQueueType</Link>
+    </Content>
+    <Content Include="AxFormExtension\BusinessEventsEndpointConfiguration.OneMoreActionQueueFrameworkExtension">
+      <SubType>Content</SubType>
+      <Name>BusinessEventsEndpointConfiguration.OneMoreActionQueueFrameworkExtension</Name>
+      <Link>Form Extensions\BusinessEventsEndpointConfiguration.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
+    <Content Include="AxForm\OneMoreActionQueue">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueue</Name>
+      <Link>Forms\OneMoreActionQueue</Link>
+    </Content>
+    <Content Include="AxForm\OneMoreActionQueueMenuItemLookup">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemLookup</Name>
+      <Link>Forms\OneMoreActionQueueMenuItemLookup</Link>
+    </Content>
+    <Content Include="AxForm\OneMoreActionQueueMenuItemParametersDialog">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParametersDialog</Name>
+      <Link>Forms\OneMoreActionQueueMenuItemParametersDialog</Link>
+    </Content>
+    <Content Include="AxForm\OneMoreActionQueueTypeTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeTable</Name>
+      <Link>Forms\OneMoreActionQueueTypeTable</Link>
+    </Content>
+    <Content Include="AxLabelFile\OneMoreActionQueueFramework_en-US">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueFramework_en-US</Name>
+      <Link>Label Files\OneMoreActionQueueFramework_en-US</Link>
+    </Content>
+    <Content Include="AxMenuExtension\SystemAdministration.OneMoreActionQueueFrameworkExtension">
+      <SubType>Content</SubType>
+      <Name>SystemAdministration.OneMoreActionQueueFrameworkExtension</Name>
+      <Link>Menu Extensions\SystemAdministration.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueCleanUp">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueCleanUp</Name>
+      <Link>Action Menu Items\OneMoreActionQueueCleanUp</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueLogShow">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogShow</Name>
+      <Link>Action Menu Items\OneMoreActionQueueLogShow</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParameters</Name>
+      <Link>Action Menu Items\OneMoreActionQueueMenuItemParameters</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingQueryController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryController</Name>
+      <Link>Action Menu Items\OneMoreActionQueueProcessingQueryController</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingSingleController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingSingleController</Name>
+      <Link>Action Menu Items\OneMoreActionQueueProcessingSingleController</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueue">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueue</Name>
+      <Link>Display Menu Items\OneMoreActionQueue</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueueTypeTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeTable</Name>
+      <Link>Display Menu Items\OneMoreActionQueueTypeTable</Link>
+    </Content>
+    <Content Include="AxMenu\OneMoreActionQueue">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueue</Name>
+      <Link>Menus\OneMoreActionQueue</Link>
+    </Content>
+    <Content Include="AxQuery\OneMoreActionQueueCleanUp">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueCleanUp</Name>
+      <Link>Simple Queries\OneMoreActionQueueCleanUp</Link>
+    </Content>
+    <Content Include="AxQuery\OneMoreActionQueueWaiting">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueWaiting</Name>
+      <Link>Simple Queries\OneMoreActionQueueWaiting</Link>
+    </Content>
+    <Content Include="AxSecurityDuty\OneMoreActionQueueInquire">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueInquire</Name>
+      <Link>Security Duties\OneMoreActionQueueInquire</Link>
+    </Content>
+    <Content Include="AxSecurityDuty\OneMoreActionQueueMaintain">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMaintain</Name>
+      <Link>Security Duties\OneMoreActionQueueMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueEntityMaintain">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueEntityMaintain</Name>
+      <Link>Security Privileges\OneMoreActionQueueEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueEntityView">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueEntityView</Name>
+      <Link>Security Privileges\OneMoreActionQueueEntityView</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueLogView">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogView</Name>
+      <Link>Security Privileges\OneMoreActionQueueLogView</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueMaintain">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMaintain</Name>
+      <Link>Security Privileges\OneMoreActionQueueMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueView">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueView</Name>
+      <Link>Security Privileges\OneMoreActionQueueView</Link>
+    </Content>
+    <Content Include="AxSecurityRole\OneMoreActionQueueAdministrator">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueAdministrator</Name>
+      <Link>Security Roles\OneMoreActionQueueAdministrator</Link>
+    </Content>
+    <Content Include="AxSecurityRole\OneMoreActionQueueViewer">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueViewer</Name>
+      <Link>Security Roles\OneMoreActionQueueViewer</Link>
+    </Content>
+    <Content Include="AxServiceGroup\OneMoreActionQueueServiceGroup">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueServiceGroup</Name>
+      <Link>Service Groups\OneMoreActionQueueServiceGroup</Link>
+    </Content>
+    <Content Include="AxService\OneMoreActionQueueService">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueService</Name>
+      <Link>Services\OneMoreActionQueueService</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueue">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueue</Name>
+      <Link>Tables\OneMoreActionQueue</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueBusinessEventsEndpoint">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBusinessEventsEndpoint</Name>
+      <Link>Tables\OneMoreActionQueueBusinessEventsEndpoint</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueCleanUpTmp">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueCleanUpTmp</Name>
+      <Link>Tables\OneMoreActionQueueCleanUpTmp</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogTable</Name>
+      <Link>Tables\OneMoreActionQueueLogTable</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueStaging">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueStaging</Name>
+      <Link>Tables\OneMoreActionQueueStaging</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeMenuItemParameterTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeMenuItemParameterTable</Name>
+      <Link>Tables\OneMoreActionQueueTypeMenuItemParameterTable</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeTable</Name>
+      <Link>Tables\OneMoreActionQueueTypeTable</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeTransformation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeTransformation</Name>
+      <Link>Tables\OneMoreActionQueueTypeTransformation</Link>
+    </Content>
+    <Content Include="OneMoreActionQueueFramework.en-US.label.txt">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueFramework.en-US.label.txt</Name>
+      <DependentUpon>AxLabelFile\OneMoreActionQueueFramework_en-US</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="JUST.net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>JUST.net</Name>
+      <HintPath>K:\AosService\PackagesLocalDirectory\OneMoreActionQueueFramework\bin\JUST.net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(BuildTasksDirectory)\Microsoft.Dynamics.Framework.Tools.BuildTasks.targets" />
+</Project>

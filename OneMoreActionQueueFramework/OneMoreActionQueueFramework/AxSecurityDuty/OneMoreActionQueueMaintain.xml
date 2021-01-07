@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxSecurityDuty xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMaintain</Name>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueMaintain</Label>
+	<Privileges>
+		<AxSecurityPrivilegeReference>
+			<Name>OneMoreActionQueueLogView</Name>
+		</AxSecurityPrivilegeReference>
+		<AxSecurityPrivilegeReference>
+			<Name>OneMoreActionQueueMaintain</Name>
+		</AxSecurityPrivilegeReference>
+		<AxSecurityPrivilegeReference>
+			<Name>OneMoreActionQueueEntityMaintain</Name>
+		</AxSecurityPrivilegeReference>
+	</Privileges>
+</AxSecurityDuty>

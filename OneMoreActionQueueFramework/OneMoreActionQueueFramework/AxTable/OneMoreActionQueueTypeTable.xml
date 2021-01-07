@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueueTypeTable</c> record by <c>OneMoreActionQueueTypeId</c>
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name="_forUpdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueueTypeTable</c> table otherwise, an empty record.
+    /// </returns>
+    public static OneMoreActionQueueTypeTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
+    {
+        OneMoreActionQueueTypeTable  ret;
+
+        ret.selectForUpdate(_forUpdate);
+
+        if (_typeId)
+        {
+            select firstonly ret
+                where ret.TypeId == _typeId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exist</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Does <c>OneMoreActionQueueTypeTable</c> record exist?
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <returns>True if <c>OneMoreActionQueueTypeTable</c> record exists otherwise false</returns>
+    public static boolean exist(OneMoreActionQueueTypeId _typeId)
+    {
+        return (select firstonly RecId
+            from OneMoreActionQueueTypeTable
+            where OneMoreActionQueueTypeTable.TypeId == _typeId).RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>txtNotExist</Name>
+				<Source><![CDATA[
+    public static str txtNotExist()
+    {
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueTypeDoesNotExist";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getActionQueueAttributeFromProcessorClass</Name>
+				<Source><![CDATA[
+    public static OneMoreActionQueueProcessorAttribute getActionQueueAttributeFromProcessorClass(ClassId _classId)
+    {
+        SysDictClass actionQueueDictClass = new SysDictClass(_classId);
+
+        return actionQueueDictClass.getAttribute(classStr(OneMoreActionQueueProcessorAttribute));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>lookupCustomTypeActions</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Lookup custom type action classes
+    /// </summary>
+    /// <returns>Name of selected class</returns>
+    public static str lookupCustomTypeActions()
+    {
+        Array   actionQueueList = new Array(Types::Integer);        
+        Map     actionQueueMap  = new Map(Types::String, Types::String);
+        str     ret;
+
+        actionQueueList = DictClass::getAttributedClasses(classStr(OneMoreActionQueueProcessorAttribute));
+
+        for (int i = 1; i <= actionQueueList.lastIndex(); i++)
+        {
+            SysDictClass actionQueueDictClass = new SysDictClass(actionQueueList.value(i));
+            OneMoreActionQueueProcessorAttribute actionQueueProcessorAttribute = OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(actionQueueList.value(i));
+            
+            if (actionQueueProcessorAttribute.parmIsSystemAction())
+            {
+                continue;
+            }
+ 
+            actionQueueMap.insert(actionQueueDictClass.name(), actionQueueDictClass.name());
+        }
+
+        ret = pickList(actionQueueMap, "@SYS316788", "@SYS315751");
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>contractClassName</Name>
+				<Source><![CDATA[
+    public ClassName contractClassName()
+    {
+        return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>messageExample</Name>
+				<Source><![CDATA[
+    [SysClientCacheDataMethod(true)]
+    public display OneMoreActionQueueMessageExample messageExample()
+    {
+        OneMoreActionQueueMessageExample ret;
+
+        if (this.ActionClassName)
+        {
+            SysDictClass                    actionQueueDictClass = new SysDictClass(className2Id(this.contractClassName()));
+            OneMoreActionQueueContract      contract = actionQueueDictClass.makeObject();
+
+            Set methods = actionQueueDictClass.methods(true, false, true);
+            SetEnumerator methodsEnumerator = methods.getEnumerator();
+
+            while(methodsEnumerator.moveNext())
+            {
+                DictMethod dictMethod = methodsEnumerator.current();
+            
+                DataMemberAttribute dataMember = dictMethod.getAttribute(classStr(DataMemberAttribute));
+            
+                if (dataMember)
+                {
+                    switch (dictMethod.returnType())
+                    {
+                        case Types::Class:
+                            DataCollectionAttribute dataCollectionAttribute = dictMethod.getAttribute(classStr(DataCollectionAttribute));
+
+                            //Only List as collection is supported
+                            if (dataCollectionAttribute != null)
+                            {
+                                List  list = new List(dataCollectionAttribute.itemType());
+
+                                switch (dataCollectionAttribute.itemType())
+                                {
+                                    case Types::Class:
+                                        SysDictClass collectionClass = new SysDictClass(className2Id(dataCollectionAttribute.itemTypeName()));
+
+                                        Object collectionObject = collectionClass.makeObject();
+
+                                        list.addEnd(collectionObject);
+                                        list.addEnd(collectionObject);
+
+                                        break;
+                                }
+
+                                actionQueueDictClass.callObject(dictMethod.Name(), contract, list);
+                            }
+
+                            break;
+                        default:
+                            actionQueueDictClass.callObject(dictMethod.Name(), contract, 'string_value');
+                    }
+                }
+            }
+
+            ret = FormJsonSerializer::serializeClass(contract);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>modifiedField</Name>
+				<Source><![CDATA[
+    public void modifiedField(FieldId _fieldId)
+    {
+        super(_fieldId);
+
+        switch (_fieldId)
+        {
+            case fieldNum(OneMoreActionQueueTypeTable, ActionQueueType):
+                switch (this.ActionQueueType)
+                {
+                    case OneMoreActionQueueType::MenuItem:
+                        this.ActionClassName   = classStr(OneMoreActionQueueMenuItemActionProcessor);
+                        break;
+                    default:
+                        this.ActionClassName   = '';
+                }
+                break;
+            case fieldNum(OneMoreActionQueueTypeTable, ProcessingType):
+                this.setDefaultProcessAutomationPollingInterval();
+                break;
+                
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>transformationJSONEdit</Name>
+				<Source><![CDATA[
+    [SysClientCacheDataMethod(true)]
+    public edit OneMoreActionQueueTransformationJSON transformationJSONEdit(boolean _set, OneMoreActionQueueTransformationJSON _value)
+    {
+        if (_set)
+        {
+            ttsbegin;
+            
+            OneMoreActionQueueTypeTransformation oneMoreActionQueueTypeTransformation = OneMoreActionQueueTypeTransformation::find(this.TypeId, true);
+
+            if (_value)
+            {
+                oneMoreActionQueueTypeTransformation.TypeId             = this.TypeId;
+                oneMoreActionQueueTypeTransformation.TransformationJSON = _value;
+                oneMoreActionQueueTypeTransformation.write();
+            }
+            else if (oneMoreActionQueueTypeTransformation.RecId != 0)
+            {
+                oneMoreActionQueueTypeTransformation.delete();
+            }
+
+            ttscommit;
+        }
+        
+        return OneMoreActionQueueTypeTransformation::find(this.TypeId).TransformationJSON;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>oneMoreActionQueueTypeMenuItemParameterTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable(boolean _forupdate = false)
+    {
+        return OneMoreActionQueueTypeMenuItemParameterTable::find(this.TypeId, _forupdate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkIfCanBeEnabled</Name>
+				<Source><![CDATA[
+    public boolean checkIfCanBeEnabled()
+    {
+        boolean ret = true;
+        
+        switch (this.ActionQueueType)
+        {
+            case OneMoreActionQueueType::Custom:
+                break;
+            case OneMoreActionQueueType::MenuItem:
+                if (this.oneMoreActionQueueTypeMenuItemParameterTable().RecId == 0)
+                {
+                    ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParametersAreNotSpecified");
+                }
+                break;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateWrite</Name>
+				<Source><![CDATA[
+    public boolean validateWrite()
+    {
+        boolean ret;
+
+        ret = super();
+
+        if (this.Enabled)
+        {
+            ret = this.checkIfCanBeEnabled() && ret;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initValue</Name>
+				<Source><![CDATA[
+    public void initValue()
+    {
+        super();
+
+        this.ProcessingType = OneMoreActionQueueProcessingType::ReliableAsynchronous;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setDefaultProcessAutomationPollingInterval</Name>
+				<Source><![CDATA[
+    private void setDefaultProcessAutomationPollingInterval()
+    {
+        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation && !this.ProcessAutomationPollingInterval)
+        {
+            this.ProcessAutomationPollingInterval = OneMoreActionQueueConstants::DefaultProcessAutomationPollingInterval;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert()
+    {
+        ttsbegin;
+        
+        this.setDefaultProcessAutomationPollingInterval();
+        
+        super();
+
+        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
+        {
+            this.findOrCreateprocessScheduleSeries();
+            this.updateProcessAutomationSeries();
+            
+            if (this.Enabled)
+            {
+                this.enableSeries();
+            }
+            else
+            {
+                this.disableSeries();
+            }
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update()
+    {
+        ttsbegin;
+        
+        this.setDefaultProcessAutomationPollingInterval();
+        
+        super();
+
+        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
+        {
+            this.findOrCreateprocessScheduleSeries();
+            this.updateProcessAutomationSeries();
+            
+            if (this.Enabled)
+            {
+                this.enableSeries();
+            }
+            else
+            {
+                this.disableSeries();
+            }
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>delete</Name>
+				<Source><![CDATA[
+    public void delete()
+    {
+        ttsbegin;
+        
+        super();
+
+        this.disableSeries();
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateProcessAutomationSeries</Name>
+				<Source><![CDATA[
+    private void updateProcessAutomationSeries()
+    {
+        ProcessScheduleSeriesPollingDetails processScheduleSeriesPollingDetails = ProcessScheduleSeries::getPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessing, this.TypeId);
+
+        if (processScheduleSeriesPollingDetails && processScheduleSeriesPollingDetails.parmInterval() != this.ProcessAutomationPollingInterval)
+        {
+            processScheduleSeriesPollingDetails.parmInterval(this.ProcessAutomationPollingInterval);
+            processScheduleSeriesPollingDetails.parmUnit(ProcessScheduleUnit::Minute);
+
+            ProcessScheduleSeries::setPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessing, this.TypeId, processScheduleSeriesPollingDetails);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processScheduleType</Name>
+				<Source><![CDATA[
+    private ProcessScheduleType processScheduleType()
+    {
+        ProcessScheduleType type;
+
+        select firstonly type
+            where type.Name == OneMoreActionQueueConstants::OneMoreActionQueueProcessing;
+
+        return type;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createProcessAutomationSeries</Name>
+				<Source><![CDATA[
+    private ProcessScheduleSeries createProcessAutomationSeries()
+    {
+        ProcessScheduleSeries createdScheduleSeries;
+
+        createdScheduleSeries.clear();
+        createdScheduleSeries.initValue();
+
+        createdScheduleSeries.Name                  = this.TypeId;
+        createdScheduleSeries.Description           = this.Description;
+        createdScheduleSeries.OwnerId               = this.RunAsUserId;
+        createdScheduleSeries.ProcessScheduleType   = this.processScheduleType().RecId;
+        //createdScheduleSeries.IsEnabled             = _scheduleSeriesTmp.IsEnabled;
+        //createdScheduleSeries.AlertWhenJobEnds      = _scheduleSeriesTmp.AlertWhenJobEnds;
+        //createdScheduleSeries.AlertWhenJobFails     = _scheduleSeriesTmp.AlertWhenJobFails;
+        //createdScheduleSeries.AlertWhenJobCanceled  = _scheduleSeriesTmp.AlertWhenJobCanceled;
+        //createdScheduleSeries.AlertShowPopUp        = _scheduleSeriesTmp.AlertShowPopUp;
+        //createdScheduleSeries.AlertSendEmail        = _scheduleSeriesTmp.AlertSendEmail;
+        //createdScheduleSeries.IsEnabled             = NoYes::Yes;
+
+        if (!createdScheduleSeries.validateWrite())
+        {
+            throw Exception::Error;
+        }
+
+        createdScheduleSeries.insert();
+
+        this.writePatternForRegisteredProviders();
+
+        return createdScheduleSeries;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findOrCreateProcessScheduleSeries</Name>
+				<Source><![CDATA[
+    private ProcessScheduleSeries findOrCreateProcessScheduleSeries(boolean _forUpdate = false)
+    {
+        ProcessScheduleSeries series;
+
+        series.selectForUpdate(_forUpdate);
+
+        select firstonly series
+            where series.Name                   == this.TypeId
+               && series.ProcessScheduleType    == this.processScheduleType().RecId;
+
+        if (series.RecId == 0)
+        {
+            this.createProcessAutomationSeries();
+        }
+
+        return series;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>enableSeries</Name>
+				<Source><![CDATA[
+    private void enableSeries()
+    {
+        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
+        {
+            ttsbegin;
+        
+            ProcessScheduleSeries selectedSeries = this.findOrCreateProcessScheduleSeries(true);
+
+            if (selectedSeries.IsEnabled == NoYes::No)
+            {
+                selectedSeries.IsEnabled = NoYes::Yes;
+                selectedSeries.update();
+            }
+
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>disableSeries</Name>
+				<Source><![CDATA[
+    private void disableSeries()
+    {
+        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
+        {
+            ttsbegin;
+        
+            ProcessScheduleSeries selectedSeries = this.findOrCreateProcessScheduleSeries(true);
+
+            if (selectedSeries.IsEnabled == NoYes::Yes)
+            {
+                selectedSeries.IsEnabled = NoYes::No;
+                selectedSeries.update();
+            }
+
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>writePatternForRegisteredProviders</Name>
+				<Source><![CDATA[
+    private void writePatternForRegisteredProviders()
+    {
+        ProcessScheduleSeries           series = this.findOrCreateProcessScheduleSeries(true);
+        ProcessScheduleSeriesPattern    seriesPattern;
+
+        select firstonly forupdate seriesPattern
+            where seriesPattern.ProcessScheduleSeries   == series.RecId
+               && !seriesPattern.StartDate
+               && !seriesPattern.EndDate
+               && !seriesPattern.Time;
+
+        seriesPattern.ProcessScheduleSeries = series.RecId;
+        
+        seriesPattern.write();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>hasUnprocessedMessagesInQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if action type has unprocessed messages in the queue
+    /// </summary>
+    /// <returns>True if action type has unprocessed messages in the queue otherwise False</returns>
+    public boolean hasUnprocessedMessagesInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        
+        select firstonly RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.TypeId == this.TypeId  
+               && oneMoreActionQueue.Status == OneMoreActionQueueStatus::Waiting;
+
+        return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueType</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeTable</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueType</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>TypeId</TitleField1>
+	<TitleField2>Description</TitleField2>
+	<CacheLookup>FoundAndEmpty</CacheLookup>
+	<ClusteredIndex>TypeIdx</ClusteredIndex>
+	<PrimaryIndex>TypeIdx</PrimaryIndex>
+	<ReplacementKey>TypeIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Enabled</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionClassName</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ProcessingType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryAttemptNumber</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryAttemptInterval</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>OverviewGrid</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Enabled</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>RetryParameters</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRetryParameters</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>RetryAttemptNumber</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryAttemptInterval</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Identification</Name>
+			<Label>@SYS5711</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Description</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueType</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Parameters</Name>
+			<Label>@SYS7764</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ProcessingType</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Enabled</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>CustomAction</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeCustom</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionClassName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>ReliableAsync</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueReliableAsync</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ReliableAsyncBatchGroupId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RunAsUserId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>ProcessAutomation</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingTypeProcessAutomation</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ProcessAutomationPollingInterval</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RunAsUserId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TypeId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueTypeId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>Description</Name>
+			<ExtendedDataType>Description</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Enabled</Name>
+			<ExtendedDataType>OneMoreActionQueueEnabled</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ActionClassName</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>SysClassName</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ProcessingType</Name>
+			<Mandatory>Yes</Mandatory>
+			<EnumType>OneMoreActionQueueProcessingType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ActionQueueType</Name>
+			<AllowEdit>No</AllowEdit>
+			<EnumType>OneMoreActionQueueType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetryAttemptNumber</Name>
+			<ExtendedDataType>OneMoreActionQueueRetryAttemptNumber</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetryAttemptInterval</Name>
+			<ExtendedDataType>OneMoreActionQueueRetryAttemptInterval</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ReliableAsyncBatchGroupId</Name>
+			<ExtendedDataType>OneMoreActionQueueReliableAsyncBatchGroupId</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>RunAsUserId</Name>
+			<ExtendedDataType>OneMoreActionQueueRunAsUserId</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>ProcessAutomationPollingInterval</Name>
+			<ExtendedDataType>OneMoreActionQueueProcessAutomationPollingInterval</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TypeIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TypeId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>ProcessingTypeIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ProcessingType</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

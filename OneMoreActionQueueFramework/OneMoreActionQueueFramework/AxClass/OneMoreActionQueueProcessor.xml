@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue base processor
+/// </summary>
+abstract class OneMoreActionQueueProcessor
+{
+    protected OneMoreActionQueue              oneMoreActionQueue;
+    protected OneMoreActionQueueTypeTable     oneMoreActionQueueTypeTable;
+    
+    protected OneMoreActionQueueContract      contract;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>newFromOneMoreActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New processor from <c>OneMoreActionQueueProcessor</c>
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
+    /// <returns><c>OneMoreActionQueueProcessor</c></returns>
+    public static OneMoreActionQueueProcessor newFromOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
+    {
+        OneMoreActionQueueProcessor ret = OneMoreActionQueueProcessor::newFromBusinessActionTypeTable(_oneMoreActionQueue.oneMoreActionQueueTypeTable());
+        ;
+
+        ret.parmOneMoreActionQueue(_oneMoreActionQueue);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromBusinessActionTypeTable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New processor from <c>OneMoreActionQueueTypeTable</c>
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueProcessor</c> record</param>
+    /// <returns><c>OneMoreActionQueueProcessor</c></returns>
+    public static OneMoreActionQueueProcessor newFromBusinessActionTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    {
+        OneMoreActionQueueProcessor    ret;
+        ;
+
+        DictClass actionQueueDictClass = SysDictClass::newName(_oneMoreActionQueueTypeTable.ActionClassName);
+    
+        ret = actionQueueDictClass.makeObject();
+        ret.parmOneMoreActionQueueTypeTable(_oneMoreActionQueueTypeTable);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// <c>OneMoreActionQueue</c> record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
+    /// <returns><c>OneMoreActionQueue</c> record</returns>
+    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
+    {
+        oneMoreActionQueue = _oneMoreActionQueue;
+        return oneMoreActionQueue;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// <c>OneMoreActionQueueTypeTable</c> record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueTypeTable</c> record</param>
+    /// <returns><c>OneMoreActionQueueTypeTable</c> record</returns>
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    {
+        oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
+        return oneMoreActionQueueTypeTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getContract</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Get <c>OneMoreActionQueueContract</c>
+    /// </summary>
+    /// <returns><c>OneMoreActionQueueContract</c></returns>
+    public OneMoreActionQueueContract getContract()
+    {
+        return contract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeContract</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize contract from JSON payload
+    /// </summary>
+    protected void initializeContract()
+    {
+        contract = FormJsonSerializer::deserializeObject(className2Id(oneMoreActionQueueTypeTable.contractClassName()), oneMoreActionQueue.transformedMessage());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initialize</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    protected void initialize()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkContractDataAreaId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check of company id field is not empty and exists
+    /// </summary>
+    /// <returns>True if company id is not empty and exists otherwise false</returns>
+    private boolean checkContractDataAreaId()
+    {
+        boolean ret = true;
+
+        if (!contract.parmDataAreaId())
+        {
+            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueFieldIsNotSpecified", 'DataAreaId'));
+        }
+
+        if (ret && !xDataArea::exist(contract.parmDataAreaId()))
+        {
+            ret = checkFailed(strFmt("@SYS10666", contract.parmDataAreaId()));
+        }
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canProcessAction</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Can action be processed
+    /// </summary>
+    /// <returns>True if can be processed otherwise false</returns>
+    protected boolean canProcessAction()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run action internally
+    /// </summary>
+    protected abstract void runActionInternal()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runAction</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run action
+    /// </summary>
+    public void runAction()
+    {
+        this.initializeContract();
+
+        if (!this.checkContractDataAreaId())
+        {
+            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
+        }
+        
+        changecompany(contract.parmDataAreaId())
+        {
+            this.initialize();
+
+            if (!this.canProcessAction())
+            {
+                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
+            }
+
+            this.runActionInternal();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

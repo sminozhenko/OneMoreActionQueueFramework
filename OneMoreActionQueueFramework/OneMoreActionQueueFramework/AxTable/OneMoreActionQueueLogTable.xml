@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueLogTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueLogTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>addInfoLogData</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add infolog
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
+    /// <param name = "_exceptionTypeName">An <c>OneMoreActionQueueLogExceptionTypeName</c> value</param>    
+    /// <param name = "_infoLogData">Infolog data</param>
+    /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
+    public static void addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueLogExceptionTypeName _exceptionTypeName, InfologData _infoLogData, UserConnection _userConnection)
+    {
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId, true, _userConnection);
+
+        if (_infoLogData == conNull())
+        {
+            if (oneMoreActionQueueLogTable.RecId != 0)
+            {
+                oneMoreActionQueueLogTable.delete();
+            }
+
+            return;
+        }
+
+        oneMoreActionQueueLogTable.RefRecId             =   _oneMoreActionQueue.RecId;
+        oneMoreActionQueueLogTable.InfologData          =   _infoLogData;
+        oneMoreActionQueueLogTable.ExceptionTypeName    =   _exceptionTypeName;
+
+        oneMoreActionQueueLogTable.write();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findByRefRecId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueueLogTable</c> record by <c>RefRecId</c> value
+    /// </summary>
+    /// <param name = "_refRecId">An <c>RefRecId</c> value</param>
+    /// <param name = "_forupdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueueLogTable</c> table otherwise, an empty record.
+    /// </returns>
+    public static OneMoreActionQueueLogTable findByRefRecId(RefRecId _refRecId, boolean _forupdate = false, UserConnection _userConnection = null)
+    {
+        OneMoreActionQueueLogTable   ret;
+
+        ret.selectForUpdate(_forupdate);
+
+        if (_userConnection)
+        {
+            ret.setConnection(_userConnection);
+        }
+
+        if (_refRecId)
+        {
+            select firstonly ret
+                where ret.RefRecId      ==  _refRecId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showLog</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Show log for <c>OneMoreActionQueue</c>
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
+    public static void showLog(OneMoreActionQueue _oneMoreActionQueue)
+    {
+        OneMoreActionQueueLogTable       oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId);
+        
+        if (oneMoreActionQueueLogTable.RecId && oneMoreActionQueueLogTable.InfologData != conNull())
+        {
+            infolog.import(oneMoreActionQueueLogTable.InfologData, true);
+        }
+        else
+        {
+            info("@OneMoreActionQueueFramework:OneMoreActionQueueNoInfologFound");
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueLogTable</DeveloperDocumentation>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueLogTable</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TitleField1>RefRecId</TitleField1>
+	<CacheLookup>NotInTTS</CacheLookup>
+	<ClusteredIndex>RefRecIdx</ClusteredIndex>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ReplacementKey>RefRecIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>RefRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>InfologData</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ExceptionTypeName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>RefRecId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>RefRecId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RefRecId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldContainer">
+			<Name>InfologData</Name>
+			<ExtendedDataType>InfologData</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ExceptionTypeName</Name>
+			<ExtendedDataType>OneMoreActionQueueLogExceptionTypeName</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>RefRecIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>RefRecId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueue</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueue</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>RefRecId</Name>
+					<Field>RefRecId</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

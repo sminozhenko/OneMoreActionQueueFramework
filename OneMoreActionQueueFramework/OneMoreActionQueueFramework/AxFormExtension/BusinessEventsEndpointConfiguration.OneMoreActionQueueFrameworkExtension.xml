@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>BusinessEventsEndpointConfiguration.OneMoreActionQueueFrameworkExtension</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlh5h1v5t21</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>OneMoreActionQueueEndpointFields</Name>
+				<AutoDeclaration>Yes</AutoDeclaration>
+				<Type>Group</Type>
+				<Visible>No</Visible>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>OneMoreActionQueueEndpointFields_TypeId</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>TypeId</DataField>
+						<DataSource>BusinessEventsEndpoint_OneMoreActionQueueBusinessEventsEndpoint</DataSource>
+					</AxFormControl>
+				</Controls>
+				<DataGroup>OneMoreActionQueueEndpointFields</DataGroup>
+				<DataSource>BusinessEventsEndpoint_OneMoreActionQueueBusinessEventsEndpoint</DataSource>
+				<FrameType>None</FrameType>
+			</FormControl>
+			<Parent>EndpointFieldsGroup</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

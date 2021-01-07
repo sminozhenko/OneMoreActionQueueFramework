@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeMenuItemParameterTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeMenuItemParameterTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueueTypeMenuItemParameterTable</c> record
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name="_forUpdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueueTypeMenuItemParameterTable</c> table otherwise, an empty record.
+    /// </returns>
+    public static OneMoreActionQueueTypeMenuItemParameterTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
+    {
+        OneMoreActionQueueTypeMenuItemParameterTable  ret;
+
+        ret.selectForUpdate(_forUpdate);
+
+        if (_typeId)
+        {
+            select firstonly ret
+                where ret.TypeId == _typeId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update parameters
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueTypeMenuItemParameterTable">Original <c>oneMoreActionQueueTypeMenuItemParameterTable</c></param>
+    /// <param name = "_classId">Packed class id</param>
+    /// <param name = "_packedParameters">Packed parameters for class object</param>
+    public static void updateParameters(oneMoreActionQueueTypeMenuItemParameterTable _oneMoreActionQueueTypeMenuItemParameterTable, ClassId _classId, container _packedParameters)
+    {
+        ttsbegin;
+
+        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = OneMoreActionQueueTypeMenuItemParameterTable::find(_oneMoreActionQueueTypeMenuItemParameterTable.TypeId, true);
+
+        oneMoreActionQueueTypeMenuItemParameterTable.TypeId             = _oneMoreActionQueueTypeMenuItemParameterTable.TypeId;
+        oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName       = _oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName;
+        oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters   = _packedParameters;
+        oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber        = _classId;        
+        oneMoreActionQueueTypeMenuItemParameterTable.write();
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkMenuItemName</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check menu item name value
+    /// </summary>
+    /// <param name = "_menuItemName">Menu item name value</param>
+    /// <returns>True if menu item is supported otherwise False</returns>
+    public static boolean checkMenuItemName(OneMoreActionQueueMenuItemName _menuItemName)
+    {
+        boolean ret = true;
+        
+        if (!_menuItemName)
+        {
+            ret = checkFailed(strFmt("@SYS84378", "@SYS53994"));
+        }
+
+        if (ret)
+        {
+            MenuFunction menuFunction = OneMoreActionQueueTypeMenuItemParameterTable::menuFunction(_menuItemName);
+
+            if (menuFunction == null || menuFunction.objectType() != MenuItemObjectType::Class)
+            {
+                ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionMenuWasNotFound", _menuItemName));
+            }
+
+            ret = ret && OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(className2Id(menuFunction.object()));
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isClassSupported</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is class supported for menu item action queue processing?
+    /// </summary>
+    /// <param name = "_classId">Class id</param>
+    /// <returns>True if class is supported for menu item action queue processing otherwise False</returns>
+    public static boolean isClassSupported(ClassId _classId)
+    {
+        return OneMoreActionQueueMenuItemBehavior::isClassSupported(_classId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>menuFunction</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Created <C>MenuFunction</C> by menu item name
+    /// </summary>
+    /// <param name = "_menuItemName">An <c>OneMoreActionQueueMenuItemName</c> value</param>
+    /// <returns><c>MenuFunction</c></returns>
+    public static MenuFunction menuFunction(OneMoreActionQueueMenuItemName _menuItemName)
+    {
+        return new MenuFunction(_menuItemName, MenuItemType::Action);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateWrite</Name>
+				<Source><![CDATA[
+    public boolean validateWrite()
+    {
+        boolean ret;
+
+        ret = super();
+
+        ret = OneMoreActionQueueTypeMenuItemParameterTable::checkMenuItemName(this.MenuItemName) && ret;
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>menuItemClassName</Name>
+				<Source><![CDATA[
+    [SysClientCacheDataMethod(true)]
+    public display ClassName menuItemClassName()
+    {
+        ClassName   ret;
+
+        if (this.ClassNumber)
+        {
+            ret = classId2Name(this.ClassNumber);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParameter</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeTable</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParameter</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>TypeId</TitleField1>
+	<CacheLookup>FoundAndEmpty</CacheLookup>
+	<ClusteredIndex>TypeIdx</ClusteredIndex>
+	<PrimaryIndex>TypeIdx</PrimaryIndex>
+	<ReplacementKey>TypeIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MenuItemName</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ClassNumber</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>MenuItem</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItem</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>MenuItemName</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>menuItemClassName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TypeId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueTypeId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldContainer">
+			<Name>PackedParameters</Name>
+			<ExtendedDataType>OneMoreActionQueuePackedParameters</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>ClassNumber</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<AssetClassification>System Metadata</AssetClassification>
+			<ExtendedDataType>ClassId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MenuItemName</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueMenuItemName</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TypeIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TypeId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeTable</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>TypeId</Name>
+					<Field>TypeId</Field>
+					<RelatedField>TypeId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

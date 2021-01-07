@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingProcessAutomationContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueProcessingProcessAutomationContract</c> class holds information for the <c>OneMoreActionQueueProcessingProcessAutomationController</c>.
+/// </summary>
+[DataContract]
+public final class OneMoreActionQueueProcessingProcessAutomationContract extends ProcessScheduleWorkItem
+{
+    private OneMoreActionQueueTypeId actionQueueTypeId;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmActionQueueTypeId</Name>
+				<Source><![CDATA[
+    [DataMember]
+    public OneMoreActionQueueTypeId parmActionQueueTypeId(OneMoreActionQueueTypeId _actionQueueTypeId = actionQueueTypeId)
+    {
+        actionQueueTypeId = _actionQueueTypeId;
+        return actionQueueTypeId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

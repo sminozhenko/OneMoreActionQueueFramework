@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueContext</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue static context
+/// </summary>
+public static class OneMoreActionQueueContext
+{
+    public static OneMoreActionQueueTypeMenuItemParameterTable      oneMoreActionQueueTypeMenuItemParameterTable = null;
+    public static OneMoreActionQueueMenuItemContract                oneMoreActionQueueMenuItemContext = null;
+    public static boolean                                           doRetryFlag;
+}
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+</AxClass>

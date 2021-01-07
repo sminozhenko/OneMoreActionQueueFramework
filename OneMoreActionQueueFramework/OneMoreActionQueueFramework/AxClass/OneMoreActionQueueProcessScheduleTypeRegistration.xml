@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessScheduleTypeRegistration</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// Implements the <c>ProcessScheduleITypeRegistration</c> to register the one more action queue process task 'Type' with the Process Automation.
+/// </summary>
+[Export(identifierStr(Dynamics.AX.Application.ProcessScheduleITypeRegistration))]
+[ExportMetadata(classStr(ProcessScheduleITypeRegistration), classStr(OneMoreActionQueueProcessScheduleTypeRegistration))]
+class OneMoreActionQueueProcessScheduleTypeRegistration implements ProcessScheduleITypeRegistration
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getScheduleTypeRegistrationItem</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public ProcessScheduleTypeRegistrationItem getScheduleTypeRegistrationItem()
+    {
+        ProcessScheduleTypeRegistrationItem processScheduleTypeRegistrationItem = ProcessScheduleTypeRegistrationItem::construct();
+        processScheduleTypeRegistrationItem.parmCompanyScope(ProcessScheduleTypeCompanyScope::Global);
+        processScheduleTypeRegistrationItem.parmLabelId(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueProcessing"));
+        processScheduleTypeRegistrationItem.parmName(OneMoreActionQueueConstants::OneMoreActionQueueProcessing);
+        processScheduleTypeRegistrationItem.parmProcessAutomationTaskClassName(classStr(OneMoreActionQueueProcessingProcessAutomationTask));
+        processScheduleTypeRegistrationItem.parmScheduleType(ProcessScheduleProcessType::Polled);
+        processScheduleTypeRegistrationItem.parmIsEnabled(true);
+
+        return processScheduleTypeRegistrationItem;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

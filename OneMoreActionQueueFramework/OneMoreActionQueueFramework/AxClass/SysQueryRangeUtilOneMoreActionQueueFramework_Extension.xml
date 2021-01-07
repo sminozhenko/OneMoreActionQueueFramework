@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SysQueryRangeUtilOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension class from <c>SysQueryRangeUtil</c>
+/// </summary>
+[ExtensionOf(classStr(SysQueryRangeUtil))]
+public final class SysQueryRangeUtilOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>OneMoreActionQueueParameterValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Action queue parameter value
+    /// </summary>
+    /// <param name = "_parameterName">Parameter name</param>
+    /// <returns>Range for query</returns>
+    [QueryRangeFunctionAttribute()]
+    public static str OneMoreActionQueueParameterValue(str _parameterName)
+    {
+        return OneMoreActionQueueSysQueryRangeUtilCopy::actionQueueParameterValue(_parameterName);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

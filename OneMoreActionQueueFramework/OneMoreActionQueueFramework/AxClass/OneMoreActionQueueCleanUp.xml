@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueCleanUp</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Clean-up routine for action queue table
+/// </summary>
+[SysOperationJournaledParameters(true)]
+class OneMoreActionQueueCleanUp extends SysOperationServiceController
+{
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static SysOperationController construct(Args _args)
+    {
+        SysOperationController controller = new OneMoreActionQueueCleanUp(classstr(OneMoreActionQueueCleanUpService), methodstr(OneMoreActionQueueCleanUpService, cleanUp), SysOperationExecutionMode::Synchronous);
+        controller.parmArgs(_args);
+
+        return controller;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        OneMoreActionQueueCleanUp::construct(_args).startOperation();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

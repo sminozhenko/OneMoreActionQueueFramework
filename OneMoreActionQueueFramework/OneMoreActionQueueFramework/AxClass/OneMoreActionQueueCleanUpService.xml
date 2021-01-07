@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueCleanUpService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Service class for action queue clean-up operation
+/// </summary>
+class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
+{
+    private     RecordInsertList                oneMoreActionQueueCleanUpTmpRIL;
+    private     int                             totalDeletedRecords;
+    protected   OneMoreActionQueueCleanUpTmp    oneMoreActionQueueCleanUpTmp;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>cleanUp</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Clean-up action queue
+    /// </summary>
+    /// <param name = "_contract">An <c>OneMoreActionQueueCleanUpContract</c></param>
+    public void cleanUp(OneMoreActionQueueCleanUpContract _contract)
+    {
+        Query                           query = _contract.getQuery();
+        QueryRun                        qr;
+        
+        int                             numberOfRecords;
+
+        this.initializeRecordInsertList();
+
+        query.dataSourceTable(tableNum(OneMoreActionQueue)).addSelectionField(fieldNum(OneMoreActionQueue, RecId));
+        
+        qr = new QueryRun(query);
+
+        while (qr.next())
+        {
+            oneMoreActionQueueCleanUpTmp.RefRecId = qr.get(tableNum(OneMoreActionQueue)).RecId;
+            oneMoreActionQueueCleanUpTmpRIL.add(oneMoreActionQueueCleanUpTmp);
+
+            numberOfRecords++;
+            totalDeletedRecords++;
+
+            if (numberOfRecords >= OneMoreActionQueueConstants::cleanUpBatchSize)
+            {
+                numberOfRecords = 0;
+                this.deleteRecordsInternal();
+            }
+        }
+
+        this.deleteRecordsInternal();
+
+        info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueNumberOfDeletedRecord", numberOfRecords));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeRecordInsertList</Name>
+				<Source><![CDATA[
+    private void initializeRecordInsertList()
+    {
+        oneMoreActionQueueCleanUpTmpRIL = new RecordInsertList(tableNum(OneMoreActionQueueCleanUpTmp), true, true, true, true, true, oneMoreActionQueueCleanUpTmp);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteRecordsInternal</Name>
+				<Source><![CDATA[
+    private void deleteRecordsInternal()
+    {
+        oneMoreActionQueueCleanUpTmpRIL.insertDatabase();
+
+        this.deleteRecords();
+
+        delete_from oneMoreActionQueueCleanUpTmp;
+        
+        this.initializeRecordInsertList();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteRecords</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Delete data from real tables
+    /// </summary>
+    protected void deleteRecords()
+    {
+        OneMoreActionQueueLogTable      oneMoreActionQueueLogTable;
+        OneMoreActionQueue              oneMoreActionQueue;
+        
+        oneMoreActionQueueLogTable.skipDeleteActions(true);
+        oneMoreActionQueueLogTable.skipDataMethods(true);
+        oneMoreActionQueueLogTable.skipDatabaseLog(true);
+        oneMoreActionQueueLogTable.skipEvents(true);
+
+        delete_from oneMoreActionQueueLogTable
+            exists join oneMoreActionQueueCleanUpTmp
+            where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueueLogTable.RefRecId;
+
+        oneMoreActionQueue.skipDeleteActions(true);
+        oneMoreActionQueue.skipDataMethods(true);
+        oneMoreActionQueue.skipDatabaseLog(true);
+        oneMoreActionQueue.skipEvents(true);
+
+        delete_from oneMoreActionQueue
+            exists join oneMoreActionQueueCleanUpTmp
+            where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueue.RecId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

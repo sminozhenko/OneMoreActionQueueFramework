@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxQuery xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxQuerySimple">
+	<Name>OneMoreActionQueueCleanUp</Name>
+	<SourceCode>
+		<Methods>
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Query]
+public class OneMoreActionQueueCleanUp extends QueryRun
+{
+}
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Title>@OneMoreActionQueueFramework:OneMoreActionQueueCleanUp</Title>
+	<DataSources>
+		<AxQuerySimpleRootDataSource>
+			<Name>OneMoreActionQueue</Name>
+			<DynamicFields>Yes</DynamicFields>
+			<Table>OneMoreActionQueue</Table>
+			<DataSources />
+			<DerivedDataSources />
+			<Fields />
+			<Ranges>
+				<AxQuerySimpleDataSourceRange>
+					<Name>Status</Name>
+					<Field>Status</Field>
+					<Value>Processed, Error</Value>
+				</AxQuerySimpleDataSourceRange>
+				<AxQuerySimpleDataSourceRange>
+					<Name>CreatedDateTime</Name>
+					<Field>CreatedDateTime</Field>
+					<Value>(LessThanUtcDate(-30))</Value>
+				</AxQuerySimpleDataSourceRange>
+			</Ranges>
+			<GroupBy />
+			<Having />
+			<OrderBy />
+		</AxQuerySimpleRootDataSource>
+	</DataSources>
+</AxQuery>

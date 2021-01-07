@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxForm xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>OneMoreActionQueueMenuItemParametersDialog</Name>
+	<SourceCode>
+		<Methods xmlns="">
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Form]
+public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implements OneMoreActionQueueIMenuItemLookupCaller
+{
+    private OneMoreActionQueueMenuItemParameters    oneMoreActionQueueMenuItemParameters;
+    private OneMoreActionQueueMenuItemName          menuItemname;
+
+}
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canClose</Name>
+				<Source><![CDATA[
+    public boolean canClose()
+    {
+        boolean ret = super();
+
+        if (ret && element.closedOk())
+        {
+            ret = oneMoreActionQueueMenuItemParameters.validate();
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    public void init()
+    {
+        if (!element.args() || !element.args().caller())
+        {
+            throw error(strfmt("@SYS22862", element.name()));
+        }
+
+        if (classidget(element.args().caller().runBase()) != classnum(OneMoreActionQueueMenuItemParameters))
+        {
+            throw error(strfmt("@SYS22456", element.name(), classId2Name(classnum(OneMoreActionQueueMenuItemParameters))));
+        }
+
+        oneMoreActionQueueMenuItemParameters = element.args().caller().runBase();
+
+        super();
+
+        MenuItemNameControl.text(oneMoreActionQueueMenuItemParameters.parmMenuItemName());
+        MenuItemNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmMenuItemName());
+
+        ClassNameControl.text(classId2Name(oneMoreActionQueueMenuItemParameters.parmJobClassId()));
+        ClassNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmJobClassId());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runBase</Name>
+				<Source><![CDATA[
+    Object runBase()
+    {
+        return oneMoreActionQueueMenuItemParameters;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setSelectedMenuItem</Name>
+				<Source><![CDATA[
+    public void setSelectedMenuItem(OneMoreActionQueueMenuItemName _selectedMenuItem, MenuItemType _menuItemType)
+    {
+        oneMoreActionQueueMenuItemParameters.parmMenuItemName(_selectedMenuItem);
+        MenuItemNameControl.text(_selectedMenuItem);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+		<DataSources xmlns="" />
+		<DataControls xmlns="">
+			<Control>
+				<Name>ClassNameControl</Name>
+				<Type>String</Type>
+				<Methods>
+					<Method>
+						<Name>modified</Name>
+						<Source><![CDATA[
+        public boolean modified()
+        {
+            boolean ret;
+    
+            ret = super();
+
+            oneMoreActionQueueMenuItemParameters.parmJobClassId(this.valueStr() ? className2Id(this.valueStr()) : 0); 
+    
+            return ret;
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+		</DataControls>
+		<Members xmlns="" />
+	</SourceCode>
+	<DataSources />
+	<Design>
+		<Caption xmlns="">@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParameters</Caption>
+		<DialogSize xmlns="">Medium</DialogSize>
+		<Frame xmlns="">Dialog</Frame>
+		<Pattern xmlns="">DialogTabs</Pattern>
+		<PatternVersion xmlns="">1.3</PatternVersion>
+		<Style xmlns="">Dialog</Style>
+		<WindowResize xmlns="">Fixed</WindowResize>
+		<Controls xmlns="">
+			<AxFormControl xmlns=""
+				i:type="AxFormTabControl">
+				<Name>Tab</Name>
+				<AlignControl>No</AlignControl>
+				<ElementPosition>1073741823</ElementPosition>
+				<FilterExpression>%1</FilterExpression>
+				<Type>Tab</Type>
+				<VerticalSpacing>-1</VerticalSpacing>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormTabPageControl">
+						<Name>General</Name>
+						<ElementPosition>1431655764</ElementPosition>
+						<FilterExpression>%1</FilterExpression>
+						<HeightMode>SizeToAvailable</HeightMode>
+						<Pattern>FieldsFieldGroups</Pattern>
+						<PatternVersion>1.1</PatternVersion>
+						<Type>TabPage</Type>
+						<VerticalSpacing>-1</VerticalSpacing>
+						<WidthMode>SizeToAvailable</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>MenuItemNameControl</Name>
+								<AutoDeclaration>Yes</AutoDeclaration>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<ExtendedDataType>OneMoreActionQueueMenuItemName</ExtendedDataType>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>ClassNameControl</Name>
+								<AutoDeclaration>Yes</AutoDeclaration>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<ExtendedDataType>ClassName</ExtendedDataType>
+							</AxFormControl>
+						</Controls>
+						<ColumnsMode>Fill</ColumnsMode>
+						<Caption>@SYS19924</Caption>
+						<Scrollbars>Auto</Scrollbars>
+					</AxFormControl>
+				</Controls>
+				<AlignChild>No</AlignChild>
+				<ArrangeMethod>Vertical</ArrangeMethod>
+			</AxFormControl>
+			<AxFormControl xmlns=""
+				i:type="AxFormButtonGroupControl">
+				<Name>ButtonGroup</Name>
+				<ElementPosition>1431655764</ElementPosition>
+				<FilterExpression>%1</FilterExpression>
+				<LeftMode>AutoRight</LeftMode>
+				<Type>ButtonGroup</Type>
+				<VerticalSpacing>-1</VerticalSpacing>
+				<WidthMode>SizeToAvailable</WidthMode>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormCommandButtonControl">
+						<Name>CommandButtonOK</Name>
+						<ElementPosition>1073741822</ElementPosition>
+						<FilterExpression>%1</FilterExpression>
+						<HeightMode>Auto</HeightMode>
+						<Type>CommandButton</Type>
+						<VerticalSpacing>-1</VerticalSpacing>
+						<WidthMode>Auto</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<ButtonDisplay>TextOnly</ButtonDisplay>
+						<Command>OK</Command>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormCommandButtonControl">
+						<Name>CommandButtonCancel</Name>
+						<ElementPosition>1610612733</ElementPosition>
+						<FilterExpression>%1</FilterExpression>
+						<HeightMode>Auto</HeightMode>
+						<Type>CommandButton</Type>
+						<VerticalSpacing>-1</VerticalSpacing>
+						<WidthMode>Auto</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<ButtonDisplay>TextOnly</ButtonDisplay>
+						<Command>Cancel</Command>
+					</AxFormControl>
+				</Controls>
+				<ArrangeMethod>HorizontalRight</ArrangeMethod>
+				<FrameType>None</FrameType>
+				<Style>DialogCommitContainer</Style>
+			</AxFormControl>
+		</Controls>
+	</Design>
+	<Parts />
+</AxForm>

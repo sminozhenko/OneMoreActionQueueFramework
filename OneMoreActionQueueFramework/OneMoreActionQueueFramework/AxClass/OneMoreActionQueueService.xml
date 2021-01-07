@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueService</c> class is the support class for the <c>OneMoreActionQueueService</c> server.
+/// </summary>
+class OneMoreActionQueueService
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>runActionWithActionId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run action with action Id
+    /// </summary>
+    /// <param name = "_actionId">An <c>OneMoreActionQueueActionId</c> value</param>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name = "_actionMessage">An <c>OneMoreActionQueueMessage</c> value</param>
+    /// <returns><c>OneMoreActionQueueServiceRunActionResponse</c></returns>
+    public OneMoreActionQueueServiceRunActionResponse runActionWithActionId(OneMoreActionQueueActionId _actionId, OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage)
+    {
+        OneMoreActionQueueServiceRunActionResponse              response;
+        OneMoreActionQueueTypeTable                             oneMoreActionQueueTypeTable = OneMoreActionQueueTypeTable::find(_typeId);
+        OneMoreActionQueue                                      oneMoreActionQueue;
+
+        InfologText getInfoLogText(int _fromLine)
+        {
+            int currentLine = infologLine();
+            InfologText infologTextRet;
+
+            if (currentLine > _fromLine)
+            {
+                SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(infolog.copy(_fromLine + 1,  currentLine));
+                while (infoEnumerator.moveNext())
+                {
+                    infologTextRet += infoEnumerator.currentMessage();
+                }
+            }
+
+            return infologTextRet;
+        }
+        
+        if (oneMoreActionQueueTypeTable.RecId != 0)
+        {
+            int fromLine = infologLine();
+            
+            try
+            {
+                oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(_typeId, _actionMessage, _actionId);
+            }
+            catch
+            {
+                throw error(getInfoLogText(fromLine));
+            }
+
+            response = OneMoreActionQueueProcessing::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue);
+        }
+        else
+        {
+            throw error(strFmt(OneMoreActionQueueTypeTable::txtNotExist(), _typeId));
+        }
+
+        return response;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingProcessAutomationController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueProcessingProcessAutomationController</c> class is the <c>SysOperationServiceController</c> class for action queue processing.
+/// </summary>
+public class OneMoreActionQueueProcessingProcessAutomationController extends SysOperationServiceController
+{
+    private ProcessExecutionSourceLinkItem processExecutionSourceLinkItem;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static OneMoreActionQueueProcessingProcessAutomationController construct()
+    {
+        return new OneMoreActionQueueProcessingProcessAutomationController(classStr(OneMoreActionQueueProcessingProcessAutomationController), methodStr(OneMoreActionQueueProcessingProcessAutomationController, process), SysOperationExecutionMode::ReliableAsynchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>process</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process process automation task for action queue processing
+    /// </summary>
+    /// <param name = "_processScheduleWorkItem"><c>OneMoreActionQueueProcessingProcessAutomationContract</c></param>
+    public void process(OneMoreActionQueueProcessingProcessAutomationContract _processScheduleWorkItem)
+    {
+        processExecutionSourceLinkItem = ProcessExecutionSourceLinkItem::newFromProcessScheduleWorkItemAndStatus(_processScheduleWorkItem, ProcessExecutionSourceStatus::Success);
+
+        processExecutionSourceLinkItem.parmHeader("@OneMoreActionQueueFramework:OneMoreActionQueueProcessing");
+        processExecutionSourceLinkItem.parmMessage(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingHasBeenCompleted", _processScheduleWorkItem.parmActionQueueTypeId()));
+
+        ProcessExecutionSourceLink::insertSourceLink(processExecutionSourceLinkItem);
+        
+        OneMoreActionQueueProcessingQueryController oneMoreActionQueueProcessingQueryController = OneMoreActionQueueProcessingQueryController::construct();
+        
+        OneMoreActionQueueProcessingQueryContract oneMoreActionQueueProcessingQueryContract = oneMoreActionQueueProcessingQueryController.getDataContractInfoObject().dataContractObject();
+
+        Query query = oneMoreActionQueueProcessingQueryContract.getQuery();
+
+        QueryBuildDataSource qbdsOneMoreActionQueueTableType = query.dataSourceTable(tableNum(OneMoreActionQueue));
+
+        findOrCreateRange_W(qbdsOneMoreActionQueueTableType, fieldNum(OneMoreActionQueue, TypeId), queryValue(_processScheduleWorkItem.parmActionQueueTypeId()));
+
+        oneMoreActionQueueProcessingQueryContract.setQuery(query);
+
+        oneMoreActionQueueProcessingQueryController.runOperation();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getContract</Name>
+				<Source><![CDATA[
+    private OneMoreActionQueueProcessingProcessAutomationContract getContract()
+    {
+        return this.getDataContractInfoObject().dataContractObject() as OneMoreActionQueueProcessingProcessAutomationContract;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

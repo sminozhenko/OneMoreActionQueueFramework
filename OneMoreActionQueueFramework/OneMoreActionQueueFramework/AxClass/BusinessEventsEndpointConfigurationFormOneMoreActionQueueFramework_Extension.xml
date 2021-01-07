@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension for form <c>BusinessEventsEndpointConfiguration</c>
+/// </summary>
+[ExtensionOf(formStr(BusinessEventsEndpointConfiguration))]
+public final class BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getConcreteTableType</Name>
+				<Source><![CDATA[
+    public TableName getConcreteTableType(BusinessEventsEndpointType _endpointType)
+    {
+        TableName tableName = next getConcreteTableType(_endpointType);
+        
+        if (_endpointType == BusinessEventsEndpointType::OneMoreActionQueue)
+        {
+            tableName = tableStr(OneMoreActionQueueBusinessEventsEndpoint);
+        }
+        
+        return tableName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showOtherFields</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Show other fields
+    /// </summary>
+    public void showOtherFields()
+    {
+        next showOtherFields();
+
+        BusinessEventsEndpointType selection = any2Enum(EndpointTypeSelection.selection());
+
+        if (selection == BusinessEventsEndpointType::OneMoreActionQueue)
+        {
+            this.control(this.controlId(formControlStr(BusinessEventsEndpointConfiguration, OneMoreActionQueueEndpointFields))).visible(true);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

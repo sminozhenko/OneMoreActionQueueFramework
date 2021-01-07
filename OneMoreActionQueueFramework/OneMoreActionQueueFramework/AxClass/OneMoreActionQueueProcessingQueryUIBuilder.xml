@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingQueryUIBuilder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue processing for batch processing UI builder
+/// </summary>
+class OneMoreActionQueueProcessingQueryUIBuilder extends SysOperationAutomaticUIBuilder
+{
+    DialogField     enableBatchBundlingField;
+    DialogField     batchBundleSizeField;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>postBuild</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Does some additional logic after the <C>build</C> is done.
+    /// </summary>
+    public void postBuild()
+    {
+        super();
+
+        enableBatchBundlingField = this.bindInfo().getDialogField(this.dataContractObject(), methodStr(OneMoreActionQueueProcessingQueryContract, parmEnableBatchBundling));
+        batchBundleSizeField = this.bindInfo().getDialogField(this.dataContractObject(), methodStr(OneMoreActionQueueProcessingQueryContract, parmBatchBundleSize));
+        
+        enableBatchBundlingField.registerOverrideMethod(methodStr(FormCheckBoxControl, modified), methodStr(OneMoreActionQueueProcessingQueryUIBuilder, enableBatchBundlingModified), this);
+
+        this.batchBundelSizeFieldUpdate();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>enableBatchBundlingModified</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if the enableBatchBundling field modified.
+    /// </summary>
+    /// <param name="_formCheckBoxControl">
+    /// The form check box control
+    /// </param>
+    /// <returns>
+    /// Returns true if modified, otherwise false.
+    /// </returns>
+    public boolean enableBatchBundlingModified(FormCheckBoxControl _formCheckBoxControl)
+    {
+        boolean                                 ret;
+
+        ret = _formCheckBoxControl.modified();
+
+        if (ret)
+        {
+            this.batchBundelSizeFieldUpdate();
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>batchBundelSizeFieldUpdate</Name>
+				<Source><![CDATA[
+    private void batchBundelSizeFieldUpdate()
+    {
+        batchBundleSizeField.enabled(enableBatchBundlingField.value());
+            
+        if (!enableBatchBundlingField.value())
+        {
+            batchBundleSizeField.value(0);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

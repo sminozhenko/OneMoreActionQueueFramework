@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxForm xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>OneMoreActionQueueMenuItemLookup</Name>
+	<SourceCode>
+		<Methods xmlns="">
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Form]
+public class OneMoreActionQueueMenuItemLookup extends FormRun
+{
+    OneMoreActionQueueMenuItemLookupTreeBuilder menuItemLookupTreeBuilder;
+    OneMoreActionQueueIMenuItemLookupCaller     lookupCaller;
+    MenuItemType                                selectedMenuItemType;
+    OneMoreActionQueueMenuItemName              selectedMenuItem;
+
+}
+]]></Source>
+			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    public void init()
+    {
+        lookupCaller = element.args().caller() as OneMoreActionQueueIMenuItemLookupCaller;
+
+        super();
+
+        menuItemLookupTreeBuilder = OneMoreActionQueueMenuItemLookupTreeBuilder::construct(MenuTree, SysCountryRegionCode::getCachedLegalEntityISO());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>closeOk</Name>
+				<Source><![CDATA[
+    public void closeOk()
+    {
+        super();
+
+        lookupCaller.setSelectedMenuItem(selectedMenuItem, selectedMenuItemType);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateOkButton</Name>
+				<Source><![CDATA[
+    private void updateOkButton()
+    {
+        Ok.enabled(strLen(selectedMenuItem) > 0);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+		<DataSources xmlns="" />
+		<DataControls xmlns="">
+			<Control>
+				<Name>MenuTree</Name>
+				<Type>Tree</Type>
+				<Methods>
+					<Method>
+						<Name>selectionChanged</Name>
+						<Source><![CDATA[
+        public void selectionChanged(FormTreeItem _OldItem, FormTreeItem _NewItem, FormTreeSelect _how)
+        {
+            super(_OldItem, _NewItem, _how);
+
+            if (_how != FormTreeSelect::Unknown)
+            {
+                [selectedMenuItem, selectedMenuItemType] = menuItemLookupTreeBuilder.getUserSelection();
+                element.updateOkButton();
+            }
+        }
+
+]]></Source>
+					</Method>
+					<Method>
+						<Name>expanding</Name>
+						<Source><![CDATA[
+        public boolean expanding(int _Idx, FormTreeExpand _action, anytype _data)
+        {
+            boolean ret;
+
+            menuItemLookupTreeBuilder.menuTreeExpanding(_Idx, _action, _data);
+
+            ret = super(_Idx, _action, _data);
+
+            return ret;
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+			<Control>
+				<Name>Clear</Name>
+				<Type>CommandButton</Type>
+				<Methods>
+					<Method>
+						<Name>clicked</Name>
+						<Source><![CDATA[
+        public void clicked()
+        {
+            selectedMenuItemType = 0;
+            selectedMenuItem = '';
+            
+            element.closeOk();
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+		</DataControls>
+		<Members xmlns="" />
+	</SourceCode>
+	<DataSources />
+	<Design>
+		<HeightMode xmlns="">SizeToContent</HeightMode>
+		<Pattern xmlns="">LookupGridOnly</Pattern>
+		<PatternVersion xmlns="">1.1</PatternVersion>
+		<Style xmlns="">Lookup</Style>
+		<WidthMode xmlns="">SizeToAvailable</WidthMode>
+		<Controls xmlns="">
+			<AxFormControl xmlns=""
+				i:type="AxFormTreeControl">
+				<Name>MenuTree</Name>
+				<AutoDeclaration>Yes</AutoDeclaration>
+				<Type>Tree</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<CascadeSelect>No</CascadeSelect>
+			</AxFormControl>
+			<AxFormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>ActionGroup</Name>
+				<Type>Group</Type>
+				<WidthMode>SizeToAvailable</WidthMode>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>ButtonGroup</Name>
+						<Type>ButtonGroup</Type>
+						<WidthMode>SizeToAvailable</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormCommandButtonControl">
+								<Name>OK</Name>
+								<AutoDeclaration>Yes</AutoDeclaration>
+								<Enabled>No</Enabled>
+								<Type>CommandButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Command>OK</Command>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormCommandButtonControl">
+								<Name>Clear</Name>
+								<Type>CommandButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Command>Clear</Command>
+							</AxFormControl>
+						</Controls>
+						<ArrangeMethod>HorizontalRight</ArrangeMethod>
+						<Style>DialogCommitContainer</Style>
+					</AxFormControl>
+				</Controls>
+				<FrameType>None</FrameType>
+				<Style>DialogCommit</Style>
+			</AxFormControl>
+		</Controls>
+	</Design>
+	<Parts />
+</AxForm>

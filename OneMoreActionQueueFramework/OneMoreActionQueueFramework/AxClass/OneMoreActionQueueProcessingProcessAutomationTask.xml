@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingProcessAutomationTask</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// The <c>OneMoreActionQueueProcessingProcessAutomationTask</c> fulfills the contract needed for <c>ProcessAutomationTask</c>.
+/// </summary>
+[ExportMetadata(classStr(ProcessAutomationTask), classStr(OneMoreActionQueueProcessingProcessAutomationTask))]
+[Export(identifierStr('Microsoft.Dynamics.AX.Application.ProcessAutomationTask'))]
+internal class OneMoreActionQueueProcessingProcessAutomationTask extends ProcessAutomationTask
+{
+    OneMoreActionQueueTypeTable     oneMoreActionQueueTypeTable;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>isProcessAutomationEnabledForThisTask</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if there is work to submit to the <c>ProcessAutomation</c>.
+    /// </summary>
+    /// <returns>true if there is one or more message in the queue; otherwise, false.</returns>
+    protected boolean isProcessAutomationEnabledForThisTask()
+    {
+        // If possible to move initialization of ProcessScheduleWorkItem before executing of this method in  processAutomationTask.enqueueWork
+        // check from getListOfWorkToBePerformed can be moved here
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getListOfWorkToBePerformed</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Submits a <c>OneMoreActionQeueueProcessingProcessAutomationController</c> to the <c>ProcessAutomation</c>.
+    /// </summary>
+    /// <returns>A one element list of <c>OneMoreActionQeueueProcessingProcessAutomationController</c> object.</returns>
+    protected List getListOfWorkToBePerformed()
+    {
+        List                            workList = new List(Types::Class);
+
+        oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable::find(this.parmProcessScheduleWorkItem().parmSeriesName());
+
+        if (oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation && oneMoreActionQueueTypeTable.Enabled == NoYes::Yes && oneMoreActionQueueTypeTable.hasUnprocessedMessagesInQueue())
+        {
+            OneMoreActionQueueProcessingProcessAutomationController controller = new OneMoreActionQueueProcessingProcessAutomationController(
+                classStr(OneMoreActionQueueProcessingProcessAutomationController),
+                methodStr(OneMoreActionQueueProcessingProcessAutomationController, process),
+                SysOperationExecutionMode::ReliableAsynchronous);
+
+            this.parmProcessScheduleWorkItem().parmOccurrenceName(this.batchJobCaption());
+            
+            OneMoreActionQueueProcessingProcessAutomationContract processScheduleWorkItemContract = controller.getDataContractObject() as OneMoreActionQueueProcessingProcessAutomationContract;
+            processScheduleWorkItemContract.initializeFromScheduleWorkItem(this.parmProcessScheduleWorkItem());
+            processScheduleWorkItemContract.parmActionQueueTypeId(this.parmProcessScheduleWorkItem().parmSeriesName());
+            
+            workList.addEnd(controller);
+        }
+
+        return workList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>batchJobCaption</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Caption of the batch job that will be prepared by the <c>ProcessAutomationTask</c>
+    /// </summary>
+    /// <returns>The caption for the batch job.</returns>
+    protected BatchCaption batchJobCaption()
+    {
+        return strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingProcessAutomationTaskCaption", oneMoreActionQueueTypeTable.TypeId);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

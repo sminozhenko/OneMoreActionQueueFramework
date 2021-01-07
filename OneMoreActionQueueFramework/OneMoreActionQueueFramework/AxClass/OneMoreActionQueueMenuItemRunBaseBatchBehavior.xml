@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemRunBaseBatchBehavior</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue menu item RunBaseBatch behavior
+/// </summary>
+[OneMoreActionQueueMenuItemBehaviorAttribute(classStr(RunBaseBatch))]
+class OneMoreActionQueueMenuItemRunBaseBatchBehavior extends OneMoreActionQueueMenuItemRunBaseBehavior
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initialize</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
+    public void initialize()
+    {
+        super();
+
+        this.runBaseBatchObject().showBatchTab(false);
+        this.runBaseBatchObject().parmInBatch(true);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runBaseBatchObject</Name>
+				<Source><![CDATA[
+    private RunBaseBatch runBaseBatchObject()
+    {
+        return runClass;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

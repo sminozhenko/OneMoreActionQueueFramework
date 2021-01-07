@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingQueryContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue query processing contract
+/// </summary>
+[
+    DataContractAttribute,
+    SysOperationGroupAttribute('BatchBundling',"@OneMoreActionQueueFramework:OneMoreActionQueueBatchBundling", '99'),
+    SysOperationContractProcessingAttribute(classStr(OneMoreActionQueueProcessingQueryUIBuilder))
+]
+class OneMoreActionQueueProcessingQueryContract
+{
+    private str     packedQuery;
+
+    //Task bundling for batch processing 
+    private NoYes   enableBatchBundling;
+    private int     batchBundleSize;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getQuery</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Get query method
+    /// </summary>
+    /// <returns>Query</returns>
+    public Query getQuery()
+    {
+        ;
+        return new Query(SysOperationHelper::base64Decode(packedQuery));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmQuery</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Query
+    /// </summary>
+    /// <param name = "_packedQuery">Query</param>
+    /// <returns>Query</returns>
+    [
+        DataMemberAttribute,
+        AifQueryTypeAttribute('_packedQuery', queryStr(OneMoreActionQueueWaiting))
+    ]
+    public str parmQuery(str _packedQuery = packedQuery)
+    {
+        ;
+        packedQuery = _packedQuery;
+        return packedQuery;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setQuery</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Set query method
+    /// </summary>
+    /// <param name = "_query">Query</param>
+    public void setQuery(Query _query)
+    {
+        ;
+        packedQuery = SysOperationHelper::base64Encode(_query.pack());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmEnableBatchBundling</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute,
+        SysOperationLabelAttribute(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueEnableBatchBundling")),
+        SysOperationDisplayOrderAttribute('1'),
+        SysOperationGroupMemberAttribute('BatchBundling')
+    ]
+    public NoYes parmEnableBatchBundling(NoYes _enableBatchBundling = enableBatchBundling)
+    {
+        ;
+        enableBatchBundling = _enableBatchBundling;
+        return enableBatchBundling;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmBatchBundleSize</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute,
+        SysOperationLabelAttribute(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueBatchBundleSize")),
+        SysOperationDisplayOrderAttribute('2'),
+        SysOperationGroupMemberAttribute('BatchBundling')
+    ]
+    public int parmBatchBundleSize(int _batchBundleSize = batchBundleSize)
+    {
+        ;
+        batchBundleSize = _batchBundleSize;
+        return batchBundleSize;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

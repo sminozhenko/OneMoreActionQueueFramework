@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemParameterContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue menu item parameter contract
+/// </summary>
+[DataContract]
+class OneMoreActionQueueMenuItemParameterContract
+{
+    private str parameterName;
+    private str parameterValue;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmParameterName</Name>
+				<Source><![CDATA[
+    [DataMember("ParameterName")]
+    public str parmParameterName(str _parameterName = parameterName)
+    {
+        parameterName = _parameterName;
+        return parameterName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmParameterValue</Name>
+				<Source><![CDATA[
+    [DataMember("ParameterValue")]
+    public str parmParameterValue(str _parameterValue = parameterValue)
+    {
+        parameterValue = _parameterValue;
+        return parameterValue;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

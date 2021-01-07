@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueIMenuItemLookupCaller</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+interface OneMoreActionQueueIMenuItemLookupCaller
+{
+}
+
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>setSelectedMenuItem</Name>
+				<Source><![CDATA[
+    public void setSelectedMenuItem(OneMoreActionQueueMenuItemName _selectedMenuItem, MenuItemType _menuItemType)
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

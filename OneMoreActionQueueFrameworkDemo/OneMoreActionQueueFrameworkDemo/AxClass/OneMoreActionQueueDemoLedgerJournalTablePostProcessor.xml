@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDemoLedgerJournalTablePostProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue ledger journal post processor
+/// </summary>
+[OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDemoLedgerJournalTablePostContract))]
+class OneMoreActionQueueDemoLedgerJournalTablePostProcessor extends OneMoreActionQueueProcessor
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        OneMoreActionQueueDemoLedgerJournalTablePostContract ledgerJournalTablePostContract = contract as OneMoreActionQueueDemoLedgerJournalTablePostContract;
+        
+        LedgerJournalTable ledgerJournalTable = LedgerJournalTable::find(ledgerJournalTablePostContract.parmJournalId());
+        
+        ttsbegin;
+        
+        LedgerJournalCheckPost ledgerJournalCheckPost = LedgerJournalCheckPost::newLedgerJournalTable(ledgerJournalTable, NoYes::Yes);
+        ledgerJournalCheckPost.runOperation();
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

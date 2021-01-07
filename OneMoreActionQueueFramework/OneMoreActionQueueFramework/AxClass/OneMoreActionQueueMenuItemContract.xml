@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue contract for menu item actions
+/// </summary>
+[DataContract]
+class OneMoreActionQueueMenuItemContract extends OneMoreActionQueueContract
+{
+    List menuItemParameters = new List(Types::Class);
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmMenuItemParameters</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute("MenuItemParameters"), 
+        DataCollectionAttribute(Types::Class, classStr(OneMoreActionQueueMenuItemParameterContract))
+    ]
+    public List parmMenuItemParameters(List _menuItemParameters = menuItemParameters)
+    {
+        if (!prmIsDefault(_menuItemParameters))
+        {
+            menuItemParameters = _menuItemParameters;
+        }
+
+        return menuItemParameters;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addMenuItemParameter</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add menu item parameter
+    /// </summary>
+    /// <param name = "parameterName">Parameter name</param>
+    /// <param name = "parameterValue">Parameter value</param>
+    public void addMenuItemParameter(str parameterName, str parameterValue)
+    {
+        OneMoreActionQueueMenuItemParameterContract contract = new OneMoreActionQueueMenuItemParameterContract();
+
+        contract.parmParameterName(parameterName);
+        contract.parmParameterValue(parameterValue);
+
+        menuItemParameters.addEnd(contract);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
