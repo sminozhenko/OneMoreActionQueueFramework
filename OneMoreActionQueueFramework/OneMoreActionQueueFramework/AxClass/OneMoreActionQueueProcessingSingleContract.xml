@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingSingleContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processing contract for single record
+/// </summary>
+[DataContract]
+class OneMoreActionQueueProcessingSingleContract
+{
+    private RefRecId    actionQueueRecId;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmActionQueueRecId</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute,
+        SysOperationControlVisibilityAttribute(false)
+    ]
+    public RefRecId parmActionQueueRecId(RefRecId _actionQueueRecId = actionQueueRecId)
+    {
+        ;
+        actionQueueRecId = _actionQueueRecId;
+        return actionQueueRecId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

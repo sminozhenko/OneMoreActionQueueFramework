@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDemoLedgerJournalTablePostContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue ledger journal post contract
+/// </summary>
+[DataContract]
+class OneMoreActionQueueDemoLedgerJournalTablePostContract extends OneMoreActionQueueContract
+{
+    private LedgerJournalId journalId;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmJournalId</Name>
+				<Source><![CDATA[
+    [DataMember("JournalId")]
+    public LedgerJournalId parmJournalId(LedgerJournalId _journalId = journalId)
+    {
+        journalId = _journalId;
+        return journalId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

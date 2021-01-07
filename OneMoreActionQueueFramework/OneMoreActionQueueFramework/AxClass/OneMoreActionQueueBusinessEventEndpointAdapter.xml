@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueBusinessEventEndpointAdapter</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue business events endpoint adapter
+/// </summary>
+[BusinessEventsEndpoint(BusinessEventsEndpointType::OneMoreActionQueue)]
+class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsEndpoint
+{
+    private OneMoreActionQueueTypeId    actionQueueTypeId;
+    private System.Exception            lastException;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initialize</Name>
+				<Source><![CDATA[
+    public void initialize(BusinessEventsEndpoint _endpoint, boolean _forceCreate)
+    {
+        if (!(_endpoint is OneMoreActionQueueBusinessEventsEndpoint))
+        {
+            BusinessEventsEndpointManager::logUnknownEndpointRecord(tableStr(OneMoreActionQueueBusinessEventsEndpoint), _endpoint.RecId);
+        }
+
+        OneMoreActionQueueBusinessEventsEndpoint oneMoreActionQueueEndpoint = _endpoint as OneMoreActionQueueBusinessEventsEndpoint;
+
+        actionQueueTypeId = oneMoreActionQueueEndpoint.TypeId;        
+
+        if (!actionQueueTypeId)
+        {
+            throw warning(strFmt("@BusinessEvents:MissingAdapterConstructorParameter", classStr(OneMoreActionQueueBusinessEventEndpointAdapter), varStr(actionQueueTypeId)));
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>send</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public final boolean send(str _payload, BusinessEventsEndpointPayloadContext _context)
+    {
+        BusinessEventsParameters    businessEventsParameters = BusinessEventsParameters::find();
+        int                         retryCount = businessEventsParameters.EndpointRetryCount;
+        int                         waitTime = businessEventsParameters.EndpointWaitTime;
+       
+        // reset the last exception when sending another payload
+        lastException = null;
+                        
+        int retryNum = 0;
+        System.Exception exception;
+            
+        try
+        {
+            if (!_payload)
+            {
+                throw error(Error::missingParameter(null));
+            }
+                    
+            OneMoreActionQueue oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(actionQueueTypeId, _payload);
+
+            OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = OneMoreActionQueueTypeTable::find(actionQueueTypeId);
+
+            OneMoreActionQueueProcessingType processingType = oneMoreActionQueueTypeTable.ProcessingType;
+            
+            //Synchronous approach could slow down business events processing and not supported in this case, covert to ReliableAsynchronous
+            if (oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::Synchronous)
+            {
+                processingType = OneMoreActionQueueProcessingType::ReliableAsynchronous;
+            }
+
+            OneMoreActionQueueProcessing::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, processingType);
+        }
+        catch (exception)
+        {
+            retryNum++;
+
+            if (retryNum <= retryCount)
+            {
+                sleep(waitTime * retryNum);
+
+                retry;
+            }
+            else
+            {
+                lastException = exception;
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getException</Name>
+				<Source><![CDATA[
+    public final System.Exception getException()
+    {
+        return lastException;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

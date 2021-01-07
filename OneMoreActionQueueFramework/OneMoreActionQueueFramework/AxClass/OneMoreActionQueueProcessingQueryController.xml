@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingQueryController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue query processing controller
+/// </summary>
+class OneMoreActionQueueProcessingQueryController extends SysOperationServiceController
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    protected void new()
+    {
+        super();
+
+        this.parmClassName(classStr(OneMoreActionQueueProcessingService));
+        this.parmMethodName(methodStr(OneMoreActionQueueProcessingService, processQuery));
+        this.parmExecutionMode(SysOperationExecutionMode::Synchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Main
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    public static void main(Args _args)
+    {
+        OneMoreActionQueueProcessingQueryController::newFromArgs(_args).startOperation();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Construct <c>OneMoreActionQueueProcessingQueryController</c>
+    /// </summary>
+    /// <returns>Created <c>OneMoreActionQueueProcessingQueryController</c> object</returns>
+    public static OneMoreActionQueueProcessingQueryController construct()
+    {
+        return new OneMoreActionQueueProcessingQueryController();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromArgs</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from arguments
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    /// <returns>New class</returns>
+    public static OneMoreActionQueueProcessingQueryController newFromArgs(Args _args)
+    {
+        OneMoreActionQueueProcessingQueryController     ret = OneMoreActionQueueProcessingQueryController::construct();
+    
+        ret.initializeFromArgs(_args);
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

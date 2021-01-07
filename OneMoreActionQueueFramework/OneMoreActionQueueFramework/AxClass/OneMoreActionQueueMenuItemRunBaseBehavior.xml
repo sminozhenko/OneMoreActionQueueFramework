@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemRunBaseBehavior</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue menu item RunBase behavior
+/// </summary>
+[OneMoreActionQueueMenuItemBehaviorAttribute(classStr(RunBase))]
+class OneMoreActionQueueMenuItemRunBaseBehavior extends OneMoreActionQueueMenuItemBehavior
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initialize</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
+    public void initialize()
+    {
+        super();
+
+        this.runBaseObject().skipRunOperation(true);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runBaseObject</Name>
+				<Source><![CDATA[
+    private RunBase runBaseObject()
+    {
+        return runClass;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>promptDialog</Name>
+				<Source><![CDATA[
+    public boolean promptDialog()
+    {
+        boolean             ret = true;
+        DialogRunbase       dialog = this.runBaseObject().dialogMake();
+
+        dialog.batch(false);
+        dialog.run();
+                  
+        if (!this.runBaseObject().doNotUseWaitPattern())
+        {
+            dialog.wait();
+            
+            if (!dialog.closedOk())
+            {
+                return false;
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>promptDialogPost</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Perform post action for prompt dialog
+    /// </summary>
+    /// <returns>True if a post actions were performed successfully otherwise false</returns>
+    public boolean promptDialogPost()
+    {
+        return this.runBaseObject().getFromDialog();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>executeMenuItem</Name>
+				<Source><![CDATA[
+    public void executeMenuItem()
+    {
+        this.runBaseObject().runOperation();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

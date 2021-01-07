@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxQuery xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxQuerySimple">
+	<Name>OneMoreActionQueueWaiting</Name>
+	<SourceCode>
+		<Methods>
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Query]
+public class OneMoreActionQueueWaiting extends QueryRun
+{
+}
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<Title>@OneMoreActionQueueFramework:OneMoreActionQueue</Title>
+	<DataSources>
+		<AxQuerySimpleRootDataSource>
+			<Name>OneMoreActionQueue</Name>
+			<Table>OneMoreActionQueue</Table>
+			<DataSources />
+			<DerivedDataSources />
+			<Fields>
+				<AxQuerySimpleDataSourceField>
+					<Name>ActionId</Name>
+					<Field>ActionId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>CreatedBy</Name>
+					<Field>CreatedBy</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>CreatedDateTime</Name>
+					<Field>CreatedDateTime</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>RecId</Name>
+					<Field>RecId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Status</Name>
+					<Field>Status</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>TypeId</Name>
+					<Field>TypeId</Field>
+				</AxQuerySimpleDataSourceField>
+			</Fields>
+			<Ranges>
+				<AxQuerySimpleDataSourceRange>
+					<Name>Status</Name>
+					<Field>Status</Field>
+					<Value>Waiting</Value>
+				</AxQuerySimpleDataSourceRange>
+			</Ranges>
+			<GroupBy />
+			<Having />
+			<OrderBy />
+		</AxQuerySimpleRootDataSource>
+	</DataSources>
+</AxQuery>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemBehavior</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue menu item behavior
+/// </summary>
+abstract class OneMoreActionQueueMenuItemBehavior
+{
+    protected Object runClass;
+    protected ClassId classId;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmClassId</Name>
+				<Source><![CDATA[
+    public ClassId parmClassId(ClassId _classId = classId)
+    {
+        classId = _classId;
+        return classId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static OneMoreActionQueueMenuItemBehavior construct(ClassId _classId)
+    {
+        OneMoreActionQueueMenuItemBehavior ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueMenuItemBehavior), new OneMoreActionQueueMenuItemBehaviorAttribute(OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(classId2Name(_classId))));
+
+        ret.parmClassId(_classId);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFirstClassIdSupported</Name>
+				<Source><![CDATA[
+    public static ClassName getFirstClassIdSupported(ClassName _className)
+    {
+        ClassName     ret;
+        
+        //TODO add cache
+        Array supportedBehaviorList = DictClass::getAttributedClasses(classStr(OneMoreActionQueueMenuItemBehaviorAttribute));
+
+        for (int i = 1; i <= supportedBehaviorList.lastIndex(); i++)
+        {
+            SysDictClass                                behaviorDictClass = new SysDictClass(supportedBehaviorList.value(i));
+            OneMoreActionQueueMenuItemBehaviorAttribute behaviorAttribute = behaviorDictClass.getAttribute(classStr(OneMoreActionQueueMenuItemBehaviorAttribute));
+            
+            if (behaviorAttribute.parmClassName() == _className)
+            {
+                ret = behaviorAttribute.parmClassName();
+                break;
+            }
+        }
+
+        if (!ret)
+        {
+            ClassId parentClassId = SysDictClass::superClass(ClassName2Id(_className));
+
+            if (parentClassId != 0)
+            {
+                ret = OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(classId2Name(parentClassId));
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isClassSupported</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is class supported?
+    /// </summary>
+    /// <param name = "_classId">Class id to be check</param>
+    /// <returns>True if class is supported for menu item action queue otherwise False</returns>
+    public static boolean isClassSupported(ClassId _classId)
+    {
+        boolean     ret = true;
+        ClassName   className = OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(classId2Name(_classId));
+            
+        if (!className)
+        {
+            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueClassIsNotSupported", classId2Name(_classId)));
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initialize</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
+    public void initialize()
+    {
+        runClass = classfactory.createClass(classId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpackParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Unpack parameters
+    /// </summary>
+    /// <param name = "_packedParameters">Packed parameters</param>
+    /// <returns>True if parameters were successfully unpacked for an object otherwise false</returns>
+    public boolean unpackParameters(container _packedParameters)
+    {
+        boolean ret;
+        
+        if (runClass is SysPackable)
+        {
+            SysPackable packable = runClass;
+        
+            ret = packable.unpack(_packedParameters);
+            
+            if (!ret)
+            {
+                warning("@SYS343313");
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>packParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Pack parameters
+    /// </summary>
+    /// <returns>Packed parameters</returns>
+    public container packParameters()
+    {
+        container ret = conNull();
+        
+        if (runClass is SysPackable)
+        {
+            SysPackable packable = runClass;
+        
+            ret = packable.pack();
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>promptDialog</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Prompt dialog
+    /// </summary>
+    /// <returns>True if a dialog was closed successfully otherwise false</returns>
+    abstract boolean promptDialog()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>promptDialogPost</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Perform post action for prompt dialog
+    /// </summary>
+    /// <returns>True if a post actions were performed successfully otherwise false</returns>
+    public boolean promptDialogPost()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>executeMenuItem</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Execute menu item
+    /// </summary>
+    abstract void executeMenuItem()
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

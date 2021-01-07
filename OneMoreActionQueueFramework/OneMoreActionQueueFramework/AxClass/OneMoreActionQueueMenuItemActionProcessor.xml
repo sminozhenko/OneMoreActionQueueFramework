@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemActionProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processor class for menu item type
+/// </summary>
+[OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueMenuItemContract), true)]
+class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProcessor
+{
+    OneMoreActionQueueMenuItemContract  localContract;
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Initialize</Name>
+				<Source><![CDATA[
+    public void Initialize()
+    {
+        super();
+
+        localContract = contract as OneMoreActionQueueMenuItemContract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        try
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
+
+            OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = OneMoreActionQueueTypeMenuItemParameterTable::find(oneMoreActionQueueTypeTable.TypeId);
+
+            OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
+            
+            menuItemBehavior.initialize();
+            
+            if (!menuItemBehavior.unpackParameters(oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters))
+            {
+                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueCantUnpackMenuItemParameters");
+            }
+
+            menuItemBehavior.executeMenuItem();
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

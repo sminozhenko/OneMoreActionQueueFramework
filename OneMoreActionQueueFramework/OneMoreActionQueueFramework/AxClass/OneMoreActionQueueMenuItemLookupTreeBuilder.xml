@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemLookupTreeBuilder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueMenuItemLookupTreeBuilder</c> class manages a tree control as part of lookup to display menu items available for menu item action queue processing 
+/// </summary>
+class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuilder
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static OneMoreActionQueueMenuItemLookupTreeBuilder construct(FormTreeControl _treeControl, container _countryRegionCodes)
+    {
+        OneMoreActionQueueMenuItemLookupTreeBuilder treeBuilder = new OneMoreActionQueueMenuItemLookupTreeBuilder();
+        treeBuilder.initialize(_treeControl, _countryRegionCodes);
+        return treeBuilder;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isVisible</Name>
+				<Source><![CDATA[
+    protected boolean isVisible(TreeNode _node)
+    {
+        var ret = super(_node);
+
+        if (ret)
+        {
+            switch(_node.handle())
+            {
+                case classNum(Menu):
+                    Menu menuNode = _node;
+                    if (menuNode.visible())
+                    {
+                        ret = this.isConfigKeyEnabled(menuNode.configurationKey());
+                    }
+                    break;
+
+                case classNum(MenuItem):
+                    MenuItem menuItemNode = _node;
+                    if (menuItemNode.visible())
+                    {
+                        // check menufunction
+                        MenuItemType menuItemType = menuItemNode.menuItemType();
+                    
+                        switch (menuItemType)
+                        {
+                            case MenuItemType::Action:
+                                //TODO check if class supported
+                                ret = true;
+                                break;
+                            default:
+                                ret = false;
+
+                        }
+                    }
+                    break;
+
+                case classNum(MenuReference):
+                    MenuReference menuReferenceNode = _node;
+                    var menu = SysDictMenu::newMenuName(menuReferenceNode.menuName());
+                    ret = this.isVisible(menu.parmTreeNode());
+                    break;
+
+                default:
+                    ret = false;
+
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildMenuTree</Name>
+				<Source><![CDATA[
+    //TODO workaround is isVisible doesn't work for lower items
+    /// <summary>
+    /// Returns true if the tree could be recursively built based on the menu provided.
+    /// </summary>
+    /// <param name = "_menu">The <c>SysDictMenu</c> being selected by the user.</param>
+    /// <param name = "_parentPath">The <c>TreeNodePath</c> of the parent.</param>
+    /// <returns>True if the tree could be recursively built based on the menu provided; otherwise, false.</returns>
+    public boolean buildMenuTree(SysDictMenu _menu, TreeNodePath _parentPath)
+    {
+        var childAdded = false;
+
+        if (_menu.isSeparator() || !_menu.isVisible() || !this.hasCountryAccess(_menu))
+        {
+            return false;
+        }
+
+        if (_menu.isMenuItem())
+        {
+            // check menufunction
+            MenuItemType menuItemType = _menu.menuItem().type();
+            
+            boolean addMenuItem;
+
+            switch (menuItemType)
+            {
+                case MenuItemType::Action:
+                    //TODO check if class supported
+                    addMenuItem = true;
+                    break;
+                default:
+                    addMenuItem = false;
+            }
+            
+            if (addMenuItem)
+            {
+                childAdded = super(_menu, _parentPath);
+            }
+        }
+        else if (_menu.isTileReference())
+        {
+            childAdded = false;
+        }
+        else
+        {
+            childAdded = super(_menu, _parentPath);
+        }
+
+        return childAdded;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessorAttribute</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue processor attribute class
+/// </summary>
+class OneMoreActionQueueProcessorAttribute extends SysAttribute
+{
+    private ClassName                   actionQueueContractClass;
+    private boolean                     isSystemAction;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new(ClassName _actionQueueContractClass, boolean _isSystemAction = false)
+    {
+        actionQueueContractClass    = _actionQueueContractClass;
+        isSystemAction              = _isSystemAction;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmActionQueueContractClass</Name>
+				<Source><![CDATA[
+    public ClassName parmActionQueueContractClass()
+    {
+        return actionQueueContractClass;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmIsSystemAction</Name>
+				<Source><![CDATA[
+    public boolean parmIsSystemAction()
+    {
+        return isSystemAction;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

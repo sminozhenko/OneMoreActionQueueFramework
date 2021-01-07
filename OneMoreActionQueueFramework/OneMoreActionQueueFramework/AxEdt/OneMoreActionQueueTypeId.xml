@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>OneMoreActionQueueTypeId</Name>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeId</Label>
+	<ReferenceTable>OneMoreActionQueueTypeTable</ReferenceTable>
+	<ArrayElements />
+	<Relations />
+	<TableReferences>
+		<AxEdtTableReference>
+			<RelatedField>TypeId</RelatedField>
+			<Table>OneMoreActionQueueTypeTable</Table>
+		</AxEdtTableReference>
+	</TableReferences>
+	<StringSize>50</StringSize>
+</AxEdt>

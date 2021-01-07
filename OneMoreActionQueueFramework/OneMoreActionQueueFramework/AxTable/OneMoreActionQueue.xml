@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueue</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueue extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>oneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable(boolean _forupdate = false)
+    {
+        return OneMoreActionQueueTypeTable::find(this.TypeId, _forupdate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findRecId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueue</c> by RecId
+    /// </summary>
+    /// <param name = "_refRecId">An <c>RecId</c> value</param>
+    /// <param name="_forUpdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueue</c> table otherwise, an empty record.
+    /// </returns>
+    public static OneMoreActionQueue findRecId(RefRecId _refRecId, boolean _forUpdate = false)
+    {
+        OneMoreActionQueue  ret;
+
+        ret.selectForUpdate(_forUpdate);
+
+        if (_refRecId)
+        {
+            select firstonly ret
+                where ret.RecId == _refRecId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initValue</Name>
+				<Source><![CDATA[
+    public void initValue()
+    {
+        super();
+
+        this.ActionId = newGuid();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addToActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add record to <c>OneMoreActionQueue</c> table
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name = "_actionMessage">Action queue message</param>
+    /// <param name = "_actionId">Action Id. Optional</param>
+    /// <returns>Added <c>OneMoreActionQueue</c> record</returns>
+    public static OneMoreActionQueue addToActionQueue(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage, OneMoreActionQueueActionId _actionId = emptyGuid())
+    {
+        OneMoreActionQueue ret;
+        
+        ret.clear();
+        ret.initValue();
+
+        if (_actionId != emptyGuid())
+        {
+            ret.ActionId        = _actionId;
+        }
+        ret.TypeId          = _typeId;
+        ret.ActionMessage   = _actionMessage;
+
+        if (!ret.validateWrite())
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionCantBeAddedToQueue", _actionId));
+        }
+
+        ret.insert();
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>transformedMessage</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Transform action message if transformation is set up for action queue type
+    /// </summary>
+    /// <returns>Transformed message</returns>
+    [SysClientCacheDataMethod(true)]
+    public display OneMoreActionQueueTransformedMessage transformedMessage()
+    {
+        OneMoreActionQueueTransformedMessage ret = this.ActionMessage;
+
+        OneMoreActionQueueTypeTransformation oneMoreActionQueueTypeTransformation = OneMoreActionQueueTypeTransformation::find(this.TypeId);
+
+        if (oneMoreActionQueueTypeTransformation.RecId != 0)
+        {
+            JUST.JUSTContext justContext = new JUST.JUSTContext();
+
+            justContext.EvaluationMode = JUST.EvaluationMode::Strict;
+
+            ret = new JUST.JsonTransformer(justContext).Transform(oneMoreActionQueueTypeTransformation.TransformationJSON, ret);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueue</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueue</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueue</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TitleField1>ActionId</TitleField1>
+	<TitleField2>TypeId</TitleField2>
+	<CacheLookup>NotInTTS</CacheLookup>
+	<CreatedBy>Yes</CreatedBy>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<OccEnabled>No</OccEnabled>
+	<ReplacementKey>ActionIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Status</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ProcessingNotes</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryCount</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionMessage</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>OverviewGrid</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CompanyId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Status</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryCount</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Message</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueMessage</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionMessage</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Notes</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingNotes</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ProcessingNotes</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>CreatedModifiedInfo</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueCreatedModified</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CreatedBy</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ModifiedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ModifiedBy</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>General</Name>
+			<Label>@SYS35893</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Status</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TypeId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueTypeId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldGuid">
+			<Name>ActionId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueActionId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ActionMessage</Name>
+			<ExtendedDataType>OneMoreActionQueueMessage</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Status</Name>
+			<EnumType>OneMoreActionQueueStatus</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ProcessingNotes</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueProcessingNotes</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetryCount</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueRetryCount</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>CompanyId</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>SelectableDataArea</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TypeIdStatusIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TypeId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Status</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>ActionIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ActionId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>CreatedDateTimeIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>CompanyIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>CompanyId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeTable</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<OnDelete>Restricted</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelatedTableRole>OneMoreActionQueueTypeTable</RelatedTableRole>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>TypeId</Name>
+					<Field>TypeId</Field>
+					<RelatedField>TypeId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

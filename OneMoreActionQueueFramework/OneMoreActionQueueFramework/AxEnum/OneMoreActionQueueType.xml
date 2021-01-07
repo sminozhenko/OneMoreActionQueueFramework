@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueType</Name>
+	<Label>@SYS1201</Label>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>Custom</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeCustom</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>MenuItem</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItem</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

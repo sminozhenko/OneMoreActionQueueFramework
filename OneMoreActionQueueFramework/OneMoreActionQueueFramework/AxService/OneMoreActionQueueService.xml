@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxService xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueService</Name>
+	<Class>OneMoreActionQueueService</Class>
+	<ExternalName>OneMoreActionQueueService</ExternalName>
+	<ServiceOperations>
+		<AxServiceOperation>
+			<Name>RunActionWithActionId</Name>
+			<Method>runActionWithActionId</Method>
+			<SubscriberAccessLevel>
+				<Read>Allow</Read>
+			</SubscriberAccessLevel>
+		</AxServiceOperation>
+	</ServiceOperations>
+</AxService>

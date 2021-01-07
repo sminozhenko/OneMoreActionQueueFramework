@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConstants</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Constants for OneMore action queue framework
+/// </summary>
+internal static final class OneMoreActionQueueConstants
+{
+    // 50000 records deleted in one transaction
+    internal const int                                                  CleanUpBatchSize = 50000;
+    internal const OneMoreActionQueueRetryAttemptInterval               DefaultRetryAttemptInterval = 3600; //60 minutes
+    internal const OneMoreActionQueueProcessAutomationPollingInterval   DefaultProcessAutomationPollingInterval = 60; //60 minutes
+
+    internal const LabelId                                              OneMoreActionQueueProcessing = 'OneMoreActionQueueProcessing';
+}
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+</AxClass>

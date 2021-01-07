@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueServiceRunActionResponse</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Contract for RunAction service action response
+/// </summary>
+[
+    DataContract,
+    Newtonsoft.Json.JsonObjectAttribute(IsReference = false)
+]
+public final class OneMoreActionQueueServiceRunActionResponse
+{
+    private OneMoreActionQueueResponseType responseType;
+    private str                            notes;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmResponseType</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueResponseType parmResponseType(OneMoreActionQueueResponseType _responseType = responseType)
+    {
+        responseType = _responseType;
+        return responseType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmResponseTypeStr</Name>
+				<Source><![CDATA[
+    [DataMember('ResponseType')]
+    public str parmResponseTypeStr(str _responseType = '')
+    {
+        return enum2Str(responseType);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmNotes</Name>
+				<Source><![CDATA[
+    [DataMember('Notes')]
+    public str parmNotes(str _notes = notes)
+    {
+        notes = _notes;
+        return notes;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

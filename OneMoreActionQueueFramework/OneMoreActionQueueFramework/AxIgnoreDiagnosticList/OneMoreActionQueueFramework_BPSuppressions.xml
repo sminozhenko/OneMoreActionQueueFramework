@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<IgnoreDiagnostics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>OneMoreActionQueueFramework_BPSuppressions</Name>
+  <Items>
+	  <Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://DataEntityView/OneMoreActionQueueEntity</Path>
+      <Moniker>DataEntityPublicFieldEdtMatchOnStagingTableCheck</Moniker>
+      <Justification>MS bug?</Justification>
+    </Diagnostic>
+	  <Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://DataEntityView/OneMoreActionQueueEntity</Path>
+      <Moniker>DataEntityPublicFieldDefinedOnStagingTableCheck</Moniker>
+      <Justification>MS bug?</Justification>
+    </Diagnostic>
+	  <Diagnostic>
+      <DiagnosticType>CodeAnalysis</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Table/OneMoreActionQueueBusinessEventsEndpoint/TableRelationForeignKey/BusinessEventsEndpoint</Path>
+      <Moniker>BPCheckMissingDeleteActions</Moniker>
+      <Justification>Same as in standard code</Justification>
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Form/OneMoreActionQueueMenuItemParametersDialog</Path>
+      <Moniker>BPCheckInvalidInitFormMethodWarning</Moniker>
+      <Justification>MS bug? Validation that form opened with record context</Justification>
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Table/OneMoreActionQueueTypeMenuItemParameterTable/Method/menuItemClassName</Path>
+      <Moniker>BPErrorLabelIsText</Moniker>
+      <Justification>ClassName EDT doesn't have label</Justification>
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/SysOperationSandboxOneMoreActionQueueFramework_Extension</Path>
+      <Moniker>ChainOfCommandInInternalMethodIsNotSupported</Moniker>
+      <Justification>Check if extension point can be created</Justification>
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Form/OneMoreActionQueue/FormDesign/FormDesign</Path>
+      <Moniker>BPWarningFormDesignOrControlsWithCustomPattern</Moniker>
+      <Justification>By design. Copy of Simple list with tabular grid, but it doesn't allow multiselect on the grid</Justification>
+    </Diagnostic>
+  </Items>
+</IgnoreDiagnostics>

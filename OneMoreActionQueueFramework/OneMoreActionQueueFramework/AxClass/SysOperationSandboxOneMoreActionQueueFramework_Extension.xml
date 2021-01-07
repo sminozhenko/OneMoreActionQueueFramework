@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SysOperationSandboxOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension for class <c>SysOperationSandbox</c>
+/// </summary>
+[ExtensionOf(classStr(SysOperationSandbox))]
+public final class SysOperationSandboxOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>canExecuteInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if current execution environment is suitable for multi-session execution
+    /// </summary>
+    /// <returns>true if execution should be transferred to an async session</returns>
+    public static boolean canExecuteInNewSession()
+    {
+        boolean ret = next canExecuteInNewSession();
+
+        //TODO check if extension point or delegate can be requested
+        ret = ret && OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext == null;
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

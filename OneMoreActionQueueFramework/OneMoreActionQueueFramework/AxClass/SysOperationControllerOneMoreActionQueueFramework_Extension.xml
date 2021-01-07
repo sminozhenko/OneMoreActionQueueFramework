@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SysOperationControllerOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension class for <c>SysOperationController</c>
+/// </summary>
+[ExtensionOf(classStr(SysOperationController))]
+public final class SysOperationControllerOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialogClose</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Close dialog
+    /// </summary>
+    protected void dialogClose()
+    {
+        next dialogClose();
+
+        if (this.useOneMoreActionQueueTypeTableParameters())
+        {
+            //If dialog canceled we don't want to save changes
+            if (!dialogCanceled)
+            {
+                OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable, classIdGet(this), this.pack());
+
+                //Cancel dialog to prevent execution of logic
+                dialogCanceled = true;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useOneMoreActionQueueTypeTableParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is class run from action queue form?
+    /// </summary>
+    /// <returns>True if class is run from action queue form otherwise False</returns>
+    //TODO Request extension point for dialogClose 
+    public boolean useOneMoreActionQueueTypeTableParameters()
+    {
+        return OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable.TypeId != '' && !(this is SysOperationQueryController);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showBatchTab</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Show batch tab
+    /// </summary>
+    /// <param name = "_showBatchTab">Show batch tab</param>
+    /// <returns>True if show otherwise false</returns>
+    public boolean showBatchTab(boolean _showBatchTab)
+    {
+        boolean ret = next showBatchTab(_showBatchTab);
+
+        if (this.useOneMoreActionQueueTypeTableParameters())
+        {
+            ret = false;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

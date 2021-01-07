@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemParameters</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Set menu item parameter for action queue
+/// </summary>
+class OneMoreActionQueueMenuItemParameters extends RunBase
+{
+    private OneMoreActionQueueMenuItemName              menuItemName;
+    private ClassId                                     jobClassId;
+    
+    private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static OneMoreActionQueueMenuItemParameters construct()
+    {
+        return new OneMoreActionQueueMenuItemParameters();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
+    {
+        oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
+        return oneMoreActionQueueTypeTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMenuItemName</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueMenuItemName parmMenuItemName(OneMoreActionQueueMenuItemName _menuItemName = menuItemName)
+    {
+        menuItemName = _menuItemName;
+        return menuItemName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmJobClassId</Name>
+				<Source><![CDATA[
+    public ClassId parmJobClassId(ClassId _jobClassId = jobClassId)
+    {
+        jobClassId = _jobClassId;
+        return jobClassId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        Dialog ret = Dialog::newFormnameRunbase(formStr(OneMoreActionQueueMenuItemParametersDialog), this);
+
+        return this.dialogInternal(ret);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    public boolean validate(Object calledFrom = null)
+    {
+        boolean ret;
+
+        ret = super(calledFrom);
+
+        if (menuItemName && jobClassId || (!menuItemName && !jobClassId))
+        {
+            ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueEitherMenuItemOrClassNameSelected");
+        }
+
+        if (ret)
+        {
+            if (menuItemName)
+            {
+                ret = OneMoreActionQueueTypeMenuItemParameterTable::checkMenuItemName(menuItemName) && ret;
+            }
+
+            if (jobClassId)
+            {
+                ret = OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(jobClassId) && ret;
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        if (!_args || !_args.record() || _args.record().TableId != tableNum(OneMoreActionQueueTypeTable))
+        {
+            throw error(Error::missingRecord(funcname()));
+        }
+
+        OneMoreActionQueueMenuItemParameters oneMoreActionQueueMenuItemParameters = OneMoreActionQueueMenuItemParameters::construct();
+
+        oneMoreActionQueueMenuItemParameters.parmOneMoreActionQueueTypeTable(_args.record());
+
+        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = oneMoreActionQueueMenuItemParameters.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
+
+        if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0)
+        {
+            oneMoreActionQueueMenuItemParameters.parmMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
+            oneMoreActionQueueMenuItemParameters.parmJobClassId(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
+        }
+
+        if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0 || oneMoreActionQueueMenuItemParameters.prompt())
+        {
+            oneMoreActionQueueMenuItemParameters.runOperation();
+
+            if (_args.record())
+            {
+                if (FormDataUtil::isFormDataSource(_args.record()))
+                {
+                    FormDataSource fds = FormDataUtil::getFormDataSource(_args.record());
+                    fds.research(true);
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = oneMoreActionQueueTypeTable.oneMoreActionQueueTypeMenuItemParameterTable();
+
+        try
+        {
+            if (oneMoreActionQueueTypeMenuItemParameterTable.RecId == 0)
+            {
+                oneMoreActionQueueTypeMenuItemParameterTable.TypeId         = oneMoreActionQueueTypeTable.TypeId;
+                oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName   = menuItemName;
+                oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber    = jobClassId;
+            }
+
+            if (oneMoreActionQueueTypeMenuItemParameterTable.RecId == 0 && menuItemName)
+            {
+                OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable = oneMoreActionQueueTypeMenuItemParameterTable;
+
+                OneMoreActionQueueTypeMenuItemParameterTable::menuFunction(menuItemName).run(new Args());
+            }
+            else
+            {
+                OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(jobClassId);
+
+                menuItemBehavior.initialize();
+
+                // Check if there are parameters saved in the batch table and unpack them
+                if (oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters != conNull())
+                {
+                    if (!menuItemBehavior.unpackParameters(oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters))
+                    {
+                        //TODO check, maybe better to clean packed parameters if they are corrupted (or create a button to clean it)
+                        return;
+                    }
+                }
+
+                if (menuItemBehavior.promptDialog() && menuItemBehavior.promptDialogPost())
+                {
+                    OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(oneMoreActionQueueTypeMenuItemParameterTable, jobClassId, menuItemBehavior.packParameters());
+                }
+            }
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// To determine if can run the inquiry in new session or not.
+    /// </summary>
+    /// <returns>
+    /// True if can run the inquiry in new session; otherwise, false.
+    /// </returns>
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

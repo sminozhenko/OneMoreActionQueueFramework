@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemSysOperationControllerBehavior</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue menu item RunBase behavior
+/// </summary>
+[OneMoreActionQueueMenuItemBehaviorAttribute(classStr(SysOperationController))]
+class OneMoreActionQueueMenuItemSysOperationControllerBehavior extends OneMoreActionQueueMenuItemBehavior
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initialize</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
+    public void initialize()
+    {
+        super();
+
+        this.sysOperationControllerObject().skipRunOperation(true);
+        this.sysOperationControllerObject().showBatchTab(false);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>sysOperationControllerObject</Name>
+				<Source><![CDATA[
+    private SysOperationController sysOperationControllerObject()
+    {
+        return runClass;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>promptDialog</Name>
+				<Source><![CDATA[
+    public boolean promptDialog()
+    {
+        return this.sysOperationControllerObject().prompt();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>executeMenuItem</Name>
+				<Source><![CDATA[
+    public void executeMenuItem()
+    {
+        this.sysOperationControllerObject().run();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

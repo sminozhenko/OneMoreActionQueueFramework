@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processing service class
+/// </summary>
+class OneMoreActionQueueProcessingService extends SysOperationServiceBase
+{    
+    private List            batchBundlingList;
+    private BatchHeader     batchHeader;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>processQuery</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process action queue from query
+    /// </summary>
+    /// <param name = "_contract"><c>OneMoreActionQueueProcessingQueryContract</c></param>
+    [Hookable(false)]
+    public void processQuery(OneMoreActionQueueProcessingQueryContract _contract)
+    {
+        QueryRun                            queryRun;
+        boolean                             throwError;
+
+        queryRun = new queryRun(_contract.getQuery());
+    
+        while(queryRun.next())
+        {
+            if (_contract.parmEnableBatchBundling() && _contract.parmBatchBundleSize() && this.isExecutingInBatch())
+            {
+                this.addToQueue(_contract, queryRun.get(tableNum(OneMoreActionQueue)));
+            }
+            else
+            {
+                if (!OneMoreActionQueueProcessingService::processSingleRecord(queryRun.get(tableNum(OneMoreActionQueue))))
+                {
+                    throwError = true;
+                }
+            }
+        }
+
+        if (_contract.parmEnableBatchBundling() && _contract.parmBatchBundleSize() && this.isExecutingInBatch())
+        {
+            if (batchBundlingList)
+            {
+                this.createTask(batchBundlingList.pack());
+            }
+
+            if (batchHeader)
+            {
+                batchHeader.save();
+            }
+        }
+
+        //Batch job should fail if there were errors
+        if (throwError)
+        {
+            throw Exception::Error;
+        }
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addToQueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    private void addToQueue(OneMoreActionQueueProcessingQueryContract _contract, OneMoreActionQueue _oneMoreActionQueue)
+    {
+        if (!batchBundlingList || batchBundlingList.elements() >= _contract.parmBatchBundleSize())
+        {
+            if (batchBundlingList)
+            {
+                this.createTask(batchBundlingList.pack());
+            }
+                                        
+            batchBundlingList = new List(Types::Int64);
+        }
+            
+        batchBundlingList.addEnd(_oneMoreActionQueue.RecId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processSingleRecord</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process single record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue">Action queue record to be processed</param>
+    /// <returns>True if record was processed without errors otherwise False</returns>
+    [Hookable(false)]
+    public static boolean processSingleRecord(OneMoreActionQueue _oneMoreActionQueue)
+    {
+        OneMoreActionQueueProcessing oneMoreActionQueueProcessing = OneMoreActionQueueProcessing::construct();
+        oneMoreActionQueueProcessing.parmOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueueProcessing.run();
+
+        return oneMoreActionQueueProcessing.getProcessedSuccessfully();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createTask</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    private void createTask(container _recIdListPacked)
+    {
+        SysOperationServiceController                       controller;
+        OneMoreActionQueueProcessingBatchTaskBundleContract batchTaskBundleContract;
+        
+        if (this.isExecutingInBatch() && !batchHeader)
+        {
+            batchHeader = this.getCurrentBatchHeader();
+        }
+        
+        controller = new SysOperationServiceController(classStr(OneMoreActionQueueProcessingService), methodStr(OneMoreActionQueueProcessingService, runBatchTaskBundle));
+
+        batchTaskBundleContract = controller.getDataContractObject('_contract');
+        batchTaskBundleContract.parmRecIdListPacked(_recIdListPacked);
+
+        if (this.isExecutingInBatch())
+        {
+            batchHeader.addRuntimeTask(controller, this.getCurrentBatchTask().RecId);
+        }
+        else
+        {
+            controller.run();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processActionQueueRecord</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process single record from action queue
+    /// </summary>
+    /// <param name = "_contract"><c>OneMoreActionQueueProcessingSingleContract</c></param>
+    [Hookable(false)]
+    public void processActionQueueRecord(OneMoreActionQueueProcessingSingleContract _contract)
+    {
+        if (!OneMoreActionQueueProcessingService::processSingleRecord(OneMoreActionQueue::findRecId(_contract.parmActionQueueRecId())))
+        {
+            throw Exception::Error;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runBatchTaskBundle</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run batch task bundle
+    /// </summary>
+    /// <param name = "_contract"><c>OneMoreActionQueueProcessingBatchTaskBundleContract</c></param>
+    [Hookable(false)]
+    public void runBatchTaskBundle(OneMoreActionQueueProcessingBatchTaskBundleContract _contract)
+    {
+        boolean throwError;
+        
+        ListEnumerator       le = List::create(_contract.parmRecIdListPacked()).getEnumerator();
+
+        while (le.moveNext())
+        {
+            if (!OneMoreActionQueueProcessingService::processSingleRecord(OneMoreActionQueue::findRecId(le.current())))
+            {
+                throwError = true;
+            }
+        }
+
+        //Batch job should fail if there were errors
+        if (throwError)
+        {
+            throw Exception::Error;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

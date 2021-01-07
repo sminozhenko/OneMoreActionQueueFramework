@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueLogShow</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Show processing log
+/// </summary>
+class OneMoreActionQueueLogShow
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        if (!_args)
+        {
+            throw error(error::wrongUseOfFunction(funcName()));
+        }
+
+        OneMoreActionQueueLogTable::showLog(_args.record());
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RunBaseBatchOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension class for <c>RunBaseBatch</c>
+/// </summary>
+[ExtensionOf(classStr(RunBaseBatch))]
+public final class RunBaseBatchOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>canGoBatch</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Can be executed in batch?
+    /// </summary>
+    /// <returns>False if dialog opened from action queue set up parameters form otherwise takes value from parent class</returns>
+    public boolean canGoBatch()
+    {
+        boolean ret = next canGoBatch();
+
+        if (this.useOneMoreActionQueueTypeTableParameters())
+        {
+            ret = false;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

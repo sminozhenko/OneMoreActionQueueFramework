@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingSingleController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue single record processing controller
+/// </summary>
+class OneMoreActionQueueProcessingSingleController extends SysOperationServiceController
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initContract</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize contract
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    protected void initContract(Args _args)
+    {
+        OneMoreActionQueueProcessingSingleContract  contract = this.getDataContractObject('_contract');
+        
+        contract.parmActionQueueRecId(_args.record().RecId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Main
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    public static void main(Args _args)
+    {
+        OneMoreActionQueueProcessingSingleController   controller;
+        FormDataSource                          fds;
+    
+        controller = OneMoreActionQueueProcessingSingleController::newFromArgs(_args);
+        controller.startOperation();
+    
+        if (_args.record())
+        {
+            if (FormDataUtil::isFormDataSource(_args.record()))
+            {
+                fds = FormDataUtil::getFormDataSource(_args.record());
+                fds.research(true);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromArgs</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from arguments
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    /// <returns>New class</returns>
+    public static OneMoreActionQueueProcessingSingleController newFromArgs(Args _args)
+    {
+        OneMoreActionQueueProcessingSingleController     ret;
+    
+        ret = new OneMoreActionQueueProcessingSingleController();
+    
+        ret.initializeFromArgs(_args);
+        ret.parmClassName(classStr(OneMoreActionQueueProcessingService));
+        ret.parmMethodName(methodStr(OneMoreActionQueueProcessingService, processActionQueueRecord));
+        ret.parmExecutionMode(SysOperationExecutionMode::Synchronous);
+        ret.initContract(_args);
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

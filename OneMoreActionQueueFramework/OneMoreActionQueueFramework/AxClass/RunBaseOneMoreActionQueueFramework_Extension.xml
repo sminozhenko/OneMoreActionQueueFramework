@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RunBaseOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension class for <c>RunBase</c>
+/// </summary>
+[ExtensionOf(classStr(RunBase))]
+public final class RunBaseOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>useOneMoreActionQueueTypeTableParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is class run from action queue form?
+    /// </summary>
+    /// <returns>True if class is run from action queue form otherwise False</returns>
+    public boolean useOneMoreActionQueueTypeTableParameters()
+    {
+        return OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable.TypeId != ''  && !(this is RunBaseQueryDialog);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>prompt</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Prompt
+    /// </summary>
+    /// <returns>Prompt</returns>
+    public boolean prompt()
+    {
+        boolean ret = next prompt();
+
+        if (this.useOneMoreActionQueueTypeTableParameters())
+        {
+            //If dialog canceled we don't want to save changes
+            if (!dialogCanceled)
+            {
+                OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable, classIdGet(this), this.pack());
+
+                //Cancel dialog to prevent execution of logic
+                dialogCanceled = true;
+                ret = false;
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

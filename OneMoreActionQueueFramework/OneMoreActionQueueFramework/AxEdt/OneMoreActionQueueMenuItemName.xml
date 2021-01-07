@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtString">
+	<Name>OneMoreActionQueueMenuItemName</Name>
+	<Extends>MenuItemName</Extends>
+	<FormHelp>OneMoreActionQueueMenuItemLookup</FormHelp>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemName</Label>
+	<ArrayElements />
+	<Relations />
+	<TableReferences />
+</AxEdt>

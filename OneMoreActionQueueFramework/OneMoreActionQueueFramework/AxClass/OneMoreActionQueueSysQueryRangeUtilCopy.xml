@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueSysQueryRangeUtilCopy</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Query range utils for action queues
+/// </summary>
+class OneMoreActionQueueSysQueryRangeUtilCopy
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>actionQueueParameterValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Action queue manu item parameter value
+    /// </summary>
+    /// <param name = "_parameterName">Action queue manu item parameter value</param>
+    /// <returns>Range for query</returns>
+    public static str actionQueueParameterValue(str _parameterName)
+    {
+        if (OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext != null)
+        {
+            List menuItemParameters = OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext.parmMenuItemParameters();
+
+            ListEnumerator                              li = menuItemParameters.getEnumerator();
+            OneMoreActionQueueMenuItemParameterContract menuItemParameter;
+            boolean                                     found;
+
+            while (li.moveNext())
+            {
+                menuItemParameter = li.current();
+
+                if (menuItemParameter.parmParameterName() == _parameterName)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueParameterNotFoundInContract", _parameterName));
+            }
+
+            return menuItemParameter.parmParameterValue();
+        }
+
+        //Can't get real value for set up dialog
+        return '';
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
