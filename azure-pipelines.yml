@@ -12,8 +12,10 @@ pool:
 variables:
   NugetConfigsPath: '$(Build.SourcesDirectory)'
   NugetsPath: '$(Pipeline.Workspace)\NuGets'
-  MetadataPath: '$(Build.SourcesDirectory)\Metadata'
+  MetadataPath: '$(Build.SourcesDirectory)'
   ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
+  AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
+  PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
 
 steps:
 - task: NuGetInstaller@0
