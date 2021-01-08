@@ -4,12 +4,30 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- '*'
+
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'vs2017-win2016'
 
 steps:
+- task: NuGetInstaller@0
+  displayName: 'NuGet install Packages'
+  inputs:
+    solution: '$(NugetConfigsPath)\packages.config'
+    nugetConfigPath: '$(NugetConfigsPath)\nuget.config'
+    restoreMode: install
+    nuGetRestoreArgs: '-ExcludeVersion -OutputDirectory "$(NugetsPath)"'
+    verbosity: Detailed
+    nuGetVersion: 4.0.0.2283
+
+- task: CopyFiles@2
+  displayName: 'Copy Binary Dependencies to: $(Build.BinariesDirectory)'
+  inputs:
+    SourceFolder: '$(MetadataPath)'
+    Contents: '**/bin/**'
+    TargetFolder: '$(Build.BinariesDirectory)'
+
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
