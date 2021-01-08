@@ -28,12 +28,13 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Binary Dependencies to: $(Build.BinariesDirectory)'
   inputs:
-    SourceFolder: '$(MetadataPath)'
+    # SourceFolder: '$(MetadataPath)'
+    SourceFolder: '$(Build.SourcesDirectory)'
     Contents: '**/bin/**'
     TargetFolder: '$(Build.BinariesDirectory)'
     
 - task: VSBuild@1
-  displayName: 'Build solution $(Build.SourcesDirectory)\Build\AxBuildSolution\*.sln'
+  displayName: 'Build solution $(Build.SourcesDirectory)\**\*.sln'
   inputs:
     solution: '$(Build.SourcesDirectory)\**\*.sln'
     vsVersion: 15.0
