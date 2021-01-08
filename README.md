@@ -225,8 +225,8 @@ When there is no standard operation that can be used with **Menu item** action t
 5. Set **Transformation JSON** to convert business event JSON message to action queue JSON message:
     ```
     {
-    "DataAreaId": "#valueof($.DataAreaId)", "MenuItemParameters":[{"ParameterName": "JournalNum", "ParameterValue": "#valueof($.KeyValue1)"}]
-    }
+		"DataAreaId": "#valueof($.DataAreaId)", "JournalId" : "#valueof($.KeyValue1)"
+	}
     ```
 6. Activate created action type by enabling **Enabled** checkbox.
 7. Activate **BusinessEventsAlertEvent** for OneMore action queue endpoint:
