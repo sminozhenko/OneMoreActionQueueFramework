@@ -6,9 +6,14 @@
 trigger:
 - '*'
 
-
 pool:
   vmImage: 'vs2017-win2016'
+  
+ variables:
+ - name: NugetConfigsPath
+    value: $(Build.SourcesDirectory)\Build
+ - name: NugetsPath
+    value: $(Pipeline.Workspace)\NuGets
 
 steps:
 - task: NuGetInstaller@0
