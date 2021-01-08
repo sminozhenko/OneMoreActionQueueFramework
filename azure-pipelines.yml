@@ -32,7 +32,7 @@ steps:
     Contents: '**/bin/**'
     TargetFolder: '$(Build.BinariesDirectory)'
     
-- task: VSBuild@3
+- task: VSBuild@1
   displayName: 'Build solution $(Build.SourcesDirectory)\Build\AxBuildSolution\*.sln'
   inputs:
     solution: '$(Build.SourcesDirectory)\**\*.sln'
