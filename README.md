@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/sminozhenko/OneMoreActionQueueFramework/_apis/build/status/sminozhenko.OneMoreActionQueueFramework?branchName=main)](https://dev.azure.com/sminozhenko/OneMoreActionQueueFramework/_build/latest?definitionId=1&branchName=main)
+
 <br />
 <p align="center">
   <h3 align="center">OneMore Action Queue framework</h3>
