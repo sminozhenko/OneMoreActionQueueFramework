@@ -2,6 +2,9 @@
 BuildProjectResult.err.xml
 BuildProjectResult.xml
 BuildProjectResult.log
+BuildModelResult.log
+BuildModelResult.xml
+CompileLabels.xml
 XppMetadata/
 **/bin/*.md
 **/bin/Dynamics.AX.OneMoreActionQueueFramework*.*
