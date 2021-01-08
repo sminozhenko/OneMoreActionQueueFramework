@@ -31,8 +31,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Binary Dependencies to: $(Build.BinariesDirectory)'
   inputs:
-    # SourceFolder: '$(MetadataPath)'
-    SourceFolder: '$(Build.SourcesDirectory)'
+    SourceFolder: '$(MetadataPath)'
     Contents: '**/bin/**'
     TargetFolder: '$(Build.BinariesDirectory)'
     
@@ -44,11 +43,20 @@ steps:
     msbuildArgs: '/p:BuildTasksDirectory="$(NugetsPath)\$(ToolsPackage)\DevAlm" /p:MetadataDirectory="$(MetadataPath)" /p:FrameworkDirectory="$(NuGetsPath)\$(ToolsPackage)" /p:ReferenceFolder="$(NuGetsPath)\$(PlatPackage)\ref\net40;$(NuGetsPath)\$(AppPackage)\ref\net40;$(MetadataPath);$(Build.BinariesDirectory)" /p:ReferencePath="$(NuGetsPath)\$(ToolsPackage)" /p:OutputDirectory="$(Build.BinariesDirectory)"'
     msbuildArchitecture: x64
 
+- task: CopyFiles@2
+  displayName: 'Copy X++ Compile Log Files to: $(Build.ArtifactStagingDirectory)\Logs'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: |
+     **\Dynamics.AX.*.xppc.*
+     **\Dynamics.AX.*.labelc.*
+     **\Dynamics.AX.*.reportsc.*
+     **\Dynamics.AX.*.xppbp.*
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\Logs'
+  condition: succeededOrFailed()
 
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
