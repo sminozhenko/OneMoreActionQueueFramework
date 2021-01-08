@@ -13,6 +13,7 @@ variables:
   NugetConfigsPath: '$(Build.SourcesDirectory)'
   NugetsPath: '$(Pipeline.Workspace)\NuGets'
   MetadataPath: '$(Build.SourcesDirectory)\Metadata'
+  ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
 
 steps:
 - task: NuGetInstaller@0
