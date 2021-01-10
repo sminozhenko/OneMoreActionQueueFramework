@@ -10,6 +10,7 @@ variables:
   NugetConfigsPath: '$(Build.SourcesDirectory)'
   NugetsPath: '$(Pipeline.Workspace)\NuGets'
   MetadataPath: '$(Build.SourcesDirectory)'
+  DynamicsSDK: '$(Build.SourcesDirectory)'
   ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
   AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
   PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
