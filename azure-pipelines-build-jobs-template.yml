@@ -1,5 +1,17 @@
 jobs:
   - job: Build_10_0_15
+    displayName: 'Build for 10.0.14'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.5778.35626'
+      Application.BuildXpp.Version: '10.0.605.10014'
+      Platform.CompilerPackage.Version: '7.0.5778.35626'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_15
     displayName: 'Build for 10.0.15'
     pool:
       vmImage: 'vs2017-win2016'
