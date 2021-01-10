@@ -3,9 +3,8 @@ steps:
   displayName: 'Replace version in packages.config'
   inputs:
     targetFiles: packages.config    
-- bash: |
-    cat packages.config
-    displayName: "Show Json substitution"
+- bash: cat packages.config    
+    displayName: List packages.config
 
 - task: NuGetInstaller@0
   displayName: 'NuGet install Packages'
