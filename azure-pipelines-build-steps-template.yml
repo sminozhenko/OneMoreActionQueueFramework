@@ -30,21 +30,6 @@ steps:
     vsVersion: 15.0
     msbuildArgs: '/p:BuildTasksDirectory="$(NugetsPath)\$(ToolsPackage)\DevAlm" /p:MetadataDirectory="$(MetadataPath)" /p:FrameworkDirectory="$(NuGetsPath)\$(ToolsPackage)" /p:ReferenceFolder="$(NuGetsPath)\$(PlatPackage)\ref\net40;$(NuGetsPath)\$(AppPackage)\ref\net40;$(MetadataPath);$(Build.BinariesDirectory)" /p:ReferencePath="$(NuGetsPath)\$(ToolsPackage)" /p:OutputDirectory="$(Build.BinariesDirectory)"'
     msbuildArchitecture: x64
-    
-- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365ExecuteBestPractices.FcsDynamics365ExecuteBestPractices@1
-  displayName: 'Execute best practices checks'
-  
-- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365AnalyzeBuildQuality.FcsDynamics365AnalyzeBuildQuality@1
-  displayName: 'Analyze build quality'
-  inputs:
-    checkBestPractices: true
-    checkTodos: true
-    checkCompilerWarnings: true
-  continueOnError: true
-
-- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365BuildSummary.FcsDynamics365BuildSummary@1
-  displayName: 'Generate build quality summary'
-  continueOnError: true
 
 - task: CopyFiles@2
   displayName: 'Copy X++ Compile Log Files to: $(Build.ArtifactStagingDirectory)\Logs'
@@ -57,6 +42,43 @@ steps:
      **\Dynamics.AX.*.xppbp.*
     TargetFolder: '$(Build.ArtifactStagingDirectory)\Logs'
   condition: succeededOrFailed()
+
+- powershell: |
+   $applFolder = "$(Build.ArtifactStagingDirectory)\Logs"
+   $pattern = '*xppbp.xml'
+   $issuesFound = 0;
+   Write-Output 'Counting best practice violations:'
+   $logFiles = Get-ChildItem -Path $applFolder -Include $pattern -Recurse
+   foreach ($logFile in $logFiles) {
+       Write-Host "##[group] File name: $logFile"
+       [xml]$XmlDocument = Get-Content -Path $logFile.FullName
+       $items = $XmlDocument.SelectSingleNode("Diagnostics").SelectSingleNode("Items") #Diagnostics->Items
+       if ($items) {
+           foreach ($item in $items.ChildNodes) {
+               if ($item) {
+                   $message = $item.SelectSingleNode("Message").InnerText
+                   $path = $item.SelectSingleNode("Path").InnerText
+                   $moniker = $item.SelectSingleNode("Moniker").InnerText
+                   if ($moniker -eq "BPFrameworkFatalException") {
+                       Write-Host "##[warning]$moniker : $message $path"
+                   }
+                   else {
+                       Write-Host "##vso[task.LogIssue type=error;]$moniker : $message $path"
+                       $issuesFound = 1;
+                   }
+               }
+           }
+       }
+       Write-Host ""
+       Write-Host "##[endgroup]"
+   }
+   if ($issuesFound -eq 1) {
+       Write-Host "##vso[task.LogIssue type=error;]BP issues found"
+       exit 1;
+   }
+  failOnStderr: true
+  displayName: 'Check BP'
+
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
