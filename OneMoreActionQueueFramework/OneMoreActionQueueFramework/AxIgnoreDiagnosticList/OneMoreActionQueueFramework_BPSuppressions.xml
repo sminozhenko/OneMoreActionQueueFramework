@@ -38,13 +38,6 @@
       <Justification>ClassName EDT doesn't have label</Justification>
     </Diagnostic>
 	<Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/SysOperationSandboxOneMoreActionQueueFramework_Extension</Path>
-      <Moniker>ChainOfCommandInInternalMethodIsNotSupported</Moniker>
-      <Justification>Check if extension point can be created</Justification>
-    </Diagnostic>
-	<Diagnostic>
       <DiagnosticType>BestPractices</DiagnosticType>
       <Severity>Warning</Severity>
       <Path>dynamics://Form/OneMoreActionQueue/FormDesign/FormDesign</Path>
