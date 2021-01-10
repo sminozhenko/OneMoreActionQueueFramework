@@ -1,11 +1,3 @@
-variables:
-  NugetConfigsPath: '$(Build.SourcesDirectory)'
-  NugetsPath: '$(Pipeline.Workspace)\NuGets'
-  MetadataPath: '$(Build.SourcesDirectory)'
-  ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
-  AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
-  PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
-
 jobs:
   - job: Build_10_0_15
     displayName: 'Build for 10.0.15'

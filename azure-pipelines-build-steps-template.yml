@@ -7,6 +7,12 @@ variables:
   Platform.BuildXpp.Version: ${{ Platform.BuildXpp.Version }} 
   Application.BuildXpp.Version: ${{ Application.BuildXpp.Version }} 
   Platform.CompilerPackage.Version: ${{ Platform.CompilerPackage.Version }} 
+  NugetConfigsPath: '$(Build.SourcesDirectory)'
+  NugetsPath: '$(Pipeline.Workspace)\NuGets'
+  MetadataPath: '$(Build.SourcesDirectory)'
+  ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
+  AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
+  PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
 
 steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
