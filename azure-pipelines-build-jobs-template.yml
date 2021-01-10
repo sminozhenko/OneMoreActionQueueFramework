@@ -1,5 +1,5 @@
 jobs:
-  - job: Build_10_0_15
+  - job: Build_10_0_14
     displayName: 'Build for 10.0.14'
     pool:
       vmImage: 'vs2017-win2016'
