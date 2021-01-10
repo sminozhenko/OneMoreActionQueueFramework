@@ -1,0 +1,15 @@
+jobs:
+  - job: BuildSolution
+    pool:
+      vmImage: 'vs2017-win2016'
+      
+    variables:
+      NugetConfigsPath: '$(Build.SourcesDirectory)'
+      NugetsPath: '$(Pipeline.Workspace)\NuGets'
+      MetadataPath: '$(Build.SourcesDirectory)'
+      ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
+      AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
+      PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml

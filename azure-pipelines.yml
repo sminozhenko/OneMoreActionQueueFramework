@@ -10,4 +10,4 @@ stages:
 - stage: Build
   displayName: 'Build Stage'
   jobs:
-  - template: azure-pipelines-build-template.yml
+  - template: azure-pipelines-build-jobs-template.yml
