@@ -256,11 +256,6 @@
       <Name>SysOperationControllerOneMoreActionQueueFramework_Extension</Name>
       <Link>Classes\SysOperationControllerOneMoreActionQueueFramework_Extension</Link>
     </Content>
-    <Content Include="AxClass\SysOperationSandboxOneMoreActionQueueFramework_Extension">
-      <SubType>Content</SubType>
-      <Name>SysOperationSandboxOneMoreActionQueueFramework_Extension</Name>
-      <Link>Classes\SysOperationSandboxOneMoreActionQueueFramework_Extension</Link>
-    </Content>
     <Content Include="AxClass\SysQueryRangeUtilOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>
       <Name>SysQueryRangeUtilOneMoreActionQueueFramework_Extension</Name>
