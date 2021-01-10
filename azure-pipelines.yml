@@ -6,6 +6,14 @@ pr:
     include:
     - '*'
 
+variables:
+  NugetConfigsPath: '$(Build.SourcesDirectory)'
+  NugetsPath: '$(Pipeline.Workspace)\NuGets'
+  MetadataPath: '$(Build.SourcesDirectory)'
+  ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
+  AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
+  PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
+
 stages:
 - stage: Build
   displayName: 'Build Stage'

@@ -3,22 +3,15 @@ parameters: # defaults for any parameters that aren't specified
   Application.BuildXpp.Version: ''
   Platform.CompilerPackage.Version: ''
 
-variables:
-  Platform.BuildXpp.Version: ${{ Platform.BuildXpp.Version }} 
-  Application.BuildXpp.Version: ${{ Application.BuildXpp.Version }} 
-  Platform.CompilerPackage.Version: ${{ Platform.CompilerPackage.Version }} 
-  NugetConfigsPath: '$(Build.SourcesDirectory)'
-  NugetsPath: '$(Pipeline.Workspace)\NuGets'
-  MetadataPath: '$(Build.SourcesDirectory)'
-  ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
-  AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
-  PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
-
 steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace version in packages.config'
   inputs:
-    targetFiles: packages.config
+    targetFiles: packages.config    
+  variables:
+    Platform.BuildXpp.Version: ${{ Platform.BuildXpp.Version }} 
+    Application.BuildXpp.Version: ${{ Application.BuildXpp.Version }} 
+    Platform.CompilerPackage.Version: ${{ Platform.CompilerPackage.Version }}   
 - bash: |
     cat packages.config
     displayName: "Show Json substitution"
