@@ -1,32 +1,32 @@
+variables:
+  NugetConfigsPath: '$(Build.SourcesDirectory)'
+  NugetsPath: '$(Pipeline.Workspace)\NuGets'
+  MetadataPath: '$(Build.SourcesDirectory)'
+  ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
+  AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
+  PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
+
 jobs:
   - job: Build_10_0_15
     displayName: 'Build for 10.0.15'
     pool:
       vmImage: 'vs2017-win2016'
-      
-    variables:
-      NugetConfigsPath: '$(Build.SourcesDirectory)'
-      NugetsPath: '$(Pipeline.Workspace)\NuGets'
-      MetadataPath: '$(Build.SourcesDirectory)'
-      ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
-      AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
-      PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
+      parameters:
+        Platform.BuildXpp.Version: '7.0.5816.35654'
+        Application.BuildXpp.Version: '10.0.644.10018'
+        Platform.CompilerPackage.Version: '7.0.5816.3565'
     
   - job: Build_10_0_16
     displayName: 'Build for 10.0.16'
     pool:
       vmImage: 'vs2017-win2016'
-      
-    variables:
-      NugetConfigsPath: '$(Build.SourcesDirectory)'
-      NugetsPath: '$(Pipeline.Workspace)\NuGets'
-      MetadataPath: '$(Build.SourcesDirectory)'
-      ToolsPackage: 'Microsoft.Dynamics.AX.Platform.CompilerPackage'
-      AppPackage: 'Microsoft.Dynamics.AX.Application.DevALM.BuildXpp'
-      PlatPackage: 'Microsoft.Dynamics.AX.Platform.DevALM.BuildXpp'
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
+        parameters:
+        Platform.BuildXpp.Version: '7.0.5860.35679'
+        Application.BuildXpp.Version: '10.0.689.10004'
+        Platform.CompilerPackage.Version: '7.0.5860.35679'
