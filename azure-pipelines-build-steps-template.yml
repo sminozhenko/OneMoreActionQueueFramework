@@ -42,21 +42,6 @@ steps:
      **\Dynamics.AX.*.xppbp.*
     TargetFolder: '$(Build.ArtifactStagingDirectory)\Logs'
   condition: succeededOrFailed()
-  
-- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365AnalyzeBuildQuality.FcsDynamics365AnalyzeBuildQuality@1
-  displayName: 'Analyze build quality'
-  inputs:
-    checkBestPractices: true
-    checkTodos: true
-    checkCompilerWarnings: true
-    directory: '$(Build.ArtifactStagingDirectory)\Logs'
-  continueOnError: true
-
-- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365BuildSummary.FcsDynamics365BuildSummary@1
-  displayName: 'Generate build quality summary'
-  inputs:
-    directory: '$(Build.ArtifactStagingDirectory)\Logs'
-  continueOnError: true
 
 - powershell: |
    $applFolder = "$(Build.ArtifactStagingDirectory)\Logs"
@@ -89,7 +74,7 @@ steps:
    }
    if ($issuesFound -eq 1) {
        Write-Host "##vso[task.LogIssue type=error;]BP issues found"
-       exit 1;
+       exit 0;
    }
   failOnStderr: true
   displayName: 'Check BP'
