@@ -18,7 +18,7 @@ jobs:
     variables:
       Platform.BuildXpp.Version: '7.0.5816.35654'
       Application.BuildXpp.Version: '10.0.644.10018'
-      Platform.CompilerPackage.Version: '7.0.5816.3565'
+      Platform.CompilerPackage.Version: '7.0.5816.35654'
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
