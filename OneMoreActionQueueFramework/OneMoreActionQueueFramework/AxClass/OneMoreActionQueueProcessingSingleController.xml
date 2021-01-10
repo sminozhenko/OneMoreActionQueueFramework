@@ -79,6 +79,22 @@ class OneMoreActionQueueProcessingSingleController extends SysOperationServiceCo
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Can be overridden to inidicate that the operation supports running in a different, non interactive
+    /// session than the one from which it was launched
+    /// from the client
+    /// </summary>
+    /// <returns>If true operation will be run synchrnously in an non GUI async session</returns>
+    protected boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>
