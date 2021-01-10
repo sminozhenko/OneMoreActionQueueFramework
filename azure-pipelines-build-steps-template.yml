@@ -4,7 +4,7 @@ steps:
   inputs:
     targetFiles: packages.config    
 - bash: cat packages.config    
-    displayName: List packages.config
+  displayName: 'List packages.config'
 
 - task: NuGetInstaller@0
   displayName: 'NuGet install Packages'
