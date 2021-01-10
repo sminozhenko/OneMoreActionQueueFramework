@@ -30,6 +30,21 @@ steps:
     vsVersion: 15.0
     msbuildArgs: '/p:BuildTasksDirectory="$(NugetsPath)\$(ToolsPackage)\DevAlm" /p:MetadataDirectory="$(MetadataPath)" /p:FrameworkDirectory="$(NuGetsPath)\$(ToolsPackage)" /p:ReferenceFolder="$(NuGetsPath)\$(PlatPackage)\ref\net40;$(NuGetsPath)\$(AppPackage)\ref\net40;$(MetadataPath);$(Build.BinariesDirectory)" /p:ReferencePath="$(NuGetsPath)\$(ToolsPackage)" /p:OutputDirectory="$(Build.BinariesDirectory)"'
     msbuildArchitecture: x64
+    
+- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365ExecuteBestPractices.FcsDynamics365ExecuteBestPractices@1
+  displayName: 'Execute best practices checks'
+  
+- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365AnalyzeBuildQuality.FcsDynamics365AnalyzeBuildQuality@1
+  displayName: 'Analyze build quality'
+  inputs:
+    checkBestPractices: true
+    checkTodos: true
+    checkCompilerWarnings: true
+  continueOnError: true
+
+- task: fcs-mpo.FcsDynamics365BuildTasks.FcsDynamics365BuildSummary.FcsDynamics365BuildSummary@1
+  displayName: 'Generate build quality summary'
+  continueOnError: true
 
 - task: CopyFiles@2
   displayName: 'Copy X++ Compile Log Files to: $(Build.ArtifactStagingDirectory)\Logs'
