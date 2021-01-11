@@ -3,7 +3,7 @@
 	<Name>OneMoreActionQueueProcessingQueryController</Name>
 	<EnumParameter>Synchronous</EnumParameter>
 	<EnumTypeParameter>SysOperationExecutionMode</EnumTypeParameter>
-	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcess</Label>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessBatchJob</Label>
 	<Object>OneMoreActionQueueProcessingQueryController</Object>
 	<ObjectType>Class</ObjectType>
 	<Parameters>OneMoreActionQueueProcessingService.processQuery</Parameters>
