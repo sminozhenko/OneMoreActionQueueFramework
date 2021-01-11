@@ -188,6 +188,26 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>processActionQueueManual</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process set of records from action queue
+    /// </summary>
+    /// <param name = "_contract"><c>OneMoreActionQueueProcessingManualContract</c></param>
+    [Hookable(false)]
+    public void processActionQueueManual(OneMoreActionQueueProcessingManualContract _contract)
+    {
+        SetEnumerator       se = _contract.parmRecordCollection().getEnumerator();
+        
+        while (se.moveNext())
+        {
+            OneMoreActionQueueProcessingService::processSingleRecord(OneMoreActionQueue::findRecId(se.current()));
+        }
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>

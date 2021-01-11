@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingManualContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processing contract for manual processing
+/// </summary>
+[DataContract]
+class OneMoreActionQueueProcessingManualContract
+{
+    private Set recordCollection;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmRecordCollection</Name>
+				<Source><![CDATA[
+    [
+        DataMember,
+        AifCollectionType('return', Types::Int64),
+        SysOperationControlVisibility(false),
+        Hookable(false)
+    ]
+    public Set parmRecordCollection(Set _recordCollection = recordCollection)
+    {
+        recordCollection = _recordCollection;
+        return recordCollection;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

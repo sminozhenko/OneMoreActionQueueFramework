@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueProcessingSingleController</Name>
+	<Name>OneMoreActionQueueProcessingManualController</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
 /// Action queue single record processing controller
 /// </summary>
-class OneMoreActionQueueProcessingSingleController extends SysOperationServiceController
+class OneMoreActionQueueProcessingManualController extends SysOperationServiceController
 {
 }
 ]]></Declaration>
@@ -20,9 +20,9 @@ class OneMoreActionQueueProcessingSingleController extends SysOperationServiceCo
     /// <param name = "_args">Arguments</param>
     protected void initContract(Args _args)
     {
-        OneMoreActionQueueProcessingSingleContract  contract = this.getDataContractObject('_contract');
+        OneMoreActionQueueProcessingManualContract  contract = this.getDataContractObject();
         
-        contract.parmActionQueueRecId(_args.record().RecId);
+        contract.parmRecordCollection(this.getRecordCollection(_args));
     }
 
 ]]></Source>
@@ -36,10 +36,10 @@ class OneMoreActionQueueProcessingSingleController extends SysOperationServiceCo
     /// <param name = "_args">Arguments</param>
     public static void main(Args _args)
     {
-        OneMoreActionQueueProcessingSingleController   controller;
+        OneMoreActionQueueProcessingManualController   controller;
         FormDataSource                          fds;
     
-        controller = OneMoreActionQueueProcessingSingleController::newFromArgs(_args);
+        controller = OneMoreActionQueueProcessingManualController::newFromArgs(_args);
         controller.startOperation();
     
         if (_args.record())
@@ -62,15 +62,15 @@ class OneMoreActionQueueProcessingSingleController extends SysOperationServiceCo
     /// </summary>
     /// <param name = "_args">Arguments</param>
     /// <returns>New class</returns>
-    public static OneMoreActionQueueProcessingSingleController newFromArgs(Args _args)
+    public static OneMoreActionQueueProcessingManualController newFromArgs(Args _args)
     {
-        OneMoreActionQueueProcessingSingleController     ret;
+        OneMoreActionQueueProcessingManualController     ret;
     
-        ret = new OneMoreActionQueueProcessingSingleController();
+        ret = new OneMoreActionQueueProcessingManualController();
     
         ret.initializeFromArgs(_args);
         ret.parmClassName(classStr(OneMoreActionQueueProcessingService));
-        ret.parmMethodName(methodStr(OneMoreActionQueueProcessingService, processActionQueueRecord));
+        ret.parmMethodName(methodStr(OneMoreActionQueueProcessingService, processActionQueueManual));
         ret.parmExecutionMode(SysOperationExecutionMode::Synchronous);
         ret.initContract(_args);
     
@@ -91,6 +91,49 @@ class OneMoreActionQueueProcessingSingleController extends SysOperationServiceCo
     protected boolean canRunInNewSession()
     {
         return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getRecordCollection</Name>
+				<Source><![CDATA[
+    private Set getRecordCollection(Args _args)
+    {
+        Set recordCollection = new Set(Types::Int64);
+        
+        if (FormDataUtil::isFormDataSource(_args.record()))
+        {
+            MultiSelectionHelper selection = MultiSelectionHelper::construct();
+            selection.parmDatasource(FormDataUtil::getFormDataSource(_args.record()));
+                
+            common selectedRecord = selection.getFirst();
+
+            while (selectedRecord)
+            {
+                this.addToCollection(recordCollection, selectedRecord);
+                selectedRecord = selection.getNext();
+            }
+        }
+        else
+        {
+            this.addToCollection(recordCollection, _args.record());
+        }
+
+        return recordCollection;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addToCollection</Name>
+				<Source><![CDATA[
+    private void addToCollection(Set _recordCollection, common selectedRecord)
+    {
+        if (selectedRecord.RecId && !_recordCollection.in(selectedRecord.RecId))
+        {
+            _recordCollection.add(selectedRecord.RecId);
+        }
     }
 
 ]]></Source>

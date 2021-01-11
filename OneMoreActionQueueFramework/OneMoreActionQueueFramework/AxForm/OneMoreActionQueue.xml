@@ -129,13 +129,14 @@ public class OneMoreActionQueue extends FormRun
 						<Controls>
 							<AxFormControl xmlns=""
 								i:type="AxFormMenuFunctionButtonControl">
-								<Name>OneMoreActionQueueProcessingSingleController</Name>
+								<Name>OneMoreActionQueueProcessingManualController</Name>
 								<Type>MenuFunctionButton</Type>
 								<FormControlExtension
 									i:nil="true" />
 								<DataSource>OneMoreActionQueue</DataSource>
-								<MenuItemName>OneMoreActionQueueProcessingSingleController</MenuItemName>
+								<MenuItemName>OneMoreActionQueueProcessingManualController</MenuItemName>
 								<MenuItemType>Action</MenuItemType>
+								<MultiSelect>Yes</MultiSelect>
 								<NeedsRecord>Yes</NeedsRecord>
 							</AxFormControl>
 							<AxFormControl xmlns=""

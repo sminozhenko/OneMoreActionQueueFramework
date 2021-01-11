@@ -19,7 +19,8 @@ class OneMoreActionQueueProcessingSingleContract
 				<Source><![CDATA[
     [
         DataMemberAttribute,
-        SysOperationControlVisibilityAttribute(false)
+        SysOperationControlVisibilityAttribute(false),
+        Hookable(false)
     ]
     public RefRecId parmActionQueueRecId(RefRecId _actionQueueRecId = actionQueueRecId)
     {

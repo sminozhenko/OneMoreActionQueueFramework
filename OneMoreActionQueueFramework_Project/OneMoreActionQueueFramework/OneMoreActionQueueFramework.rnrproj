@@ -166,6 +166,16 @@
       <Name>OneMoreActionQueueProcessingBatchTaskBundleContract</Name>
       <Link>Classes\OneMoreActionQueueProcessingBatchTaskBundleContract</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingManualContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingManualContract</Name>
+      <Link>Classes\OneMoreActionQueueProcessingManualContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingManualController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingManualController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingManualController</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingProcessAutomationContract">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingProcessAutomationContract</Name>
@@ -205,11 +215,6 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingSingleContract</Name>
       <Link>Classes\OneMoreActionQueueProcessingSingleContract</Link>
-    </Content>
-    <Content Include="AxClass\OneMoreActionQueueProcessingSingleController">
-      <SubType>Content</SubType>
-      <Name>OneMoreActionQueueProcessingSingleController</Name>
-      <Link>Classes\OneMoreActionQueueProcessingSingleController</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessor">
       <SubType>Content</SubType>
@@ -426,15 +431,15 @@
       <Name>OneMoreActionQueueMenuItemParameters</Name>
       <Link>Action Menu Items\OneMoreActionQueueMenuItemParameters</Link>
     </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingManualController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingManualController</Name>
+      <Link>Action Menu Items\OneMoreActionQueueProcessingManualController</Link>
+    </Content>
     <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingQueryController">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingQueryController</Name>
       <Link>Action Menu Items\OneMoreActionQueueProcessingQueryController</Link>
-    </Content>
-    <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingSingleController">
-      <SubType>Content</SubType>
-      <Name>OneMoreActionQueueProcessingSingleController</Name>
-      <Link>Action Menu Items\OneMoreActionQueueProcessingSingleController</Link>
     </Content>
     <Content Include="AxMenuItemDisplay\OneMoreActionQueue">
       <SubType>Content</SubType>

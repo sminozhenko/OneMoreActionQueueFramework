@@ -70,7 +70,7 @@
 			<Forms />
 		</AxSecurityEntryPointReference>
 		<AxSecurityEntryPointReference>
-			<Name>OneMoreActionQueueProcessingSingleController</Name>
+			<Name>OneMoreActionQueueProcessingManualController</Name>
 			<Grant>
 				<Correct>Allow</Correct>
 				<Create>Allow</Create>
@@ -78,7 +78,7 @@
 				<Read>Allow</Read>
 				<Update>Allow</Update>
 			</Grant>
-			<ObjectName>OneMoreActionQueueProcessingSingleController</ObjectName>
+			<ObjectName>OneMoreActionQueueProcessingManualController</ObjectName>
 			<ObjectType>MenuItemAction</ObjectType>
 			<Forms />
 		</AxSecurityEntryPointReference>
