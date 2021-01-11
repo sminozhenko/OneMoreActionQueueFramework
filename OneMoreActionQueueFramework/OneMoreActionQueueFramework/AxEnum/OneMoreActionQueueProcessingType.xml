@@ -18,6 +18,11 @@
 			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingTypeProcessAutomation</Label>
 			<Value>2</Value>
 		</AxEnumValue>
+		<AxEnumValue>
+			<Name>BatchJob</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingTypeBatchJob</Label>
+			<Value>3</Value>
+		</AxEnumValue>
 	</EnumValues>
 	<IsExtensible>true</IsExtensible>
 </AxEnum>

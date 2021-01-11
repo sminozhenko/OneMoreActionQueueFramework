@@ -88,6 +88,31 @@ class OneMoreActionQueueProcessingQueryController extends SysOperationServiceCon
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>beforeOperation</Name>
+				<Source><![CDATA[
+    protected void beforeOperation(SysOperationExecutionMode _executionMode)
+    {
+        OneMoreActionQueueProcessingQueryContract contract = this.getDataContractObject() as OneMoreActionQueueProcessingQueryContract;
+
+        Query                   q = contract.getQuery();
+
+        QueryBuildDataSource    qbdsActionQueue = q.dataSourceTable(tableNum(OneMoreActionQueue));
+        QueryBuildDataSource    qbdsActionQueueTypeTable = qbdsActionQueue.addDataSource(tableNum(OneMoreActionQueueTypeTable));
+
+        qbdsActionQueueTypeTable.relations(true);
+        qbdsActionQueueTypeTable.joinMode(JoinMode::ExistsJoin);
+
+        qbdsActionQueueTypeTable.addRange(fieldNum(OneMoreActionQueueTypeTable, Enabled)).value(queryValue(NoYes::Yes));
+        qbdsActionQueueTypeTable.addRange(fieldNum(OneMoreActionQueueTypeTable, ProcessingType)).value(queryValue(OneMoreActionQueueProcessingType::BatchJob));
+
+        contract.setQuery(q);
+
+        super(_executionMode);
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>
