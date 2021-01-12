@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueChangeStatusService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue change status service class
+/// </summary>
+class OneMoreActionQueueChangeStatusService
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>changeStatus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update status for set of records from action queue
+    /// </summary>
+    /// <param name = "_contract"><c>OneMoreActionQueueChangeStatusContract</c></param>
+    [Hookable(false)]
+    public void changeStatus(OneMoreActionQueueChangeStatusContract _contract)
+    {
+        SetEnumerator       se = _contract.parmRecordCollection().getEnumerator();
+        
+        while (se.moveNext())
+        {
+            ttsbegin;
+
+            OneMoreActionQueue oneMoreActionQueue = OneMoreActionQueue::findRecId(se.current(), true);
+
+            if (oneMoreActionQueue.Status != _contract.parmNewStatus())
+            {
+                oneMoreActionQueue.Status = _contract.parmNewStatus();
+                oneMoreActionQueue.update();
+            }
+
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

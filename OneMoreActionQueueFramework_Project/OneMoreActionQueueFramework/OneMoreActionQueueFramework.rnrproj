@@ -66,6 +66,21 @@
       <Name>OneMoreActionQueueBusinessEventEndpointAdapter</Name>
       <Link>Classes\OneMoreActionQueueBusinessEventEndpointAdapter</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueChangeStatusContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueChangeStatusContract</Name>
+      <Link>Classes\OneMoreActionQueueChangeStatusContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueChangeStatusController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueChangeStatusController</Name>
+      <Link>Classes\OneMoreActionQueueChangeStatusController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueChangeStatusService">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueChangeStatusService</Name>
+      <Link>Classes\OneMoreActionQueueChangeStatusService</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueCleanUp">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueCleanUp</Name>
@@ -415,6 +430,11 @@
       <SubType>Content</SubType>
       <Name>SystemAdministration.OneMoreActionQueueFrameworkExtension</Name>
       <Link>Menu Extensions\SystemAdministration.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueChangeStatusController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueChangeStatusController</Name>
+      <Link>Action Menu Items\OneMoreActionQueueChangeStatusController</Link>
     </Content>
     <Content Include="AxMenuItemAction\OneMoreActionQueueCleanUp">
       <SubType>Content</SubType>
