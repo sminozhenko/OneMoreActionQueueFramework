@@ -141,6 +141,15 @@ public class OneMoreActionQueue extends FormRun
 							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueChangeStatusController</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueChangeStatusController</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
 								<Name>OneMoreActionQueueLogShow</Name>
 								<Type>MenuFunctionButton</Type>
 								<FormControlExtension

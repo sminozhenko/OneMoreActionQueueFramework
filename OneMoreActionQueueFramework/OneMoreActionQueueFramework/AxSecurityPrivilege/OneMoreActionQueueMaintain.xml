@@ -95,6 +95,16 @@
 			<ObjectType>MenuItemAction</ObjectType>
 			<Forms />
 		</AxSecurityEntryPointReference>
+		<AxSecurityEntryPointReference>
+			<Name>OneMoreActionQueueChangeStatusController</Name>
+			<Grant>
+				<Read>Allow</Read>
+				<Update>Allow</Update>
+			</Grant>
+			<ObjectName>OneMoreActionQueueChangeStatusController</ObjectName>
+			<ObjectType>MenuItemAction</ObjectType>
+			<Forms />
+		</AxSecurityEntryPointReference>
 	</EntryPoints>
 	<FormControlOverrides />
 </AxSecurityPrivilege>

@@ -77,3 +77,4 @@ OneMoreActionQueueProcessAutomationPollingInterval=Polling interval
 OneMoreActionQueueProcessingHasBeenCompleted=OneMore action queue processing for '%1' has been completed
 OneMoreActionQueueProcessingTypeBatchJob=Batch job
 OneMoreActionQueueProcessBatchJob=Process action queue (batch job)
+OneMoreActionQueueChangeStatus=Change status

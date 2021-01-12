@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueChangeStatusController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue change status controller
+/// </summary>
+class OneMoreActionQueueChangeStatusController extends SysOperationServiceController
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initContract</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize contract
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    protected void initContract(Args _args)
+    {
+        OneMoreActionQueueChangeStatusContract  contract = this.getDataContractObject();
+        
+        contract.parmRecordCollection(this.getRecordCollection(_args));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Main
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    public static void main(Args _args)
+    {
+        OneMoreActionQueueChangeStatusController   controller;
+        FormDataSource                          fds;
+    
+        controller = OneMoreActionQueueChangeStatusController::newFromArgs(_args);
+        controller.startOperation();
+    
+        if (_args.record())
+        {
+            if (FormDataUtil::isFormDataSource(_args.record()))
+            {
+                fds = FormDataUtil::getFormDataSource(_args.record());
+                fds.research(true);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromArgs</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from arguments
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    /// <returns>New class</returns>
+    public static OneMoreActionQueueChangeStatusController newFromArgs(Args _args)
+    {
+        OneMoreActionQueueChangeStatusController     ret;
+    
+        ret = new OneMoreActionQueueChangeStatusController();
+    
+        ret.initializeFromArgs(_args);
+        ret.parmClassName(classStr(OneMoreActionQueueChangeStatusService));
+        ret.parmMethodName(methodStr(OneMoreActionQueueChangeStatusService, changeStatus));
+        ret.parmExecutionMode(SysOperationExecutionMode::Synchronous);
+        ret.initContract(_args);
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Can be overridden to inidicate that the operation supports running in a different, non interactive
+    /// session than the one from which it was launched
+    /// from the client
+    /// </summary>
+    /// <returns>If true operation will be run synchrnously in an non GUI async session</returns>
+    protected boolean canRunInNewSession()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getRecordCollection</Name>
+				<Source><![CDATA[
+    private Set getRecordCollection(Args _args)
+    {
+        Set recordCollection = new Set(Types::Int64);
+        
+        if (FormDataUtil::isFormDataSource(_args.record()))
+        {
+            MultiSelectionHelper selection = MultiSelectionHelper::construct();
+            selection.parmDatasource(FormDataUtil::getFormDataSource(_args.record()));
+                
+            common selectedRecord = selection.getFirst();
+
+            while (selectedRecord)
+            {
+                this.addToCollection(recordCollection, selectedRecord);
+                selectedRecord = selection.getNext();
+            }
+        }
+        else
+        {
+            this.addToCollection(recordCollection, _args.record());
+        }
+
+        return recordCollection;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addToCollection</Name>
+				<Source><![CDATA[
+    private void addToCollection(Set _recordCollection, common selectedRecord)
+    {
+        if (selectedRecord.RecId && !_recordCollection.in(selectedRecord.RecId))
+        {
+            _recordCollection.add(selectedRecord.RecId);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
