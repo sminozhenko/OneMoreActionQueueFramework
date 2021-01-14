@@ -283,6 +283,10 @@ class OneMoreActionQueueProcessing
         if (doStatusUpdate)
         {
             oneMoreActionQueueUpd.Status    = _status;
+
+            //Invoke Business Event if status changes to processed or error
+            //TODO send should be performed in user connection context
+            OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable).send();
         }
 
         InfologData infologData = this.getInfoLogData();

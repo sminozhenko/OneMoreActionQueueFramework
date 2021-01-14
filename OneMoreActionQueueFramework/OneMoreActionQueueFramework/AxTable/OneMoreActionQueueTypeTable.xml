@@ -200,6 +200,9 @@ public class OneMoreActionQueueTypeTable extends common
                     case OneMoreActionQueueType::MenuItem:
                         this.ActionClassName   = classStr(OneMoreActionQueueMenuItemActionProcessor);
                         break;
+                    case OneMoreActionQueueType::DMFExport:
+                        this.ActionClassName   = classStr(OneMoreActionQueueDMFExportProcessor);
+                        break;
                     default:
                         this.ActionClassName   = '';
                 }
@@ -250,6 +253,16 @@ public class OneMoreActionQueueTypeTable extends common
     public OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable(boolean _forupdate = false)
     {
         return OneMoreActionQueueTypeMenuItemParameterTable::find(this.TypeId, _forupdate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>oneMoreActionQueueTypeDMFExportParameterTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable(boolean _forupdate = false)
+    {
+        return OneMoreActionQueueTypeDMFExportParameterTable::find(this.TypeId, _forupdate);
     }
 
 ]]></Source>
@@ -348,6 +361,8 @@ public class OneMoreActionQueueTypeTable extends common
             }
         }
 
+        OneMoreActionQueueBusinessEventsCatalogHelper::addActionQueueEvent(this);
+
         ttscommit;
     }
 
@@ -395,7 +410,28 @@ public class OneMoreActionQueueTypeTable extends common
 
         this.disableSeries();
 
+        this.deleteBusinessEvent();
+
         ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteBusinessEvent</Name>
+				<Source><![CDATA[
+    private void deleteBusinessEvent()
+    {
+        BusinessEventsId businessEventsId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(this.TypeId);
+
+        BusinessEventsTable             businessEventsTable;
+        BusinessEventsConfiguration     businessEventsConfiguration;
+
+        delete_from businessEventsTable 
+            where BusinessEventsTable.BusinessEventId == businessEventsId;
+
+        delete_from businessEventsConfiguration 
+            where businessEventsConfiguration.BusinessEventsTable == businessEventsId;
     }
 
 ]]></Source>

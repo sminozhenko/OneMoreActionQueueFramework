@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processor class for DMF export type
+/// </summary>
+[OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)]
+class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
+{
+    OneMoreActionQueueDMFExportContract  localContract;
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Initialize</Name>
+				<Source><![CDATA[
+    public void Initialize()
+    {
+        super();
+
+        localContract = contract as OneMoreActionQueueDMFExportContract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        try
+        {
+            #DMF
+            
+            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
+            
+            DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', oneMoreActionQueueTypeTable.TypeId, newGuid());
+            OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = oneMoreActionQueueTypeTable.oneMoreActionQueueTypeDMFExportParameterTable();
+            //
+            //SharedServiceUnitFileID     fileId;
+            
+            //str                         businessEventName;
+
+            //OneMoreActionQueueMenuItemContract contract = FormJsonSerializer::deserializeObject(classNum(OneMoreActionQueueMenuItemContract), _contract.parmQueryFilters());
+
+            ttsbegin;
+
+            DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
+
+            /*
+            ListEnumerator le = contract.parmMenuItemParameters().getEnumerator();
+            
+            //Temporary ugly solution
+            while (le.moveNext())
+            {
+                OneMoreActionQueueMenuItemParameterContract parameterContract = le.current();
+            
+                if (parameterContract.parmParameterName() == DMFEntityNameParameter)
+                {
+                    dmfEntity = DMFEntity::find(parameterContract.parmParameterValue());
+                }
+
+                if (parameterContract.parmParameterName() == BusinessEventNameParameter)
+                {
+                    businessEventName = parameterContract.parmParameterValue();
+                }
+            }
+            */
+
+            DMFEntityExporter exporter = new DMFEntityExporter();
+            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', 'XML-Element', #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
+
+            if (fileId != '')
+            {
+                SharedServiceUnitURL    downloadUrl = DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
+                System.Uri              uri = new System.Uri(downloadUrl);
+                str                     fileName = System.IO.Path::GetFileName(uri.LocalPath);
+                str                     filePath = WinAPIServer::getTempPath() + fileName;
+                
+                DMFPackageUtil::downloadFileFromUrlV2(downloadUrl, filePath);
+                
+                /*
+                str fileExt;
+
+                if (uri != null)
+                {
+                    fileExt = strReplace(System.IO.Path::GetExtension(uri.LocalPath), '.', '');
+                }
+                */
+
+                using (System.IO.Stream fileStream = System.IO.File::OpenRead(filePath))
+                {
+                    var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
+                    DocumentManagement::attachFileToCommon(oneMoreActionQueue, DocuType::typeFile(), fileStream, fileName, mime, fileName);
+                }
+
+                DMFPackageUtil::deleteFileIgnoreError(filePath);
+                
+
+                /*
+                System.Uri uri = new System.Uri(downloadUrl);
+                str fileExt;
+
+                if (uri != null)
+                {
+                    fileExt = strReplace(System.IO.Path::GetExtension(uri.LocalPath), '.', '');
+                }
+                */
+                /*
+                // Temporary solution, event should be moved to DGAApplicationSuite model
+                if (BusinessEventsConfigurationReader::isBusinessEventEnabled(businessEventName))
+                {
+                    DGABaseExportServiceEvent event = DGABaseExportServiceEvent::newFromParameters(businessEventName, curExt(), fileId, downloadUrl, fileExt, _contract.parmActionId());
+                    event.send();
+                }
+                */
+
+                DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
+                dmfDefinitionGroup.delete();
+            }
+            else
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", definitionGroupName));
+            }
+
+            ttscommit;
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

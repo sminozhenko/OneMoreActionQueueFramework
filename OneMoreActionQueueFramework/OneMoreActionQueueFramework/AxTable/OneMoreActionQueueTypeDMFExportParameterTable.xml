@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeDMFExportParameterTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeDMFExportParameterTable extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueueTypeDMFExportParameterTable</c> record
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name="_forUpdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueueTypeDMFExportParameterTable</c> table otherwise, an empty record.
+    /// </returns>
+    public static OneMoreActionQueueTypeDMFExportParameterTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
+    {
+        OneMoreActionQueueTypeDMFExportParameterTable  ret;
+
+        ret.selectForUpdate(_forUpdate);
+
+        if (_typeId)
+        {
+            select firstonly ret
+                where ret.TypeId == _typeId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportParameter</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeTable</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportParameter</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>TypeId</TitleField1>
+	<TitleField2>DMFEntityName</TitleField2>
+	<CacheLookup>FoundAndEmpty</CacheLookup>
+	<ClusteredIndex>TypeIdx</ClusteredIndex>
+	<PrimaryIndex>TypeIdx</PrimaryIndex>
+	<ReplacementKey>TypeIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>DMFExport</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQeueueTypeDMFExport</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DMFEntityName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TypeId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueTypeId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldContainer">
+			<Name>PackedParameters</Name>
+			<ExtendedDataType>OneMoreActionQueuePackedParameters</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>DMFEntityName</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>DMFEntityName</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldContainer">
+			<Name>PackedQueryRun</Name>
+			<ExtendedDataType>PackedQueryRun</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TypeIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TypeId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeTable</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>TypeId</Name>
+					<Field>TypeId</Field>
+					<RelatedField>TypeId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

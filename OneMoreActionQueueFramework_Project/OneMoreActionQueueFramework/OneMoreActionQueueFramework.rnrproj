@@ -56,15 +56,35 @@
     <Folder Include="Tables\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AxClass\BusinessEventsCatalogHelperOneMoreActionQueue_Extension">
+      <SubType>Content</SubType>
+      <Name>BusinessEventsCatalogHelperOneMoreActionQueue_Extension</Name>
+      <Link>Classes\BusinessEventsCatalogHelperOneMoreActionQueue_Extension</Link>
+    </Content>
     <Content Include="AxClass\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>
       <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
       <Link>Classes\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueBusinessEvent">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBusinessEvent</Name>
+      <Link>Classes\OneMoreActionQueueBusinessEvent</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueBusinessEventContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBusinessEventContract</Name>
+      <Link>Classes\OneMoreActionQueueBusinessEventContract</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueBusinessEventEndpointAdapter">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueBusinessEventEndpointAdapter</Name>
       <Link>Classes\OneMoreActionQueueBusinessEventEndpointAdapter</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueBusinessEventsCatalogHelper">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBusinessEventsCatalogHelper</Name>
+      <Link>Classes\OneMoreActionQueueBusinessEventsCatalogHelper</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueChangeStatusContract">
       <SubType>Content</SubType>
@@ -110,6 +130,21 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueContract</Name>
       <Link>Classes\OneMoreActionQueueContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFExportContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportContract</Name>
+      <Link>Classes\OneMoreActionQueueDMFExportContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFExportProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportProcessor</Name>
+      <Link>Classes\OneMoreActionQueueDMFExportProcessor</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFExportQueryParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportQueryParameters</Name>
+      <Link>Classes\OneMoreActionQueueDMFExportQueryParameters</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueIMenuItemLookupCaller">
       <SubType>Content</SubType>
@@ -376,6 +411,11 @@
       <Name>BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension</Name>
       <Link>Base Enum Extensions\BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension</Link>
     </Content>
+    <Content Include="AxEnumExtension\ModuleAxapta.OneMoreActionQueueFrameworkExtension">
+      <SubType>Content</SubType>
+      <Name>ModuleAxapta.OneMoreActionQueueFrameworkExtension</Name>
+      <Link>Base Enum Extensions\ModuleAxapta.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
     <Content Include="AxEnum\OneMoreActionQueueProcessingType">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingType</Name>
@@ -440,6 +480,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueCleanUp</Name>
       <Link>Action Menu Items\OneMoreActionQueueCleanUp</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueDMFExportQueryParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportQueryParameters</Name>
+      <Link>Action Menu Items\OneMoreActionQueueDMFExportQueryParameters</Link>
     </Content>
     <Content Include="AxMenuItemAction\OneMoreActionQueueLogShow">
       <SubType>Content</SubType>
@@ -565,6 +610,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueStaging</Name>
       <Link>Tables\OneMoreActionQueueStaging</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeDMFExportParameterTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeDMFExportParameterTable</Name>
+      <Link>Tables\OneMoreActionQueueTypeDMFExportParameterTable</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueTypeMenuItemParameterTable">
       <SubType>Content</SubType>

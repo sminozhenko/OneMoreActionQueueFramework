@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportQueryParameters</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Set DMF export parameters for action queue
+/// </summary>
+class OneMoreActionQueueDMFExportQueryParameters extends RunBase
+{
+    private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static OneMoreActionQueueDMFExportQueryParameters construct()
+    {
+        return new OneMoreActionQueueDMFExportQueryParameters();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
+    {
+        oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
+        return oneMoreActionQueueTypeTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        if (!_args || !_args.record() || _args.record().TableId != tableNum(OneMoreActionQueueTypeTable))
+        {
+            throw error(Error::missingRecord(funcname()));
+        }
+
+        OneMoreActionQueueDMFExportQueryParameters oneMoreActionQueueDMFExportQueryParameters = OneMoreActionQueueDMFExportQueryParameters::construct();
+
+        oneMoreActionQueueDMFExportQueryParameters.parmOneMoreActionQueueTypeTable(_args.record());
+
+        oneMoreActionQueueDMFExportQueryParameters.runOperation();
+
+        if (_args.record())
+        {
+            if (FormDataUtil::isFormDataSource(_args.record()))
+            {
+                FormDataSource fds = FormDataUtil::getFormDataSource(_args.record());
+                fds.research(true);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable = OneMoreActionQueueTypeDMFExportParameterTable::find(oneMoreActionQueueTypeTable.TypeId, true);
+        
+        PackedQueryRun packedQueryRun = oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun;
+
+        if (!packedQueryRun)
+        {
+            packedQueryRun = DMFUtil::getDefaultQueryForEntityV3(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
+        }
+            
+        packedQueryRun = DMFFormBrowser::showQuery(packedQueryRun);
+        
+        if (packedQueryRun != connull())
+        {
+            ttsbegin;
+            
+            oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun = packedQueryRun;
+            oneMoreActionQueueTypeDMFExportParameterTable.write();
+            
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// To determine if can run the inquiry in new session or not.
+    /// </summary>
+    /// <returns>
+    /// True if can run the inquiry in new session; otherwise, false.
+    /// </returns>
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
