@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueBusinessEvent</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// This is a generic BusinessEvents class for action queues
+/// </summary>
+public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
+{
+    private OneMoreActionQueue          oneMoreActionQueue;
+    private OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmOneMoreActionQueue</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue = oneMoreActionQueue)
+    {
+        oneMoreActionQueue = _oneMoreActionQueue;
+        return oneMoreActionQueue;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
+    {
+        oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
+        return oneMoreActionQueueTypeTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Creates and initialize an instance of the <c>OneMoreActionQueueBusinessEvent</c> class
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue">An <c>OneMoreActionQueue</c> record</param>
+    /// <param name = "_oneMoreActionQueueTypeTable">An <c>OneMoreActionQueueTypeTable</c> record</param>
+    /// <returns>An instance of the <c>OneMoreActionQueueBusinessEvent</c> class</returns>
+    public static OneMoreActionQueueBusinessEvent construct(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    {
+        OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = new OneMoreActionQueueBusinessEvent();
+        oneMoreActionQueueBusinessEvent.parmOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueueBusinessEvent.parmOneMoreActionQueueTypeTable(_oneMoreActionQueueTypeTable);
+        return oneMoreActionQueueBusinessEvent;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildContract</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Populates OneMoreActionQueueBusinessEventContract with all the fields required for action queue event
+    /// </summary>
+    /// <returns><c>OneMoreActionQueueBusinessEventContract</c></returns>
+    public BusinessEventsContract buildContract()
+    {
+        OneMoreActionQueueBusinessEventContract contract = new OneMoreActionQueueBusinessEventContract();
+        contract.parmLegalEntity(oneMoreActionQueue.CompanyId);
+        contract.parmActionId(oneMoreActionQueue.ActionId);
+        contract.parmStatus(oneMoreActionQueue.Status);
+        contract.parmProcessingNotes(oneMoreActionQueue.ProcessingNotes);
+        return contract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getBusinessEventId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Gets the Business Event Id of the Workflow Element event
+    /// </summary>
+    /// <remarks>
+    /// BusinessEventsId is generated with the combination of ConfigurationSequenceNumber and the TemplateName from the SysWorkflow table and the ElementName from the SysWorkflowElement table.
+    /// </remarks>
+    /// <returns>The Business Event Id of the Workflow Element event</returns>
+    public str getBusinessEventId()
+    {
+        return OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(oneMoreActionQueue.TypeId);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
