@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueBusinessEventContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueBusinessEventContract</c> class will be used as the data contract for action queue business events
+/// </summary>
+[DataContract]
+class OneMoreActionQueueBusinessEventContract extends BusinessEventsContract
+{
+    private SelectableDataArea                  legalEntity;    
+    private OneMoreActionQueueActionId          actionId;
+    private OneMoreActionQueueStatus            status;
+    private OneMoreActionQueueProcessingNotes   processingNotes;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmLegalEntity</Name>
+				<Source><![CDATA[
+    [
+        DataMember('LegalEntity'),
+        BusinessEventsDataMember("@AccountsReceivable:LegalEntity"),
+        Hookable(false)
+    ]
+    public SelectableDataArea parmLegalEntity(SelectableDataArea _legalEntity = legalEntity)
+    {
+        legalEntity = _legalEntity;
+
+        return legalEntity;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmActionId</Name>
+				<Source><![CDATA[
+    [
+        DataMember('ActionId'),
+        BusinessEventsDataMember("@OneMoreActionQueueFramework:OneMoreActionQueueActionId"),
+        Hookable(false)
+    ]
+    public OneMoreActionQueueActionId parmActionId(OneMoreActionQueueActionId _actionId = actionId)
+    {
+        actionId = _actionId;
+
+        return actionId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmStatus</Name>
+				<Source><![CDATA[
+    [
+        DataMember('Status'),
+        BusinessEventsDataMember("@SYS36398"),
+        Hookable(false)
+    ]
+    public OneMoreActionQueueStatus parmStatus(OneMoreActionQueueStatus _status = status)
+    {
+        status = _status;
+
+        return status;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmProcessingNotes</Name>
+				<Source><![CDATA[
+    [
+        DataMember('ProcessingNotes'),
+        BusinessEventsDataMember("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingNotes"),
+        Hookable(false)
+    ]
+    public OneMoreActionQueueProcessingNotes parmProcessingNotes(OneMoreActionQueueProcessingNotes _processingNotes = processingNotes)
+    {
+        processingNotes = _processingNotes;
+
+        return processingNotes;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

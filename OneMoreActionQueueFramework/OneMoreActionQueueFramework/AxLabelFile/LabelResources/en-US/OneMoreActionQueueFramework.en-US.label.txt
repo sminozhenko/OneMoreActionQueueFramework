@@ -78,3 +78,4 @@ OneMoreActionQueueProcessingHasBeenCompleted=OneMore action queue processing for
 OneMoreActionQueueProcessingTypeBatchJob=Batch job
 OneMoreActionQueueProcessBatchJob=Process action queue (batch job)
 OneMoreActionQueueChangeStatus=Change status
+OneMoreActionQueueBusinessEventTypeDescription=Business events for the %1 OneMore action queue type. Use these events to respond to OneMore action queue processing events (processed or error)
