@@ -18,6 +18,7 @@ class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsE
 			<Method>
 				<Name>initialize</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public void initialize(BusinessEventsEndpoint _endpoint, boolean _forceCreate)
     {
         if (!(_endpoint is OneMoreActionQueueBusinessEventsEndpoint))
@@ -100,6 +101,7 @@ class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsE
 			<Method>
 				<Name>getException</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public final System.Exception getException()
     {
         return lastException;

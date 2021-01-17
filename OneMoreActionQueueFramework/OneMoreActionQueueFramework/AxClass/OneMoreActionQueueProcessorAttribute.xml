@@ -28,6 +28,7 @@ class OneMoreActionQueueProcessorAttribute extends SysAttribute
 			<Method>
 				<Name>parmActionQueueContractClass</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public ClassName parmActionQueueContractClass()
     {
         return actionQueueContractClass;
@@ -38,6 +39,7 @@ class OneMoreActionQueueProcessorAttribute extends SysAttribute
 			<Method>
 				<Name>parmIsSystemAction</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public boolean parmIsSystemAction()
     {
         return isSystemAction;

@@ -14,6 +14,7 @@ class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuil
 			<Method>
 				<Name>construct</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueMenuItemLookupTreeBuilder construct(FormTreeControl _treeControl, container _countryRegionCodes)
     {
         OneMoreActionQueueMenuItemLookupTreeBuilder treeBuilder = new OneMoreActionQueueMenuItemLookupTreeBuilder();

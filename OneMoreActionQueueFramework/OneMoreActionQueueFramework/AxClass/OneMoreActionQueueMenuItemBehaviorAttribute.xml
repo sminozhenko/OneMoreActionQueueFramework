@@ -26,6 +26,7 @@ class OneMoreActionQueueMenuItemBehaviorAttribute extends SysAttribute
 			<Method>
 				<Name>parmClassName</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public ClassName parmClassName()
     {
         return className;

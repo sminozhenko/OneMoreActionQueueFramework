@@ -14,6 +14,7 @@ class OneMoreActionQueueLogShow
 			<Method>
 				<Name>main</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static void main(Args _args)
     {
         if (!_args)

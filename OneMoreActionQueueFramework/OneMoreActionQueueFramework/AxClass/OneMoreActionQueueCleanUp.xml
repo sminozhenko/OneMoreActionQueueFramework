@@ -9,13 +9,13 @@
 [SysOperationJournaledParameters(true)]
 class OneMoreActionQueueCleanUp extends SysOperationServiceController
 {
-    
 }
 ]]></Declaration>
 		<Methods>
 			<Method>
 				<Name>construct</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static SysOperationController construct(Args _args)
     {
         SysOperationController controller = new OneMoreActionQueueCleanUp(classstr(OneMoreActionQueueCleanUpService), methodstr(OneMoreActionQueueCleanUpService, cleanUp), SysOperationExecutionMode::Synchronous);
@@ -29,6 +29,7 @@ class OneMoreActionQueueCleanUp extends SysOperationServiceController
 			<Method>
 				<Name>main</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static void main(Args _args)
     {
         OneMoreActionQueueCleanUp::construct(_args).startOperation();

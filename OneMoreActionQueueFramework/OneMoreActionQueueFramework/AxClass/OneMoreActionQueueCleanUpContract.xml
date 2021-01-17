@@ -19,7 +19,8 @@ public class OneMoreActionQueueCleanUpContract
 				<Source><![CDATA[
     [
         DataMemberAttribute,
-        AifQueryTypeAttribute('_packedQuery', queryStr(OneMoreActionQueueCleanUp))
+        AifQueryTypeAttribute('_packedQuery', queryStr(OneMoreActionQueueCleanUp)),
+        Hookable(false)
     ]
     public str parmPackedQuery(str _packedQuery = packedQuery)
     {
@@ -33,6 +34,7 @@ public class OneMoreActionQueueCleanUpContract
 			<Method>
 				<Name>getQuery</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public Query getQuery()
     {
         return new Query(SysOperationHelper::base64Decode(packedQuery));

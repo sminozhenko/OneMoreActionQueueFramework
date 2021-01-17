@@ -19,6 +19,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// <returns>
     /// A record in the <c>OneMoreActionQueueTypeMenuItemParameterTable</c> table otherwise, an empty record.
     /// </returns>
+    [Hookable(false)]
     public static OneMoreActionQueueTypeMenuItemParameterTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
     {
         OneMoreActionQueueTypeMenuItemParameterTable  ret;
@@ -45,6 +46,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// <param name = "_oneMoreActionQueueTypeMenuItemParameterTable">Original <c>oneMoreActionQueueTypeMenuItemParameterTable</c></param>
     /// <param name = "_classId">Packed class id</param>
     /// <param name = "_packedParameters">Packed parameters for class object</param>
+    [Hookable(false)]
     public static void updateParameters(oneMoreActionQueueTypeMenuItemParameterTable _oneMoreActionQueueTypeMenuItemParameterTable, ClassId _classId, container _packedParameters)
     {
         ttsbegin;
@@ -70,6 +72,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// </summary>
     /// <param name = "_menuItemName">Menu item name value</param>
     /// <returns>True if menu item is supported otherwise False</returns>
+    [Hookable(false)]
     public static boolean checkMenuItemName(OneMoreActionQueueMenuItemName _menuItemName)
     {
         boolean ret = true;
@@ -104,6 +107,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// </summary>
     /// <param name = "_classId">Class id</param>
     /// <returns>True if class is supported for menu item action queue processing otherwise False</returns>
+    [Hookable(false)]
     public static boolean isClassSupported(ClassId _classId)
     {
         return OneMoreActionQueueMenuItemBehavior::isClassSupported(_classId);
@@ -119,6 +123,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// </summary>
     /// <param name = "_menuItemName">An <c>OneMoreActionQueueMenuItemName</c> value</param>
     /// <returns><c>MenuFunction</c></returns>
+    [Hookable(false)]
     public static MenuFunction menuFunction(OneMoreActionQueueMenuItemName _menuItemName)
     {
         return new MenuFunction(_menuItemName, MenuItemType::Action);
@@ -145,7 +150,10 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 			<Method>
 				<Name>menuItemClassName</Name>
 				<Source><![CDATA[
-    [SysClientCacheDataMethod(true)]
+    [
+        SysClientCacheDataMethod(true),
+        Hookable(false)
+    ]
     public display ClassName menuItemClassName()
     {
         ClassName   ret;

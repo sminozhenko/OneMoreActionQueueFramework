@@ -19,6 +19,7 @@ public class OneMoreActionQueueTypeTable extends common
     /// <returns>
     /// A record in the <c>OneMoreActionQueueTypeTable</c> table otherwise, an empty record.
     /// </returns>
+    [Hookable(false)]
     public static OneMoreActionQueueTypeTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
     {
         OneMoreActionQueueTypeTable  ret;
@@ -44,6 +45,7 @@ public class OneMoreActionQueueTypeTable extends common
     /// </summary>
     /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
     /// <returns>True if <c>OneMoreActionQueueTypeTable</c> record exists otherwise false</returns>
+    [Hookable(false)]
     public static boolean exist(OneMoreActionQueueTypeId _typeId)
     {
         return (select firstonly RecId
@@ -56,6 +58,7 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>txtNotExist</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static str txtNotExist()
     {
         return "@OneMoreActionQueueFramework:OneMoreActionQueueTypeDoesNotExist";
@@ -66,6 +69,7 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>getActionQueueAttributeFromProcessorClass</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueProcessorAttribute getActionQueueAttributeFromProcessorClass(ClassId _classId)
     {
         SysDictClass actionQueueDictClass = new SysDictClass(_classId);
@@ -82,6 +86,7 @@ public class OneMoreActionQueueTypeTable extends common
     /// Lookup custom type action classes
     /// </summary>
     /// <returns>Name of selected class</returns>
+    [Hookable(false)]
     public static str lookupCustomTypeActions()
     {
         Array   actionQueueList = new Array(Types::Integer);        
@@ -113,6 +118,7 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>contractClassName</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public ClassName contractClassName()
     {
         return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
@@ -123,7 +129,10 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>messageExample</Name>
 				<Source><![CDATA[
-    [SysClientCacheDataMethod(true)]
+    [
+        SysClientCacheDataMethod(true),
+        Hookable(false)
+    ]
     public display OneMoreActionQueueMessageExample messageExample()
     {
         OneMoreActionQueueMessageExample ret;
@@ -216,7 +225,10 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>transformationJSONEdit</Name>
 				<Source><![CDATA[
-    [SysClientCacheDataMethod(true)]
+    [
+        SysClientCacheDataMethod(true),
+        Hookable(false)
+    ]
     public edit OneMoreActionQueueTransformationJSON transformationJSONEdit(boolean _set, OneMoreActionQueueTransformationJSON _value)
     {
         if (_set)
@@ -247,6 +259,7 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>oneMoreActionQueueTypeMenuItemParameterTable</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable(boolean _forupdate = false)
     {
         return OneMoreActionQueueTypeMenuItemParameterTable::find(this.TypeId, _forupdate);
@@ -589,6 +602,7 @@ public class OneMoreActionQueueTypeTable extends common
     /// Checks if action type has unprocessed messages in the queue
     /// </summary>
     /// <returns>True if action type has unprocessed messages in the queue otherwise False</returns>
+    [Hookable(false)]
     public boolean hasUnprocessedMessagesInQueue()
     {
         OneMoreActionQueue oneMoreActionQueue;

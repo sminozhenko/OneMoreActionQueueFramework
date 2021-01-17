@@ -19,6 +19,7 @@ class OneMoreActionQueueSysQueryRangeUtilCopy
     /// </summary>
     /// <param name = "_parameterName">Action queue manu item parameter value</param>
     /// <returns>Range for query</returns>
+    [Hookable(false)]
     public static str actionQueueParameterValue(str _parameterName)
     {
         if (OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext != null)

@@ -11,6 +11,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>oneMoreActionQueueTypeTable</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable(boolean _forupdate = false)
     {
         return OneMoreActionQueueTypeTable::find(this.TypeId, _forupdate);
@@ -29,6 +30,7 @@ public class OneMoreActionQueue extends common
     /// <returns>
     /// A record in the <c>OneMoreActionQueue</c> table otherwise, an empty record.
     /// </returns>
+    [Hookable(false)]
     public static OneMoreActionQueue findRecId(RefRecId _refRecId, boolean _forUpdate = false)
     {
         OneMoreActionQueue  ret;
@@ -68,6 +70,7 @@ public class OneMoreActionQueue extends common
     /// <param name = "_actionMessage">Action queue message</param>
     /// <param name = "_actionId">Action Id. Optional</param>
     /// <returns>Added <c>OneMoreActionQueue</c> record</returns>
+    [Hookable(false)]
     public static OneMoreActionQueue addToActionQueue(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage, OneMoreActionQueueActionId _actionId = emptyGuid())
     {
         OneMoreActionQueue ret;
@@ -101,7 +104,10 @@ public class OneMoreActionQueue extends common
     /// Transform action message if transformation is set up for action queue type
     /// </summary>
     /// <returns>Transformed message</returns>
-    [SysClientCacheDataMethod(true)]
+    [
+        SysClientCacheDataMethod(true),
+        Hookable(false)
+    ]
     public display OneMoreActionQueueTransformedMessage transformedMessage()
     {
         OneMoreActionQueueTransformedMessage ret = this.ActionMessage;

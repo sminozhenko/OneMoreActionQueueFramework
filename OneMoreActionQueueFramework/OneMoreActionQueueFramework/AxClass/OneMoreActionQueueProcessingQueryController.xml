@@ -32,6 +32,7 @@ class OneMoreActionQueueProcessingQueryController extends SysOperationServiceCon
     /// Main
     /// </summary>
     /// <param name = "_args">Arguments</param>
+    [Hookable(false)]
     public static void main(Args _args)
     {
         OneMoreActionQueueProcessingQueryController::newFromArgs(_args).startOperation();
@@ -46,6 +47,7 @@ class OneMoreActionQueueProcessingQueryController extends SysOperationServiceCon
     /// Construct <c>OneMoreActionQueueProcessingQueryController</c>
     /// </summary>
     /// <returns>Created <c>OneMoreActionQueueProcessingQueryController</c> object</returns>
+    [Hookable(false)]
     public static OneMoreActionQueueProcessingQueryController construct()
     {
         return new OneMoreActionQueueProcessingQueryController();
@@ -61,6 +63,7 @@ class OneMoreActionQueueProcessingQueryController extends SysOperationServiceCon
     /// </summary>
     /// <param name = "_args">Arguments</param>
     /// <returns>New class</returns>
+    [Hookable(false)]
     public static OneMoreActionQueueProcessingQueryController newFromArgs(Args _args)
     {
         OneMoreActionQueueProcessingQueryController     ret = OneMoreActionQueueProcessingQueryController::construct();
