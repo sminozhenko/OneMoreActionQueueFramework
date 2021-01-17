@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportBusinessEvent</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// This is a BusinessEvents class for DMF export action queues
+/// </summary>
+[OneMoreActionQueueBusinessEventAttribute(classStr(OneMoreActionQueueDMFExportBusinessEventContract))]
+class OneMoreActionQueueDMFExportBusinessEvent extends OneMoreActionQueueBusinessEvent
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>buildContract</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Populates <c>OneMoreActionQueueDMFExportBusinessEventContract</c> with all the fields required for action queue event
+    /// </summary>
+    /// <returns><c>OneMoreActionQueueDMFExportBusinessEventContract</c></returns>
+    public BusinessEventsContract buildContract()
+    {
+        OneMoreActionQueueDMFExportBusinessEventContract contract = super();
+
+        DocuRefSearch docuRefSearch = DocuRefSearch::newCommon(this.parmOneMoreActionQueue(), true);
+
+        if (docuRefSearch.next())
+        {
+            DocuRef docuRef = docuRefSearch.docuRef();
+        
+            contract.parmFileUrl(DocumentManagement::getAttachmentPublicUrl(docuRef));
+            contract.parmFileName(docuRef.Name);
+            contract.parmFileType(docuRef.fileExtension());
+        }
+
+        return contract;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -67,6 +67,24 @@ public class OneMoreActionQueueTypeTable extends common
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>processorDictClass</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public SysDictClass processorDictClass()
+    {
+        SysDictClass ret = SysDictClass::newName(this.ActionClassName);
+
+        if (ret == null)
+        {
+            error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueClassNotFound", this.ActionClassName));
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>getActionQueueAttributeFromProcessorClass</Name>
 				<Source><![CDATA[
     [Hookable(false)]
@@ -122,6 +140,41 @@ public class OneMoreActionQueueTypeTable extends common
     public ClassName contractClassName()
     {
         return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>businessEventClassName</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public ClassName businessEventClassName()
+    {
+        ClassName                                           ret;
+        OneMoreActionQueueProcessorBusinessEventAttribute   processorBusinessEventAttribute;
+        SysDictClass                                        actionQueueDictClass = this.processorDictClass();
+        
+        if (actionQueueDictClass)
+        {
+            processorBusinessEventAttribute = actionQueueDictClass.getAttribute(classStr(OneMoreActionQueueProcessorBusinessEventAttribute));
+
+            while (processorBusinessEventAttribute == null)
+            {
+                actionQueueDictClass = new SysDictClass(SysDictClass::superClass(actionQueueDictClass.id()));
+                processorBusinessEventAttribute = actionQueueDictClass.getAttribute(classStr(OneMoreActionQueueProcessorBusinessEventAttribute));
+            }
+        }
+
+        if (processorBusinessEventAttribute)
+        {
+            ret = processorBusinessEventAttribute.parmActionQueueBusinessEventClass();
+        }
+        else
+        {
+            error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueBusinessEventClassNotFound", this.ActionClassName));
+        }
+        
+        return ret;
     }
 
 ]]></Source>
@@ -209,6 +262,9 @@ public class OneMoreActionQueueTypeTable extends common
                     case OneMoreActionQueueType::MenuItem:
                         this.ActionClassName   = classStr(OneMoreActionQueueMenuItemActionProcessor);
                         break;
+                    case OneMoreActionQueueType::DMFExport:
+                        this.ActionClassName   = classStr(OneMoreActionQueueDMFExportProcessor);
+                        break;
                     default:
                         this.ActionClassName   = '';
                 }
@@ -263,6 +319,16 @@ public class OneMoreActionQueueTypeTable extends common
     public OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable(boolean _forupdate = false)
     {
         return OneMoreActionQueueTypeMenuItemParameterTable::find(this.TypeId, _forupdate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>oneMoreActionQueueTypeDMFExportParameterTable</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable(boolean _forupdate = false)
+    {
+        return OneMoreActionQueueTypeDMFExportParameterTable::find(this.TypeId, _forupdate);
     }
 
 ]]></Source>

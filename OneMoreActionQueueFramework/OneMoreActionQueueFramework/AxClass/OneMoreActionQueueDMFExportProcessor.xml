@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processor class for DMF export type
+/// </summary>
+[
+    OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true),
+    OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueDMFExportBusinessEvent))
+]
+class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
+{
+    OneMoreActionQueueDMFExportContract  localContract;
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Initialize</Name>
+				<Source><![CDATA[
+    public void Initialize()
+    {
+        super();
+
+        localContract = contract as OneMoreActionQueueDMFExportContract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        try
+        {
+            #DMF
+            
+            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
+            
+            DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
+            OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
+            
+            DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
+
+            ttsbegin;
+
+            DMFEntityExporter exporter = new DMFEntityExporter();
+            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', oneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName, #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
+
+            if (fileId != '')
+            {
+                SharedServiceUnitURL    downloadUrl = DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
+                System.Uri              uri = new System.Uri(downloadUrl);
+                str                     fileName = System.IO.Path::GetFileName(uri.LocalPath);
+                str                     filePath = WinAPIServer::getTempPath() + fileName;
+                
+                DMFPackageUtil::downloadFileFromUrlV2(downloadUrl, filePath);
+
+                using (System.IO.Stream fileStream = System.IO.File::OpenRead(filePath))
+                {
+                    var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
+                    DocumentManagement::attachFileToCommon(this.parmOneMoreActionQueue(), DocuType::typeFile(), fileStream, fileName, mime, fileName);
+                }
+
+                DMFPackageUtil::deleteFileIgnoreError(filePath);
+
+                if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
+                {
+                    DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
+                    dmfDefinitionGroup.delete();
+                }
+            }
+            else
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", definitionGroupName));
+            }
+
+            ttscommit;
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
