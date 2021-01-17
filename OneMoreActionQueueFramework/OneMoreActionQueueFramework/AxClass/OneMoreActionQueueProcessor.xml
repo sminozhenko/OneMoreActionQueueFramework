@@ -6,6 +6,7 @@
 /// <summary>
 /// Action queue base processor
 /// </summary>
+[OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueBusinessEvent))]
 abstract class OneMoreActionQueueProcessor
 {
     protected OneMoreActionQueue              oneMoreActionQueue;
@@ -28,7 +29,6 @@ abstract class OneMoreActionQueueProcessor
     public static OneMoreActionQueueProcessor newFromOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
     {
         OneMoreActionQueueProcessor ret = OneMoreActionQueueProcessor::newFromBusinessActionTypeTable(_oneMoreActionQueue.oneMoreActionQueueTypeTable());
-        ;
 
         ret.parmOneMoreActionQueue(_oneMoreActionQueue);
 
@@ -49,7 +49,6 @@ abstract class OneMoreActionQueueProcessor
     public static OneMoreActionQueueProcessor newFromBusinessActionTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
         OneMoreActionQueueProcessor    ret;
-        ;
 
         DictClass actionQueueDictClass = SysDictClass::newName(_oneMoreActionQueueTypeTable.ActionClassName);
     

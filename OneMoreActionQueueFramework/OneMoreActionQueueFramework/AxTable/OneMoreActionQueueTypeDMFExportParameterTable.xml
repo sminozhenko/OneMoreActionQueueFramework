@@ -91,6 +91,9 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 					<DataField>DMFEntityName</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
+					<DataField>DMFSourceName</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
 					<DataField>KeepDataProject</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
@@ -125,6 +128,13 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 			i:type="AxTableFieldEnum">
 			<Name>KeepDataProject</Name>
 			<ExtendedDataType>OneMoreActionQueueDMFExportKeepDataProject</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>DMFSourceName</Name>
+			<ExtendedDataType>DMFSourceName</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+			<Visible>No</Visible>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

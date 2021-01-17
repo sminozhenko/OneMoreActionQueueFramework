@@ -171,7 +171,8 @@ public class OneMoreActionQueueTypeTable extends FormRun
     
             if (OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport)
             {
-                OneMoreActionQueueTypeDMFExportParameterTable.TypeId = OneMoreActionQueueTypeTable.TypeId;
+                OneMoreActionQueueTypeDMFExportParameterTable.TypeId        = OneMoreActionQueueTypeTable.TypeId;
+                OneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName = 'XML-Element';
                 
                 ret = super();
             }
@@ -209,6 +210,33 @@ public class OneMoreActionQueueTypeTable extends FormRun
             public void lookup(FormControl _formControl, str _filterStr)
             {
                 DMFUtil::lookupEntity(_formControl);
+            }
+
+]]></Source>
+							</Method>
+						</Methods>
+					</Field>
+					<Field>
+						<DataField>DMFSourceName</DataField>
+						<Methods>
+							<Method>
+								<Name>lookup</Name>
+								<Source><![CDATA[
+            public void lookup(FormControl _formControl, str _filterStr)
+            {
+                SysTableLookup          tableLookup;
+                QueryBuildDataSource    qbds;
+                Query                   query = new Query();
+
+                tableLookup = SysTableLookup::newParameters(tableNum(DMFDataSource), _formControl);
+                tableLookup.addLookupfield(fieldNum(DMFDataSource, SourceName), true);
+                
+                qbds = query.addDataSource(tableNum(DMFDataSource));
+
+                qbds.addRange(fieldNum(DMFDataSource, Type)).value(queryValue(DMFSourceType::File));
+
+                tableLookup.parmQuery(query);
+                tableLookup.performFormLookup();
             }
 
 ]]></Source>
@@ -316,6 +344,12 @@ public class OneMoreActionQueueTypeTable extends FormRun
 			<Fields>
 				<AxFormDataSourceField>
 					<DataField>DMFEntityName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DMFSourceName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>KeepDataProject</DataField>
 				</AxFormDataSourceField>
 				<AxFormDataSourceField>
 					<DataField>PackedParameters</DataField>
@@ -638,6 +672,15 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<FormControlExtension
 									i:nil="true" />
 								<DataField>DMFEntityName</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>DMFExport_DMFSourceName</Name>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFSourceName</DataField>
 								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
 							</AxFormControl>
 							<AxFormControl xmlns=""

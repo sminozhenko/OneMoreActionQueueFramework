@@ -44,15 +44,13 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
             OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
 
             info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
-            //
-            //SharedServiceUnitFileID     fileId;
             
             DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
 
             ttsbegin;
 
             DMFEntityExporter exporter = new DMFEntityExporter();
-            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', 'XML-Element', #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
+            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', oneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName, #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
 
             if (fileId != '')
             {
@@ -62,15 +60,6 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
                 str                     filePath = WinAPIServer::getTempPath() + fileName;
                 
                 DMFPackageUtil::downloadFileFromUrlV2(downloadUrl, filePath);
-                
-                /*
-                str fileExt;
-
-                if (uri != null)
-                {
-                    fileExt = strReplace(System.IO.Path::GetExtension(uri.LocalPath), '.', '');
-                }
-                */
 
                 using (System.IO.Stream fileStream = System.IO.File::OpenRead(filePath))
                 {
@@ -79,25 +68,6 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
                 }
 
                 DMFPackageUtil::deleteFileIgnoreError(filePath);
-                
-
-                /*
-                System.Uri uri = new System.Uri(downloadUrl);
-                str fileExt;
-
-                if (uri != null)
-                {
-                    fileExt = strReplace(System.IO.Path::GetExtension(uri.LocalPath), '.', '');
-                }
-                */
-                /*
-                // Temporary solution, event should be moved to DGAApplicationSuite model
-                if (BusinessEventsConfigurationReader::isBusinessEventEnabled(businessEventName))
-                {
-                    DGABaseExportServiceEvent event = DGABaseExportServiceEvent::newFromParameters(businessEventName, curExt(), fileId, downloadUrl, fileExt, _contract.parmActionId());
-                    event.send();
-                }
-                */
 
                 if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
                 {
