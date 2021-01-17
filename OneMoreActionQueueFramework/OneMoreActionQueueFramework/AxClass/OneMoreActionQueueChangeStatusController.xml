@@ -18,7 +18,7 @@ class OneMoreActionQueueChangeStatusController extends SysOperationServiceContro
     /// Initialize contract
     /// </summary>
     /// <param name = "_args">Arguments</param>
-    protected void initContract(Args _args)
+    internal void initContract(Args _args)
     {
         OneMoreActionQueueChangeStatusContract  contract = this.getDataContractObject();
         
@@ -34,6 +34,7 @@ class OneMoreActionQueueChangeStatusController extends SysOperationServiceContro
     /// Main
     /// </summary>
     /// <param name = "_args">Arguments</param>
+    [Hookable(false)]
     public static void main(Args _args)
     {
         OneMoreActionQueueChangeStatusController   controller;
@@ -62,6 +63,7 @@ class OneMoreActionQueueChangeStatusController extends SysOperationServiceContro
     /// </summary>
     /// <param name = "_args">Arguments</param>
     /// <returns>New class</returns>
+    [Hookable(false)]
     public static OneMoreActionQueueChangeStatusController newFromArgs(Args _args)
     {
         OneMoreActionQueueChangeStatusController     ret;

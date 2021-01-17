@@ -21,6 +21,7 @@ class OneMoreActionQueueService
     /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
     /// <param name = "_actionMessage">An <c>OneMoreActionQueueMessage</c> value</param>
     /// <returns><c>OneMoreActionQueueServiceRunActionResponse</c></returns>
+    [Hookable(false)]
     public OneMoreActionQueueServiceRunActionResponse runActionWithActionId(OneMoreActionQueueActionId _actionId, OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage)
     {
         OneMoreActionQueueServiceRunActionResponse              response;

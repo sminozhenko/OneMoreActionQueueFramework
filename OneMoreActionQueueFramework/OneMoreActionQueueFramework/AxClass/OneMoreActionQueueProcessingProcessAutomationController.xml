@@ -16,6 +16,7 @@ public class OneMoreActionQueueProcessingProcessAutomationController extends Sys
 			<Method>
 				<Name>construct</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueProcessingProcessAutomationController construct()
     {
         return new OneMoreActionQueueProcessingProcessAutomationController(classStr(OneMoreActionQueueProcessingProcessAutomationController), methodStr(OneMoreActionQueueProcessingProcessAutomationController, process), SysOperationExecutionMode::ReliableAsynchronous);

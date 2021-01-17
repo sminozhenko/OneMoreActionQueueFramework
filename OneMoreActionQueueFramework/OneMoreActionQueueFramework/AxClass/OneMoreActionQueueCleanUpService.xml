@@ -22,6 +22,7 @@ class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
     /// Clean-up action queue
     /// </summary>
     /// <param name = "_contract">An <c>OneMoreActionQueueCleanUpContract</c></param>
+    [Hookable(false)]
     public void cleanUp(OneMoreActionQueueCleanUpContract _contract)
     {
         Query                           query = _contract.getQuery();

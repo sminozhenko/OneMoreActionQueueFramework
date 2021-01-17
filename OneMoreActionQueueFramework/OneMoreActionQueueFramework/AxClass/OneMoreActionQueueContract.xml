@@ -17,7 +17,10 @@ abstract class OneMoreActionQueueContract
 			<Method>
 				<Name>parmDataAreaId</Name>
 				<Source><![CDATA[
-    [DataMember("DataAreaId")]
+    [
+        DataMember("DataAreaId"),
+        Hookable(false)
+    ]
     public DataAreaId parmDataAreaId(DataAreaId _dataAreaId = dataAreaId)
     {
         dataAreaId = _dataAreaId;

@@ -18,7 +18,7 @@ class OneMoreActionQueueProcessingManualController extends SysOperationServiceCo
     /// Initialize contract
     /// </summary>
     /// <param name = "_args">Arguments</param>
-    protected void initContract(Args _args)
+    internal void initContract(Args _args)
     {
         OneMoreActionQueueProcessingManualContract  contract = this.getDataContractObject();
         
@@ -34,6 +34,7 @@ class OneMoreActionQueueProcessingManualController extends SysOperationServiceCo
     /// Main
     /// </summary>
     /// <param name = "_args">Arguments</param>
+    [Hookable(false)]
     public static void main(Args _args)
     {
         OneMoreActionQueueProcessingManualController   controller;
@@ -62,6 +63,7 @@ class OneMoreActionQueueProcessingManualController extends SysOperationServiceCo
     /// </summary>
     /// <param name = "_args">Arguments</param>
     /// <returns>New class</returns>
+    [Hookable(false)]
     public static OneMoreActionQueueProcessingManualController newFromArgs(Args _args)
     {
         OneMoreActionQueueProcessingManualController     ret;

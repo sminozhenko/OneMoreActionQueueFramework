@@ -17,7 +17,10 @@ public final class OneMoreActionQueueProcessingProcessAutomationContract extends
 			<Method>
 				<Name>parmActionQueueTypeId</Name>
 				<Source><![CDATA[
-    [DataMember]
+    [
+        DataMember,
+        Hookable(false)
+    ]
     public OneMoreActionQueueTypeId parmActionQueueTypeId(OneMoreActionQueueTypeId _actionQueueTypeId = actionQueueTypeId)
     {
         actionQueueTypeId = _actionQueueTypeId;

@@ -24,7 +24,6 @@ class OneMoreActionQueueProcessingSingleContract
     ]
     public RefRecId parmActionQueueRecId(RefRecId _actionQueueRecId = actionQueueRecId)
     {
-        ;
         actionQueueRecId = _actionQueueRecId;
         return actionQueueRecId;
     }
