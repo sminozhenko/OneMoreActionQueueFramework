@@ -20,7 +20,10 @@ public final class SysQueryRangeUtilOneMoreActionQueueFramework_Extension
     /// </summary>
     /// <param name = "_parameterName">Parameter name</param>
     /// <returns>Range for query</returns>
-    [QueryRangeFunctionAttribute()]
+    [
+        QueryRangeFunctionAttribute(),
+        Hookable(false)
+    ]
     public static str OneMoreActionQueueParameterValue(str _parameterName)
     {
         return OneMoreActionQueueSysQueryRangeUtilCopy::actionQueueParameterValue(_parameterName);

@@ -29,9 +29,9 @@ class OneMoreActionQueueProcessingQueryContract
     /// Get query method
     /// </summary>
     /// <returns>Query</returns>
+    [Hookable(false)]
     public Query getQuery()
     {
-        ;
         return new Query(SysOperationHelper::base64Decode(packedQuery));
     }
 
@@ -47,11 +47,11 @@ class OneMoreActionQueueProcessingQueryContract
     /// <returns>Query</returns>
     [
         DataMemberAttribute,
-        AifQueryTypeAttribute('_packedQuery', queryStr(OneMoreActionQueueWaiting))
+        AifQueryTypeAttribute('_packedQuery', queryStr(OneMoreActionQueueWaiting)),
+        Hookable(false)
     ]
     public str parmQuery(str _packedQuery = packedQuery)
     {
-        ;
         packedQuery = _packedQuery;
         return packedQuery;
     }
@@ -65,9 +65,9 @@ class OneMoreActionQueueProcessingQueryContract
     /// Set query method
     /// </summary>
     /// <param name = "_query">Query</param>
+    [Hookable(false)]
     public void setQuery(Query _query)
     {
-        ;
         packedQuery = SysOperationHelper::base64Encode(_query.pack());
     }
 
@@ -80,11 +80,11 @@ class OneMoreActionQueueProcessingQueryContract
         DataMemberAttribute,
         SysOperationLabelAttribute(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueEnableBatchBundling")),
         SysOperationDisplayOrderAttribute('1'),
-        SysOperationGroupMemberAttribute('BatchBundling')
+        SysOperationGroupMemberAttribute('BatchBundling'),
+        Hookable(false)
     ]
     public NoYes parmEnableBatchBundling(NoYes _enableBatchBundling = enableBatchBundling)
     {
-        ;
         enableBatchBundling = _enableBatchBundling;
         return enableBatchBundling;
     }
@@ -98,11 +98,11 @@ class OneMoreActionQueueProcessingQueryContract
         DataMemberAttribute,
         SysOperationLabelAttribute(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueBatchBundleSize")),
         SysOperationDisplayOrderAttribute('2'),
-        SysOperationGroupMemberAttribute('BatchBundling')
+        SysOperationGroupMemberAttribute('BatchBundling'),
+        Hookable(false)
     ]
     public int parmBatchBundleSize(int _batchBundleSize = batchBundleSize)
     {
-        ;
         batchBundleSize = _batchBundleSize;
         return batchBundleSize;
     }

@@ -19,6 +19,7 @@ public class OneMoreActionQueueTypeTable extends common
     /// <returns>
     /// A record in the <c>OneMoreActionQueueTypeTable</c> table otherwise, an empty record.
     /// </returns>
+    [Hookable(false)]
     public static OneMoreActionQueueTypeTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
     {
         OneMoreActionQueueTypeTable  ret;
@@ -44,6 +45,7 @@ public class OneMoreActionQueueTypeTable extends common
     /// </summary>
     /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
     /// <returns>True if <c>OneMoreActionQueueTypeTable</c> record exists otherwise false</returns>
+    [Hookable(false)]
     public static boolean exist(OneMoreActionQueueTypeId _typeId)
     {
         return (select firstonly RecId
@@ -56,6 +58,7 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>txtNotExist</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static str txtNotExist()
     {
         return "@OneMoreActionQueueFramework:OneMoreActionQueueTypeDoesNotExist";
@@ -64,8 +67,27 @@ public class OneMoreActionQueueTypeTable extends common
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>processorDictClass</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public SysDictClass processorDictClass()
+    {
+        SysDictClass ret = SysDictClass::newName(this.ActionClassName);
+
+        if (ret == null)
+        {
+            error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueClassNotFound", this.ActionClassName));
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>getActionQueueAttributeFromProcessorClass</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueProcessorAttribute getActionQueueAttributeFromProcessorClass(ClassId _classId)
     {
         SysDictClass actionQueueDictClass = new SysDictClass(_classId);
@@ -113,9 +135,45 @@ public class OneMoreActionQueueTypeTable extends common
 			<Method>
 				<Name>contractClassName</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public ClassName contractClassName()
     {
         return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>businessEventClassName</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public ClassName businessEventClassName()
+    {
+        ClassName                                           ret;
+        OneMoreActionQueueProcessorBusinessEventAttribute   processorBusinessEventAttribute;
+        SysDictClass                                        actionQueueDictClass = this.processorDictClass();
+        
+        if (actionQueueDictClass)
+        {
+            processorBusinessEventAttribute = actionQueueDictClass.getAttribute(classStr(OneMoreActionQueueProcessorBusinessEventAttribute));
+
+            while (processorBusinessEventAttribute == null)
+            {
+                actionQueueDictClass = new SysDictClass(SysDictClass::superClass(actionQueueDictClass.id()));
+                processorBusinessEventAttribute = actionQueueDictClass.getAttribute(classStr(OneMoreActionQueueProcessorBusinessEventAttribute));
+            }
+        }
+
+        if (processorBusinessEventAttribute)
+        {
+            ret = processorBusinessEventAttribute.parmActionQueueBusinessEventClass();
+        }
+        else
+        {
+            error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueBusinessEventClassNotFound", this.ActionClassName));
+        }
+        
+        return ret;
     }
 
 ]]></Source>

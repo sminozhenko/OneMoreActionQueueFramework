@@ -19,6 +19,7 @@ class OneMoreActionQueueMenuItemParameters extends RunBase
 			<Method>
 				<Name>construct</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueMenuItemParameters construct()
     {
         return new OneMoreActionQueueMenuItemParameters();
@@ -29,6 +30,7 @@ class OneMoreActionQueueMenuItemParameters extends RunBase
 			<Method>
 				<Name>parmOneMoreActionQueueTypeTable</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
     {
         oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
@@ -40,6 +42,7 @@ class OneMoreActionQueueMenuItemParameters extends RunBase
 			<Method>
 				<Name>parmMenuItemName</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueMenuItemName parmMenuItemName(OneMoreActionQueueMenuItemName _menuItemName = menuItemName)
     {
         menuItemName = _menuItemName;
@@ -51,6 +54,7 @@ class OneMoreActionQueueMenuItemParameters extends RunBase
 			<Method>
 				<Name>parmJobClassId</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public ClassId parmJobClassId(ClassId _jobClassId = jobClassId)
     {
         jobClassId = _jobClassId;
@@ -106,6 +110,7 @@ class OneMoreActionQueueMenuItemParameters extends RunBase
 			<Method>
 				<Name>main</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static void main(Args _args)
     {
         if (!_args || !_args.record() || _args.record().TableId != tableNum(OneMoreActionQueueTypeTable))

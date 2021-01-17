@@ -19,7 +19,8 @@ class OneMoreActionQueueMenuItemContract extends OneMoreActionQueueContract
 				<Source><![CDATA[
     [
         DataMemberAttribute("MenuItemParameters"), 
-        DataCollectionAttribute(Types::Class, classStr(OneMoreActionQueueMenuItemParameterContract))
+        DataCollectionAttribute(Types::Class, classStr(OneMoreActionQueueMenuItemParameterContract)),
+        Hookable(false)
     ]
     public List parmMenuItemParameters(List _menuItemParameters = menuItemParameters)
     {
@@ -41,6 +42,7 @@ class OneMoreActionQueueMenuItemContract extends OneMoreActionQueueContract
     /// </summary>
     /// <param name = "parameterName">Parameter name</param>
     /// <param name = "parameterValue">Parameter value</param>
+    [Hookable(false)]
     public void addMenuItemParameter(str parameterName, str parameterValue)
     {
         OneMoreActionQueueMenuItemParameterContract contract = new OneMoreActionQueueMenuItemParameterContract();

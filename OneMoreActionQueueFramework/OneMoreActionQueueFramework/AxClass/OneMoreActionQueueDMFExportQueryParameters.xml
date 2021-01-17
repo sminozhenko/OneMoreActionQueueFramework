@@ -16,6 +16,7 @@ class OneMoreActionQueueDMFExportQueryParameters extends RunBase
 			<Method>
 				<Name>construct</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueDMFExportQueryParameters construct()
     {
         return new OneMoreActionQueueDMFExportQueryParameters();
@@ -26,6 +27,7 @@ class OneMoreActionQueueDMFExportQueryParameters extends RunBase
 			<Method>
 				<Name>parmOneMoreActionQueueTypeTable</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
     {
         oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
@@ -37,6 +39,7 @@ class OneMoreActionQueueDMFExportQueryParameters extends RunBase
 			<Method>
 				<Name>main</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static void main(Args _args)
     {
         if (!_args || !_args.record() || _args.record().TableId != tableNum(OneMoreActionQueueTypeTable))

@@ -4,7 +4,7 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
-/// Action queue contract for menu item actions
+/// Action queue contract for DMF export actions
 /// </summary>
 [DataContract]
 class OneMoreActionQueueDMFExportContract extends OneMoreActionQueueMenuItemContract

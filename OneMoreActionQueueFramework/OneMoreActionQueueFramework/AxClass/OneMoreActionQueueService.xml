@@ -57,7 +57,7 @@ class OneMoreActionQueueService
                 throw error(getInfoLogText(fromLine));
             }
 
-            response = OneMoreActionQueueProcessing::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue);
+            response = OneMoreActionQueueProcessorHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue);
         }
         else
         {

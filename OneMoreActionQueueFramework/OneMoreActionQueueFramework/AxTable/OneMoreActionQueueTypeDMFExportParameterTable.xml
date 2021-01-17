@@ -90,6 +90,9 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 				<AxTableFieldGroupField>
 					<DataField>DMFEntityName</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>KeepDataProject</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 	</FieldGroups>
@@ -117,6 +120,11 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 			i:type="AxTableFieldContainer">
 			<Name>PackedQueryRun</Name>
 			<ExtendedDataType>PackedQueryRun</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>KeepDataProject</Name>
+			<ExtendedDataType>OneMoreActionQueueDMFExportKeepDataProject</ExtendedDataType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

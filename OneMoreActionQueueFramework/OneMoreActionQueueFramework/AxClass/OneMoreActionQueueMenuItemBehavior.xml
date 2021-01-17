@@ -17,6 +17,7 @@ abstract class OneMoreActionQueueMenuItemBehavior
 			<Method>
 				<Name>parmClassId</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public ClassId parmClassId(ClassId _classId = classId)
     {
         classId = _classId;
@@ -28,6 +29,7 @@ abstract class OneMoreActionQueueMenuItemBehavior
 			<Method>
 				<Name>construct</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static OneMoreActionQueueMenuItemBehavior construct(ClassId _classId)
     {
         OneMoreActionQueueMenuItemBehavior ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueMenuItemBehavior), new OneMoreActionQueueMenuItemBehaviorAttribute(OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(classId2Name(_classId))));
@@ -42,6 +44,7 @@ abstract class OneMoreActionQueueMenuItemBehavior
 			<Method>
 				<Name>getFirstClassIdSupported</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public static ClassName getFirstClassIdSupported(ClassName _className)
     {
         ClassName     ret;
@@ -84,6 +87,7 @@ abstract class OneMoreActionQueueMenuItemBehavior
     /// </summary>
     /// <param name = "_classId">Class id to be check</param>
     /// <returns>True if class is supported for menu item action queue otherwise False</returns>
+    [Hookable(false)]
     public static boolean isClassSupported(ClassId _classId)
     {
         boolean     ret = true;

@@ -6,10 +6,17 @@
 /// <summary>
 /// Action queue base processor
 /// </summary>
+[OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueBusinessEvent))]
 abstract class OneMoreActionQueueProcessor
 {
-    protected OneMoreActionQueue              oneMoreActionQueue;
-    protected OneMoreActionQueueTypeTable     oneMoreActionQueueTypeTable;
+    private OneMoreActionQueue                oneMoreActionQueueUpd;        //Record for update
+    private OneMoreActionQueue                oneMoreActionQueue;           //Caller record
+    private OneMoreActionQueueTypeTable       oneMoreActionQueueTypeTable;
+
+    private int                               infologFromLine;
+    private boolean                           processedSuccessfully;
+    private UserConnection                    userConnection;
+    private System.Exception                  lastException;
     
     protected OneMoreActionQueueContract      contract;
 
@@ -24,10 +31,10 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
     /// <returns><c>OneMoreActionQueueProcessor</c></returns>
+    [Hookable(false)]
     public static OneMoreActionQueueProcessor newFromOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
     {
-        OneMoreActionQueueProcessor ret = OneMoreActionQueueProcessor::newFromBusinessActionTypeTable(_oneMoreActionQueue.oneMoreActionQueueTypeTable());
-        ;
+        OneMoreActionQueueProcessor ret = OneMoreActionQueueProcessor::newFromOneMoreActionQueueTypeTable(_oneMoreActionQueue.oneMoreActionQueueTypeTable());
 
         ret.parmOneMoreActionQueue(_oneMoreActionQueue);
 
@@ -37,19 +44,19 @@ abstract class OneMoreActionQueueProcessor
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>newFromBusinessActionTypeTable</Name>
+				<Name>newFromOneMoreActionQueueTypeTable</Name>
 				<Source><![CDATA[
     /// <summary>
     /// New processor from <c>OneMoreActionQueueTypeTable</c>
     /// </summary>
     /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueProcessor</c> record</param>
     /// <returns><c>OneMoreActionQueueProcessor</c></returns>
-    public static OneMoreActionQueueProcessor newFromBusinessActionTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    [Hookable(false)]
+    public static OneMoreActionQueueProcessor newFromOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
         OneMoreActionQueueProcessor    ret;
-        ;
 
-        DictClass actionQueueDictClass = SysDictClass::newName(_oneMoreActionQueueTypeTable.ActionClassName);
+        DictClass actionQueueDictClass = _oneMoreActionQueueTypeTable.processorDictClass();
     
         ret = actionQueueDictClass.makeObject();
         ret.parmOneMoreActionQueueTypeTable(_oneMoreActionQueueTypeTable);
@@ -67,7 +74,8 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
     /// <returns><c>OneMoreActionQueue</c> record</returns>
-    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
+    [Hookable(false)]
+    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue = oneMoreActionQueue)
     {
         oneMoreActionQueue = _oneMoreActionQueue;
         return oneMoreActionQueue;
@@ -83,24 +91,11 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueTypeTable</c> record</param>
     /// <returns><c>OneMoreActionQueueTypeTable</c> record</returns>
-    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    [Hookable(false)]
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
     {
         oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
         return oneMoreActionQueueTypeTable;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>getContract</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Get <c>OneMoreActionQueueContract</c>
-    /// </summary>
-    /// <returns><c>OneMoreActionQueueContract</c></returns>
-    public OneMoreActionQueueContract getContract()
-    {
-        return contract;
     }
 
 ]]></Source>
@@ -188,26 +183,361 @@ abstract class OneMoreActionQueueProcessor
     /// <summary>
     /// Run action
     /// </summary>
+    [Hookable(false)]
     public void runAction()
     {
-        this.initializeContract();
-
-        if (!this.checkContractDataAreaId())
+        setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPrefix", oneMoreActionQueue.ActionId));
+    
+        try
         {
-            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
+            userConnection = new UserConnection();
+
+            //Start action queue connection transaction
+            userConnection.ttsbegin();
+
+            this.runInternal();
+
+            //Commit action queue connection transaction
+            userConnection.ttscommit();
         }
-        
-        changecompany(contract.parmDataAreaId())
+        catch
         {
-            this.initialize();
+            //Most like issue is related to status update on action queue, do not recover
+            this.updateStatus(OneMoreActionQueueStatus::Error, false);
+        }
+        finally
+        {
+            //Finalize action queue user connection to prevent user connection leak
+            if (userConnection)
+            {
+                userConnection.finalize();
+            }
+        }
+    }
 
-            if (!this.canProcessAction())
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runInternal</Name>
+				<Source><![CDATA[
+    private void runInternal()
+    {
+        boolean                     doRetry;
+        System.Exception            exception;
+        OneMoreActionQueueStatus    newActionQueueStatus;
+        
+        this.initializeOneMoreActionQueueUpd();
+
+        //In process or already processed
+        if (!this.checkActionQueue())
+        {
+            return;
+        }
+
+        this.initUpdate();
+
+        try
+        {
+            infologFromLine = infologLine();
+
+            //Global flag
+            OneMoreActionQueueContext::doRetryFlag = false;
+        
+            this.initializeContract();
+
+            if (!this.checkContractDataAreaId())
             {
                 throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
             }
+        
+            changecompany(contract.parmDataAreaId())
+            {
+                this.initialize();
 
-            this.runActionInternal();
+                if (!this.canProcessAction())
+                {
+                    throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
+                }
+
+                this.runActionInternal();
+            }
+    
+            newActionQueueStatus = OneMoreActionQueueStatus::Processed;
+
+            processedSuccessfully = true;
         }
+        catch (exception)
+        {
+            doRetry = this.isExceptionRecoverable(exception);
+            lastException = exception;
+            newActionQueueStatus = OneMoreActionQueueStatus::Error;
+        }
+        
+        if (contract)
+        {
+            oneMoreActionQueueUpd.CompanyId = contract.parmDataAreaId();
+        }
+
+        this.updateStatus(newActionQueueStatus, doRetry);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isExceptionRecoverable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Indicates if exception is recoverable and retry is needed
+    /// </summary>
+    /// <param name = "_exception">An <c>System.Exception</c> object</param>
+    /// <returns>True if exception si recoverable otherwise False</returns>
+    protected boolean isExceptionRecoverable(System.Exception _exception)
+    {
+        boolean     ret;
+
+        if (   _exception is Microsoft.Dynamics.Ax.Xpp.DeadlockException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictNotRecoveredException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyNotRecoveredException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.MaximumRetryCountExceededException
+           )
+        {
+            ret = true;
+        }
+        else
+        {
+            ret = OneMoreActionQueueContext::doRetryFlag;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeOneMoreActionQueueUpd</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize <c>OneMoreActionQueue</c> for update
+    /// </summary>
+    private void initializeOneMoreActionQueueUpd()
+    {
+        //Apply pessimistic concurency model to avoid double-processing of the same action at the same time
+        oneMoreActionQueueUpd.readPast(true);
+        oneMoreActionQueueUpd.selectForUpdate(true);
+        oneMoreActionQueueUpd.setConnection(userConnection);
+
+        select firstonly oneMoreActionQueueUpd
+            where oneMoreActionQueueUpd.RecId  ==  oneMoreActionQueue.RecId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check action queue readiness
+    /// </summary>
+    /// <returns>Returns true if action queue is ready for processing otherwise False</returns>
+    protected boolean checkActionQueue()
+    {
+        boolean     ret = true;
+
+        if (oneMoreActionQueueUpd.RecId == 0)
+        {
+            warning("@OneMoreActionQueueFramework:OneMoreActionQueueRecordIsInProcessOrDoesNotExist");
+            ret = false;
+        }
+    
+        if (ret && oneMoreActionQueueUpd.Status != OneMoreActionQueueStatus::Waiting)
+        {
+            warning(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueRecordShouldBeInStatus", OneMoreActionQueueStatus::Waiting));
+            ret = false;
+        }
+
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initUpdate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
+    protected void initUpdate()
+    {
+        oneMoreActionQueueTypeTable = oneMoreActionQueueUpd.oneMoreActionQueueTypeTable();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateStatus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update status
+    /// </summary>
+    /// <param name = "_status">New status</param>
+    /// <param name = "_doRetry">Do retry in case if new status is Error</param>
+    protected void updateStatus(OneMoreActionQueueStatus _status, boolean _doRetry = true)
+    {
+        boolean doStatusUpdate = true;
+        
+        if (_doRetry && this.useRetry() && _status == OneMoreActionQueueStatus::Error)
+        {
+            oneMoreActionQueueUpd.RetryCount += 1;
+
+            if (oneMoreActionQueueUpd.RetryCount < this.maxRetryCount())
+            {
+                doStatusUpdate = false;
+
+                this.doRetryLogic();
+            }
+        }
+
+        if (doStatusUpdate)
+        {
+            oneMoreActionQueueUpd.Status    = _status;
+        }
+
+        InfologData infologData = this.getInfoLogData();
+
+        oneMoreActionQueueUpd.ProcessingNotes = '';
+
+        if (infologData != conNull())
+        {
+            oneMoreActionQueueUpd.ProcessingNotes = this.getInfoLogText(infologData);
+        }
+    
+        oneMoreActionQueueUpd.update();
+
+        OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException != null ? lastException.GetType().FullName : '', infologData, userConnection);
+
+        //Invoke Business Event if status changes to processed
+        //TODO send should be performed in user connection context
+        if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
+        {
+            OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable).send();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getInfoLogData</Name>
+				<Source><![CDATA[
+    private InfologData getInfoLogData()
+    {
+        int             currentLine = infologLine();
+        InfologData     ret;
+       
+        if (currentLine > infologFromLine)
+        {
+            ret = infolog.copy(infologFromLine + 1,  currentLine);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getInfoLogText</Name>
+				<Source><![CDATA[
+    private InfologText getInfoLogText(InfologData _infologData)
+    {
+        System.Text.StringBuilder   logStr = new System.Text.StringBuilder();
+
+        SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(_infologData);
+
+        while (infoEnumerator.moveNext())
+        {
+            SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
+
+            int p = infoMessageStruct.prefixDepth();
+
+            for (int i = 1; i <= p; i++)
+            {
+                logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
+            }
+
+            logStr.AppendLine(infoMessageStruct.message());
+        }
+
+        return logStr.ToString();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useRetry</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Use retries
+    /// </summary>
+    /// <returns>True if processing is using retries otherwise false</returns>
+    protected boolean useRetry()
+    {
+        //Do retry only if error is recoverable (static doRecover = true), processing type is not Syncronious and number of retries is set up for action queue type
+        return oneMoreActionQueueTypeTable.ProcessingType != OneMoreActionQueueProcessingType::Synchronous && oneMoreActionQueueTypeTable.RetryAttemptNumber != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>maxRetryCount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Maximum retry count
+    /// </summary>
+    /// <returns>Maxumum number of retries</returns>
+    protected int maxRetryCount()
+    {
+        return oneMoreActionQueueTypeTable.RetryAttemptNumber;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>doRetryLogic</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Do retry logic
+    /// </summary>
+    protected void doRetryLogic()
+    {
+        OneMoreActionQueueRetryAttemptInterval retryAttemptInterval = oneMoreActionQueueTypeTable.RetryAttemptInterval;
+
+        if (!retryAttemptInterval)
+        {
+            retryAttemptInterval = OneMoreActionQueueConstants::defaultRetryAttemptInterval;
+        }
+
+        switch (oneMoreActionQueueTypeTable.ProcessingType)
+        {
+            case OneMoreActionQueueProcessingType::ReliableAsynchronous:
+                OneMoreActionQueueProcessorHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
+                break;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getProcessedSuccessfully</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is processed successfully?
+    /// </summary>
+    /// <returns>True if the record was processed successfully otherwise false</returns>
+    public boolean getProcessedSuccessfully()
+    {
+        return processedSuccessfully;
     }
 
 ]]></Source>

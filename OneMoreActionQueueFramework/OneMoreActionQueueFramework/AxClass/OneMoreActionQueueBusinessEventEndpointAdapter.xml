@@ -72,7 +72,7 @@ class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsE
                 processingType = OneMoreActionQueueProcessingType::ReliableAsynchronous;
             }
 
-            OneMoreActionQueueProcessing::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, processingType);
+            OneMoreActionQueueProcessorHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, processingType);
         }
         catch (exception)
         {

@@ -21,6 +21,7 @@ public final class OneMoreActionQueueServiceRunActionResponse
 			<Method>
 				<Name>parmResponseType</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueResponseType parmResponseType(OneMoreActionQueueResponseType _responseType = responseType)
     {
         responseType = _responseType;
@@ -32,7 +33,10 @@ public final class OneMoreActionQueueServiceRunActionResponse
 			<Method>
 				<Name>parmResponseTypeStr</Name>
 				<Source><![CDATA[
-    [DataMember('ResponseType')]
+    [   
+        DataMember('ResponseType'),
+        Hookable(false)
+    ]
     public str parmResponseTypeStr(str _responseType = '')
     {
         return enum2Str(responseType);
@@ -43,7 +47,10 @@ public final class OneMoreActionQueueServiceRunActionResponse
 			<Method>
 				<Name>parmNotes</Name>
 				<Source><![CDATA[
-    [DataMember('Notes')]
+    [
+        DataMember('Notes'),
+        Hookable(false)
+    ]
     public str parmNotes(str _notes = notes)
     {
         notes = _notes;

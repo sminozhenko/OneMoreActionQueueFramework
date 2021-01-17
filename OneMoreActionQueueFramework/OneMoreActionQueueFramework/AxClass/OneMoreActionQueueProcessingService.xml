@@ -99,11 +99,10 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
     [Hookable(false)]
     public static boolean processSingleRecord(OneMoreActionQueue _oneMoreActionQueue)
     {
-        OneMoreActionQueueProcessing oneMoreActionQueueProcessing = OneMoreActionQueueProcessing::construct();
-        oneMoreActionQueueProcessing.parmOneMoreActionQueue(_oneMoreActionQueue);
-        oneMoreActionQueueProcessing.run();
+        OneMoreActionQueueProcessor oneMoreActionQueueProcessor = OneMoreActionQueueProcessor::newFromOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueueProcessor.runAction();
 
-        return oneMoreActionQueueProcessing.getProcessedSuccessfully();
+        return oneMoreActionQueueProcessor.getProcessedSuccessfully();
     }
 
 ]]></Source>

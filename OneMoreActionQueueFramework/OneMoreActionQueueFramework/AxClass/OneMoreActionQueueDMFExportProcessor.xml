@@ -6,7 +6,10 @@
 /// <summary>
 /// Action queue processor class for DMF export type
 /// </summary>
-[OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)]
+[
+    OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true),
+    OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueDMFExportBusinessEvent))
+]
 class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
 {
     OneMoreActionQueueDMFExportContract  localContract;
@@ -37,38 +40,16 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
             
             OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
             
-            DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', oneMoreActionQueueTypeTable.TypeId, newGuid());
-            OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = oneMoreActionQueueTypeTable.oneMoreActionQueueTypeDMFExportParameterTable();
+            DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
+            OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
             //
             //SharedServiceUnitFileID     fileId;
             
-            //str                         businessEventName;
-
-            //OneMoreActionQueueMenuItemContract contract = FormJsonSerializer::deserializeObject(classNum(OneMoreActionQueueMenuItemContract), _contract.parmQueryFilters());
-
-            ttsbegin;
-
             DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
 
-            /*
-            ListEnumerator le = contract.parmMenuItemParameters().getEnumerator();
-            
-            //Temporary ugly solution
-            while (le.moveNext())
-            {
-                OneMoreActionQueueMenuItemParameterContract parameterContract = le.current();
-            
-                if (parameterContract.parmParameterName() == DMFEntityNameParameter)
-                {
-                    dmfEntity = DMFEntity::find(parameterContract.parmParameterValue());
-                }
-
-                if (parameterContract.parmParameterName() == BusinessEventNameParameter)
-                {
-                    businessEventName = parameterContract.parmParameterValue();
-                }
-            }
-            */
+            ttsbegin;
 
             DMFEntityExporter exporter = new DMFEntityExporter();
             SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', 'XML-Element', #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
@@ -94,7 +75,7 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
                 using (System.IO.Stream fileStream = System.IO.File::OpenRead(filePath))
                 {
                     var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
-                    DocumentManagement::attachFileToCommon(oneMoreActionQueue, DocuType::typeFile(), fileStream, fileName, mime, fileName);
+                    DocumentManagement::attachFileToCommon(this.parmOneMoreActionQueue(), DocuType::typeFile(), fileStream, fileName, mime, fileName);
                 }
 
                 DMFPackageUtil::deleteFileIgnoreError(filePath);
@@ -118,8 +99,11 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
                 }
                 */
 
-                DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
-                dmfDefinitionGroup.delete();
+                if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
+                {
+                    DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
+                    dmfDefinitionGroup.delete();
+                }
             }
             else
             {

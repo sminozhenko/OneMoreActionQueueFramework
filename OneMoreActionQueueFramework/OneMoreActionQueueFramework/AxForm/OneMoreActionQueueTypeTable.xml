@@ -90,6 +90,20 @@ public class OneMoreActionQueueTypeTable extends FormRun
 
 ]]></Source>
 					</Method>
+					<Method>
+						<Name>write</Name>
+						<Source><![CDATA[
+        public void write()
+        {
+            super();
+
+            element.enableActionTypeControls();
+            element.enableTransformationJSON();
+            element.enableProcessingTypeControls();
+        }
+
+]]></Source>
+					</Method>
 				</Methods>
 				<Fields>
 					<Field>
@@ -120,24 +134,6 @@ public class OneMoreActionQueueTypeTable extends FormRun
                 super();
 
                 element.enableActionTypeControls();
-            }
-
-]]></Source>
-							</Method>
-						</Methods>
-					</Field>
-					<Field>
-						<DataField>Enabled</DataField>
-						<Methods>
-							<Method>
-								<Name>modified</Name>
-								<Source><![CDATA[
-            public void modified()
-            {
-                super();
-
-                element.enableActionTypeControls();
-                element.enableTransformationJSON();
             }
 
 ]]></Source>
@@ -643,6 +639,16 @@ public class OneMoreActionQueueTypeTable extends FormRun
 									i:nil="true" />
 								<DataField>DMFEntityName</DataField>
 								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormComboBoxControl">
+								<Name>DMFExport_KeepDataProject</Name>
+								<Type>ComboBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>KeepDataProject</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+								<Items />
 							</AxFormControl>
 						</Controls>
 						<DataGroup>DMFExport</DataGroup>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessorBusinessEventAttribute</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue processor business event attribute class
+/// </summary>
+public class OneMoreActionQueueProcessorBusinessEventAttribute extends SysAttribute
+{
+    private ClassName                   actionQueueBusinessEventClass;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new(ClassName _actionQueueBusinessEventClass)
+    {
+        actionQueueBusinessEventClass   = _actionQueueBusinessEventClass;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmActionQueueBusinessEventClass</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public ClassName parmActionQueueBusinessEventClass()
+    {
+        return actionQueueBusinessEventClass;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

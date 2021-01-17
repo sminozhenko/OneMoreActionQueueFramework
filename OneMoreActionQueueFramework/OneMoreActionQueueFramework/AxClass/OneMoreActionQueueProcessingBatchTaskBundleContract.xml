@@ -19,7 +19,8 @@ class OneMoreActionQueueProcessingBatchTaskBundleContract
 				<Source><![CDATA[
     [
         DataMemberAttribute,
-        SysOperationControlVisibilityAttribute(false)
+        SysOperationControlVisibilityAttribute(false),
+        Hookable(false)
     ]
     public container parmRecIdListPacked(container _recIdListPacked = recIdListPacked)
     {

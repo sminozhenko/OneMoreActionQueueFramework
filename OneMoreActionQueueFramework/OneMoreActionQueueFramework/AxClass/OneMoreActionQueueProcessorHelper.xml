@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessorHelper</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue helper class
+/// </summary>
+public static class OneMoreActionQueueProcessorHelper
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>processActionQueueInController</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process action queue in controller class
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue">An <c>OneMoreActionQueue</c> record</param>
+    /// <param name = "_oneMoreActionQueueTypeTable">An <c>OneMoreActionQueueTypeTable</c> record</param>
+    /// <param name = "_sysOperationExecutionMode">An <c>SysOperationExecutionMode</c> value</param>
+    /// <param name = "_retryAttemptInterval">An <c>OneMoreActionQueueRetryAttemptInterval</c> value</param>
+    [Hookable(false)]
+    public static void processActionQueueInController(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, SysOperationExecutionMode _sysOperationExecutionMode, OneMoreActionQueueRetryAttemptInterval _retryAttemptInterval = 0)
+    {
+        SysOperationServiceController               controller = new SysOperationServiceController(classStr(OneMoreActionQueueProcessingService), methodStr(OneMoreActionQueueProcessingService, processActionQueueRecord));
+
+        OneMoreActionQueueProcessingSingleContract  contract = controller.getDataContractInfoObject().dataContractObject() as OneMoreActionQueueProcessingSingleContract;
+
+        contract.parmActionQueueRecId(_oneMoreActionQueue.RecId);
+
+        // Do not show the dialog and process the request directly.
+        controller.parmShowDialog(false);
+
+        // Set the caption as it is used as the reliable async batch job name.
+        LabelType dialogCaption;
+
+        if (_oneMoreActionQueueTypeTable.Description)
+        {
+            dialogCaption = strFmt('%1 (%2)', _oneMoreActionQueueTypeTable.Description, _oneMoreActionQueue.ActionId);
+        }
+        else
+        {
+            dialogCaption = strfmt("@OneMoreActionQueueFramework:OneMoreActionQueueRunAction", _oneMoreActionQueue.ActionId);
+        }
+
+        controller.parmDialogCaption(dialogCaption);
+
+        controller.parmExecutionMode(_sysOperationExecutionMode);
+
+        switch (_sysOperationExecutionMode)
+        {
+            case SysOperationExecutionMode::ReliableAsynchronous:
+                controller.parmReliableAsyncBatchGroupId(_oneMoreActionQueueTypeTable.ReliableAsyncBatchGroupId);
+                
+                BatchInfo batchInfo = controller.batchInfo();
+                batchInfo.parmBatchHeader().parmStartDateTime(DateTimeUtil::addSeconds(batchInfo.parmBatchHeader().parmStartDateTime(), _retryAttemptInterval));
+                
+                if (_oneMoreActionQueueTypeTable.RunAsUserId)
+                {
+                    batchInfo.parmBatchHeader().parmExecutingBy(_oneMoreActionQueueTypeTable.RunAsUserId);
+                }
+                
+                controller.doBatch();
+                break;
+            default:
+                controller.startOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processOneMoreActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process <c>OneMoreActionQueue</c> record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueTypeTable</c> record</param>
+    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
+    /// <param name = "_processingType">An <c>OneMoreActionQueueProcessingType</c> value</param>
+    /// <returns><c>OneMoreActionQueueServiceRunActionResponse</c></returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueServiceRunActionResponse processOneMoreActionQueue(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingType _processingType = _oneMoreActionQueueTypeTable.ProcessingType)
+    {
+        OneMoreActionQueueResponseType                          responseType = OneMoreActionQueueResponseType::OK;
+        str                                                     notes;
+        OneMoreActionQueueServiceRunActionResponse              response = new OneMoreActionQueueServiceRunActionResponse();
+        
+        //If message was added to the queue and processing enabled
+        if (_oneMoreActionQueue.RecId != 0)
+        {
+            if (_oneMoreActionQueueTypeTable.Enabled)
+            {
+                switch (_processingType)
+                {
+                    case OneMoreActionQueueProcessingType::ReliableAsynchronous:
+                        OneMoreActionQueueProcessorHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous);
+                        break;
+
+                    case OneMoreActionQueueProcessingType::Synchronous:
+                        OneMoreActionQueueProcessorHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::Synchronous);
+
+                        _oneMoreActionQueue.reread();
+
+                        switch (_oneMoreActionQueue.Status)
+                        {
+                            case OneMoreActionQueueStatus::Processed:
+                                responseType = OneMoreActionQueueResponseType::OK;
+                                notes = _oneMoreActionQueue.ProcessingNotes;
+                                break;
+
+                            case OneMoreActionQueueStatus::Error:
+                                throw error(_oneMoreActionQueue.ProcessingNotes);
+
+                            default:
+                                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueUnknownError");
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                notes = strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionTypeIsNotEnabled", _oneMoreActionQueueTypeTable.TypeId);
+                responseType = OneMoreActionQueueResponseType::Warning;
+            }
+        }
+
+        response.parmResponseType(responseType);
+        response.parmNotes(notes);
+
+        return response;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
