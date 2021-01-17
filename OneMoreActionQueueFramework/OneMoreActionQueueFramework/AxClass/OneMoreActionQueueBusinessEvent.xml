@@ -6,6 +6,7 @@
 /// <summary>
 /// This is a generic BusinessEvents class for action queues
 /// </summary>
+[OneMoreActionQueueBusinessEventAttribute(classStr(OneMoreActionQueueBusinessEventContract))]
 public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
 {
     private OneMoreActionQueue          oneMoreActionQueue;
@@ -17,6 +18,7 @@ public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
 			<Method>
 				<Name>parmOneMoreActionQueue</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue = oneMoreActionQueue)
     {
         oneMoreActionQueue = _oneMoreActionQueue;
@@ -28,6 +30,7 @@ public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
 			<Method>
 				<Name>parmOneMoreActionQueueTypeTable</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
     {
         oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
@@ -45,11 +48,15 @@ public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
     /// <param name = "_oneMoreActionQueue">An <c>OneMoreActionQueue</c> record</param>
     /// <param name = "_oneMoreActionQueueTypeTable">An <c>OneMoreActionQueueTypeTable</c> record</param>
     /// <returns>An instance of the <c>OneMoreActionQueueBusinessEvent</c> class</returns>
+    [Hookable(false)]
     public static OneMoreActionQueueBusinessEvent construct(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
-        OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = new OneMoreActionQueueBusinessEvent();
+        SysDictClass                    dc = SysDictClass::newName(_oneMoreActionQueueTypeTable.businessEventClassName());
+        OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = dc.makeObject();
+
         oneMoreActionQueueBusinessEvent.parmOneMoreActionQueue(_oneMoreActionQueue);
         oneMoreActionQueueBusinessEvent.parmOneMoreActionQueueTypeTable(_oneMoreActionQueueTypeTable);
+
         return oneMoreActionQueueBusinessEvent;
     }
 
@@ -59,16 +66,18 @@ public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
 				<Name>buildContract</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Populates OneMoreActionQueueBusinessEventContract with all the fields required for action queue event
+    /// Populates <c>OneMoreActionQueueBusinessEventContract</c> with all the fields required for action queue event
     /// </summary>
     /// <returns><c>OneMoreActionQueueBusinessEventContract</c></returns>
     public BusinessEventsContract buildContract()
     {
-        OneMoreActionQueueBusinessEventContract contract = new OneMoreActionQueueBusinessEventContract();
+        OneMoreActionQueueBusinessEventContract contract = this.initializeContract();
+
         contract.parmLegalEntity(oneMoreActionQueue.CompanyId);
         contract.parmActionId(oneMoreActionQueue.ActionId);
         contract.parmStatus(oneMoreActionQueue.Status);
         contract.parmProcessingNotes(oneMoreActionQueue.ProcessingNotes);
+
         return contract;
     }
 
@@ -84,9 +93,24 @@ public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
     /// BusinessEventsId is generated with the combination of ConfigurationSequenceNumber and the TemplateName from the SysWorkflow table and the ElementName from the SysWorkflowElement table.
     /// </remarks>
     /// <returns>The Business Event Id of the Workflow Element event</returns>
+    [Hookable(false)]
     public str getBusinessEventId()
     {
         return OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(oneMoreActionQueue.TypeId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeContract</Name>
+				<Source><![CDATA[
+    private OneMoreActionQueueBusinessEventContract initializeContract()
+    {
+        SysDictClass dc = new SysDictClass(classIdGet(this));
+
+        OneMoreActionQueueBusinessEventAttribute businessEventAttribute = dc.getAttribute(classStr(OneMoreActionQueueBusinessEventAttribute));
+
+        return SysDictClass::newName(businessEventAttribute.parmActionQueueBusinessEventClass()).makeObject();
     }
 
 ]]></Source>

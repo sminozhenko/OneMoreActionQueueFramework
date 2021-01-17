@@ -46,8 +46,22 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
     internal static void addActionQueueEvent(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
         BusinessEventsId businessEventsId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(_oneMoreActionQueueTypeTable.TypeId);
+        ClassName        businessEventClassName = _oneMoreActionQueueTypeTable.businessEventClassName();
 
-        OneMoreActionQueueBusinessEventsCatalogHelper::validateRecordAndInsert(businessEventsId, classStr(OneMoreActionQueueBusinessEventContract), businessEventsId, literalStr('@OneMoreActionQueueFramework:OneMoreActionQueueBusinessEventTypeDescription'), ModuleAxapta::OneMoreActionQueue, '', '', _oneMoreActionQueueTypeTable.Description ? _oneMoreActionQueueTypeTable.Description : _oneMoreActionQueueTypeTable.TypeId);
+        if (businessEventClassName)
+        {
+            DictClass dc = new DictClass(className2Id(businessEventClassName));
+
+            OneMoreActionQueueBusinessEventAttribute businessEventAttribute = dc.getAttribute(classStr(OneMoreActionQueueBusinessEventAttribute));
+
+            OneMoreActionQueueBusinessEventsCatalogHelper::validateRecordAndInsert(
+                businessEventsId,
+                businessEventAttribute.parmActionQueueBusinessEventClass(),
+                _oneMoreActionQueueTypeTable.Description ? _oneMoreActionQueueTypeTable.Description : _oneMoreActionQueueTypeTable.TypeId,
+                literalStr('@OneMoreActionQueueFramework:OneMoreActionQueueBusinessEventTypeDescription'),
+                ModuleAxapta::OneMoreActionQueue
+                );
+        }
 
     }
 

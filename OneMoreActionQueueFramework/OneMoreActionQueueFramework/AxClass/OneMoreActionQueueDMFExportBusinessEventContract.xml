@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportBusinessEventContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueDMFExportBusinessEventContract</c> class will be used as the data contract for DMF export action queue business events
+/// </summary>
+[DataContract]
+class OneMoreActionQueueDMFExportBusinessEventContract extends OneMoreActionQueueBusinessEventContract
+{
+    private SharedServiceUnitFileID     fileId;
+    private SharedServiceUnitURL        fileUrl;
+    private str                         fileType;
+    private str                         fileName;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmFileId</Name>
+				<Source><![CDATA[
+    [
+        DataMember('FileId'), 
+        BusinessEventsDataMember("@ApplicationPlatform:SharedServiceUnitFileId"),
+        Hookable(false)
+    ]
+    public SharedServiceUnitFileID parmFileId(SharedServiceUnitFileID _fileId = fileId)
+    {
+        fileId = _fileId;
+
+        return fileId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmFileUrl</Name>
+				<Source><![CDATA[
+    [
+        DataMember('FileUrl'),
+        BusinessEventsDataMember("@SYS37016"),
+        Hookable(false)
+    ]
+    public SharedServiceUnitURL parmFileUrl(SharedServiceUnitURL _fileUrl = fileUrl)
+    {
+        fileUrl = _fileUrl;
+
+        return fileUrl;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmFileType</Name>
+				<Source><![CDATA[
+    [
+        DataMember('FileType'),
+        BusinessEventsDataMember("@SYS13747"),
+        Hookable(false)
+    ]
+    public str parmFileType(str _fileType = fileType)
+    {
+        fileType = _fileType;
+
+        return fileType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmFileName</Name>
+				<Source><![CDATA[
+    [
+        DataMember('FileName'),
+        BusinessEventsDataMember("@SYS4009003"),
+        Hookable(false)
+    ]
+    public str parmFileName(str _fileName = fileName)
+    {
+        fileName = _fileName;
+
+        return fileName;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

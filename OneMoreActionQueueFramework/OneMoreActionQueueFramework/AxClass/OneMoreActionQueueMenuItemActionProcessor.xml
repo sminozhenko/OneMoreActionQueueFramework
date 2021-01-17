@@ -35,7 +35,7 @@ class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProces
         {
             OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
 
-            OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = OneMoreActionQueueTypeMenuItemParameterTable::find(oneMoreActionQueueTypeTable.TypeId);
+            OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
 
             OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
             

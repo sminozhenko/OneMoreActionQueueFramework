@@ -24,6 +24,7 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
     /// <returns><c>OneMoreActionQueueProcessor</c></returns>
+    [Hookable(false)]
     public static OneMoreActionQueueProcessor newFromOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
     {
         OneMoreActionQueueProcessor ret = OneMoreActionQueueProcessor::newFromBusinessActionTypeTable(_oneMoreActionQueue.oneMoreActionQueueTypeTable());
@@ -44,6 +45,7 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueProcessor</c> record</param>
     /// <returns><c>OneMoreActionQueueProcessor</c></returns>
+    [Hookable(false)]
     public static OneMoreActionQueueProcessor newFromBusinessActionTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
         OneMoreActionQueueProcessor    ret;
@@ -67,7 +69,8 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
     /// <returns><c>OneMoreActionQueue</c> record</returns>
-    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue)
+    [Hookable(false)]
+    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueue = oneMoreActionQueue)
     {
         oneMoreActionQueue = _oneMoreActionQueue;
         return oneMoreActionQueue;
@@ -83,7 +86,8 @@ abstract class OneMoreActionQueueProcessor
     /// </summary>
     /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueTypeTable</c> record</param>
     /// <returns><c>OneMoreActionQueueTypeTable</c> record</returns>
-    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    [Hookable(false)]
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
     {
         oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
         return oneMoreActionQueueTypeTable;
@@ -98,6 +102,7 @@ abstract class OneMoreActionQueueProcessor
     /// Get <c>OneMoreActionQueueContract</c>
     /// </summary>
     /// <returns><c>OneMoreActionQueueContract</c></returns>
+    [Hookable(false)]
     public OneMoreActionQueueContract getContract()
     {
         return contract;
@@ -188,6 +193,7 @@ abstract class OneMoreActionQueueProcessor
     /// <summary>
     /// Run action
     /// </summary>
+    [Hookable(false)]
     public void runAction()
     {
         this.initializeContract();

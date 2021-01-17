@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtEnum">
+	<Name>OneMoreActionQueueDMFExportKeepDataProject</Name>
+	<HelpText>@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportKeepDataProjectHelpText</HelpText>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportKeepDataProjectLabel</Label>
+	<ArrayElements />
+	<Relations />
+	<TableReferences />
+	<EnumType>NoYes</EnumType>
+</AxEdt>

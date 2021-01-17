@@ -13,6 +13,11 @@
 			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItem</Label>
 			<Value>1</Value>
 		</AxEnumValue>
+		<AxEnumValue>
+			<Name>DMFExport</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQeueueTypeDMFExport</Label>
+			<Value>2</Value>
+		</AxEnumValue>
 	</EnumValues>
 	<IsExtensible>true</IsExtensible>
 </AxEnum>
