@@ -88,3 +88,5 @@ OneMoreActionQueueDMFExportKeepDataProjectHelpText=The parameter is used for deb
 OneMoreActionQueueClassNotFound=Class '%1' was not found
 OneMoreActionQueueBusinessEventClassNotFound=Business event class was not found for class '%1'
 OneMoreActionQueueDMFExportDataProject=Data project '%1'
+OneMoreActionQueueDoesNotExist=Action queue record with action id '%1' does not exist
+OneMoreActionQueueDoesNotHaveAttachedFiles=Action queue record with action id '%1' does not have attached files

@@ -23,12 +23,10 @@ class OneMoreActionQueueDMFExportBusinessEvent extends OneMoreActionQueueBusines
     {
         OneMoreActionQueueDMFExportBusinessEventContract contract = super();
 
-        DocuRefSearch docuRefSearch = DocuRefSearch::newCommon(this.parmOneMoreActionQueue(), true);
-
-        if (docuRefSearch.next())
-        {
-            DocuRef docuRef = docuRefSearch.docuRef();
+        DocuRef docuRef = this.parmOneMoreActionQueue().docuRef();
         
+        if (docuRef)
+        {
             contract.parmFileUrl(DocumentManagement::getAttachmentPublicUrl(docuRef));
             contract.parmFileName(docuRef.Name);
             contract.parmFileType(docuRef.fileExtension());

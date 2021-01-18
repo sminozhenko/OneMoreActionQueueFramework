@@ -94,6 +94,18 @@ class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
     {
         OneMoreActionQueueLogTable      oneMoreActionQueueLogTable;
         OneMoreActionQueue              oneMoreActionQueue;
+        DocuRef                         DocuRef;
+
+        //Clean-up attachements 
+        while select oneMoreActionQueue
+            exists join oneMoreActionQueueCleanUpTmp
+                where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueue.RecId
+            exists join DocuRef
+                where docuRef.RefTableId    == oneMoreActionQueue.TableId
+                   && docuRef.RefRecId      == oneMoreActionQueue.RecId
+        {
+            oneMoreActionQueue.deleteAttachements();
+        }
         
         oneMoreActionQueueLogTable.skipDeleteActions(true);
         oneMoreActionQueueLogTable.skipDataMethods(true);

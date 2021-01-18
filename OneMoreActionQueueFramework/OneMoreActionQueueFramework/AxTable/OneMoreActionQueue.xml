@@ -49,6 +49,46 @@ public class OneMoreActionQueue extends common
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueue</c> by Action Id
+    /// </summary>
+    /// <param name = "_actionId">An <c>OneMoreActionQueueActionId</c> value</param>
+    /// <param name="_forUpdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueue</c> table otherwise, an empty record.
+    /// </returns>
+    [Hookable(false)]
+    public static OneMoreActionQueue find(OneMoreActionQueueActionId _actionId, boolean _forUpdate = false)
+    {
+        OneMoreActionQueue  ret;
+
+        ret.selectForUpdate(_forUpdate);
+
+        if (_actionId)
+        {
+            select firstonly ret
+                where ret.ActionId == _actionId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>txtNotExist</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static str txtNotExist()
+    {
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueDoesNotExist";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>initValue</Name>
 				<Source><![CDATA[
     public void initValue()
@@ -124,6 +164,62 @@ public class OneMoreActionQueue extends common
         }
 
         return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>docuRef</Name>
+				<Source><![CDATA[
+    public DocuRef docuRef()
+    {
+        DocuRef docuRef;
+
+        DocuRefSearch docuRefSearch = DocuRefSearch::newCommon(this, true);
+
+        if (docuRefSearch.next())
+        {
+            docuRef = docuRefSearch.docuRef();
+        }
+
+        return docuRef;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>delete</Name>
+				<Source><![CDATA[
+    public void delete()
+    {
+        ttsbegin;
+
+        super();
+
+        this.deleteAttachements();
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteAttachements</Name>
+				<Source><![CDATA[
+    //Delete all attachements associated with action queue record
+    public void deleteAttachements()
+    {
+        DocuRef docuRef;
+
+        while select forupdate docuRef
+            where docuRef.RefTableId    == this.TableId
+               && docuRef.RefRecId      == this.RecId
+        {
+            if (docuRef.validateDelete())
+            {
+                docuRef.delete();
+            }
+        }
     }
 
 ]]></Source>

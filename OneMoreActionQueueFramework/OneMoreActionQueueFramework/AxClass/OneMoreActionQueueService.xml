@@ -70,6 +70,36 @@ class OneMoreActionQueueService
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>getFilePublicUrlByActionId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Get public URL for the file attached to action queue
+    /// </summary>
+    /// <param name = "_actionId">An <c>OneMoreActionQueueActionId</c> value</param>
+    /// <returns>Public URL for the file attached to action queue if exists otherwise throws an error</returns>
+    [Hookable(false)]
+    public str getFilePublicUrlByActionId(OneMoreActionQueueActionId _actionId)
+    {
+        OneMoreActionQueue  oneMoreActionQueue = OneMoreActionQueue::find(_actionId);
+
+        if (oneMoreActionQueue.RecId == 0)
+        {
+            throw error(strFmt(OneMoreActionQueue::txtNotExist(), _actionId));
+        }
+
+        DocuRef docuRef = oneMoreActionQueue.docuRef();
+
+        if (docuRef.RecId == 0)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDoesNotHaveAttachedFiles", _actionId));
+        }
+       
+        return DocumentManagement::getAttachmentPublicUrl(docuRef);
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>

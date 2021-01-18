@@ -11,5 +11,12 @@
 				<Read>Allow</Read>
 			</SubscriberAccessLevel>
 		</AxServiceOperation>
+		<AxServiceOperation>
+			<Name>GetFilePublicUrlByActionId</Name>
+			<Method>getFilePublicUrlByActionId</Method>
+			<SubscriberAccessLevel>
+				<Read>Allow</Read>
+			</SubscriberAccessLevel>
+		</AxServiceOperation>
 	</ServiceOperations>
 </AxService>
