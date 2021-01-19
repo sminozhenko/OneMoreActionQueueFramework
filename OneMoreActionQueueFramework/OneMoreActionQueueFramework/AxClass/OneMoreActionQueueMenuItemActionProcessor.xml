@@ -33,7 +33,7 @@ class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProces
     {
         try
         {
-            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = localContract;
 
             OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
 
@@ -50,7 +50,7 @@ class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProces
         }
         finally
         {
-            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = null;
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
         }
     }
 

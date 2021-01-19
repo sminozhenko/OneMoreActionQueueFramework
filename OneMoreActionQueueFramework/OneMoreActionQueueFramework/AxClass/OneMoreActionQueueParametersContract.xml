@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueParametersContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue contract for parameter based actions
+/// </summary>
+class OneMoreActionQueueParametersContract extends OneMoreActionQueueContract
+{
+    private List parameters = new List(Types::Class);
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmParameters</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute("Parameters"),
+        DataCollectionAttribute(Types::Class, classStr(OneMoreActionQueueParameterContract)),
+        Hookable(false)
+    ]    
+    public List parmParameters(List _parameters = parameters)
+    {
+        if (!prmIsDefault(_parameters))
+        {
+            parameters = _parameters;
+        }
+
+        return parameters;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addParameter</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add parameter
+    /// </summary>
+    /// <param name = "parameterName">Parameter name</param>
+    /// <param name = "parameterValue">Parameter value</param>
+    [Hookable(false)]
+    public void addParameter(str parameterName, str parameterValue)
+    {
+        OneMoreActionQueueParameterContract contract = new OneMoreActionQueueParameterContract();
+
+        contract.parmParameterName(parameterName);
+        contract.parmParameterValue(parameterValue);
+
+        parameters.addEnd(contract);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

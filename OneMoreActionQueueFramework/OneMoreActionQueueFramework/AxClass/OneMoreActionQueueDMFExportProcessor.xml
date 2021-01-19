@@ -38,7 +38,7 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
         {
             #DMF
             
-            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = localContract;
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = localContract;
             
             DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
             OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
@@ -84,7 +84,7 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
         }
         finally
         {
-            OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext = null;
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
         }
     }
 

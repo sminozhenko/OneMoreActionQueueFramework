@@ -9,7 +9,6 @@
 [DataContract]
 class OneMoreActionQueueDMFExportBusinessEventContract extends OneMoreActionQueueBusinessEventContract
 {
-    private SharedServiceUnitFileID     fileId;
     private SharedServiceUnitURL        fileUrl;
     private str                         fileType;
     private str                         fileName;
@@ -17,23 +16,6 @@ class OneMoreActionQueueDMFExportBusinessEventContract extends OneMoreActionQueu
 }
 ]]></Declaration>
 		<Methods>
-			<Method>
-				<Name>parmFileId</Name>
-				<Source><![CDATA[
-    [
-        DataMember('FileId'), 
-        BusinessEventsDataMember("@ApplicationPlatform:SharedServiceUnitFileId"),
-        Hookable(false)
-    ]
-    public SharedServiceUnitFileID parmFileId(SharedServiceUnitFileID _fileId = fileId)
-    {
-        fileId = _fileId;
-
-        return fileId;
-    }
-
-]]></Source>
-			</Method>
 			<Method>
 				<Name>parmFileUrl</Name>
 				<Source><![CDATA[

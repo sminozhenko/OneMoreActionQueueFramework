@@ -9,7 +9,7 @@
 public static class OneMoreActionQueueContext
 {
     public static OneMoreActionQueueTypeMenuItemParameterTable      oneMoreActionQueueTypeMenuItemParameterTable = null;
-    public static OneMoreActionQueueMenuItemContract                oneMoreActionQueueMenuItemContext = null;
+    public static OneMoreActionQueueParametersContract              oneMoreActionQueueParametersContract = null;
     public static boolean                                           doRetryFlag;
 }
 ]]></Declaration>

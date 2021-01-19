@@ -15,26 +15,26 @@ class OneMoreActionQueueSysQueryRangeUtilCopy
 				<Name>actionQueueParameterValue</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Action queue manu item parameter value
+    /// Action queue parameter value
     /// </summary>
-    /// <param name = "_parameterName">Action queue manu item parameter value</param>
+    /// <param name = "_parameterName">Action queue parameter value</param>
     /// <returns>Range for query</returns>
     [Hookable(false)]
     public static str actionQueueParameterValue(str _parameterName)
     {
-        if (OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext != null)
+        if (OneMoreActionQueueContext::oneMoreActionQueueParametersContract != null)
         {
-            List menuItemParameters = OneMoreActionQueueContext::oneMoreActionQueueMenuItemContext.parmMenuItemParameters();
+            List parameters = OneMoreActionQueueContext::oneMoreActionQueueParametersContract.parmParameters();
 
-            ListEnumerator                              li = menuItemParameters.getEnumerator();
-            OneMoreActionQueueMenuItemParameterContract menuItemParameter;
+            ListEnumerator                              li = parameters.getEnumerator();
+            OneMoreActionQueueParameterContract         parameter;
             boolean                                     found;
 
             while (li.moveNext())
             {
-                menuItemParameter = li.current();
+                parameter = li.current();
 
-                if (menuItemParameter.parmParameterName() == _parameterName)
+                if (parameter.parmParameterName() == _parameterName)
                 {
                     found = true;
                     break;
@@ -46,7 +46,7 @@ class OneMoreActionQueueSysQueryRangeUtilCopy
                 throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueParameterNotFoundInContract", _parameterName));
             }
 
-            return menuItemParameter.parmParameterValue();
+            return parameter.parmParameterValue();
         }
 
         //Can't get real value for set up dialog

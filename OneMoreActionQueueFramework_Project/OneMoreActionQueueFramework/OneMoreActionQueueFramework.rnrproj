@@ -196,11 +196,6 @@
       <Name>OneMoreActionQueueMenuItemLookupTreeBuilder</Name>
       <Link>Classes\OneMoreActionQueueMenuItemLookupTreeBuilder</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueMenuItemParameterContract">
-      <SubType>Content</SubType>
-      <Name>OneMoreActionQueueMenuItemParameterContract</Name>
-      <Link>Classes\OneMoreActionQueueMenuItemParameterContract</Link>
-    </Content>
     <Content Include="AxClass\OneMoreActionQueueMenuItemParameters">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMenuItemParameters</Name>
@@ -220,6 +215,16 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMenuItemSysOperationControllerBehavior</Name>
       <Link>Classes\OneMoreActionQueueMenuItemSysOperationControllerBehavior</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueParameterContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameterContract</Name>
+      <Link>Classes\OneMoreActionQueueParameterContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueParametersContract">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParametersContract</Name>
+      <Link>Classes\OneMoreActionQueueParametersContract</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessing">
       <SubType>Content</SubType>
