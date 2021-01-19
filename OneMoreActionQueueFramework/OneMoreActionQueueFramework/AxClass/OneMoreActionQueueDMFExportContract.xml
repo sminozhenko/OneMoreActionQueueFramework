@@ -7,7 +7,7 @@
 /// Action queue contract for DMF export actions
 /// </summary>
 [DataContract]
-class OneMoreActionQueueDMFExportContract extends OneMoreActionQueueMenuItemContract
+class OneMoreActionQueueDMFExportContract extends OneMoreActionQueueParametersContract
 {
 }
 ]]></Declaration>

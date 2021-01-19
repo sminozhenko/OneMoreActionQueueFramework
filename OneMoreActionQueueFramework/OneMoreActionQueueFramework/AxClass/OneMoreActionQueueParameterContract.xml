@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueMenuItemParameterContract</Name>
+	<Name>OneMoreActionQueueParameterContract</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
-/// Action queue menu item parameter contract
+/// Action queue parameter contract
 /// </summary>
 [DataContract]
-class OneMoreActionQueueMenuItemParameterContract
+class OneMoreActionQueueParameterContract
 {
     private str parameterName;
     private str parameterValue;
