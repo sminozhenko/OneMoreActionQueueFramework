@@ -123,7 +123,7 @@ Prerequisites: approval workflow for general journals set up and active and aler
 2. Set **Transformation JSON** to convert business event JSON message to action queue JSON message.
     ```
     {
-    "DataAreaId": "#valueof($.DataAreaId)", "MenuItemParameters":[{"ParameterName": "JournalNum", "ParameterValue": "#valueof($.KeyValue1)"}]
+    "DataAreaId": "#valueof($.DataAreaId)", "Parameters":[{"ParameterName": "JournalNum", "ParameterValue": "#valueof($.KeyValue1)"}]
     }
     ```
 
@@ -259,7 +259,7 @@ with body:
 {
 	"_actionId": "{{$guid}}",
 	"_typeId": "PostGeneralLedgerJournalPostman",
-	"_actionMessage": "{\"DataAreaId\":\"usmf\",\"MenuItemParameters\":[{\"ParameterName\":\"JournalNum\",\"ParameterValue\":\"00636\"}]}"
+	"_actionMessage": "{\"DataAreaId\":\"usmf\",\"Parameters\":[{\"ParameterName\":\"JournalNum\",\"ParameterValue\":\"00636\"}]}"
 }
 ```
 
