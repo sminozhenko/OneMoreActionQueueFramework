@@ -111,14 +111,14 @@ Prerequisites: approval workflow for general journals set up and active and aler
 #### Implement journal posting via business events and standard multi-posting class
 
 1. Create new action queue type record:
-  a. Go to **System administration > OneMore action queue > Setup > Action queue type**
-  b. Create a new record and set values in fields **Action type Id** and **Description**
-  c. In the **Type** field, select an option **Menu item**
-  d. In the **Processing type** field, select an option **Reliable asynchronous**
-  e. Specify retry parameters in **Retry parameters** field group (optionally)
-  f. Select the system administrator user that will be used to run posting in **Run as** field, otherwise posting will be executed under the user who created the record in the action queue
-  g. Select **Batch group id** to restrict posting to certain batch group (optionally)
-  h. Save the record
+1.1. Go to **System administration > OneMore action queue > Setup > Action queue type**
+1.2. Create a new record and set values in fields **Action type Id** and **Description**
+1.3. In the **Type** field, select an option **Menu item**
+1.4. In the **Processing type** field, select an option **Reliable asynchronous**
+1.5. Specify retry parameters in **Retry parameters** field group (optionally)
+1.6. Select the system administrator user that will be used to run posting in **Run as** field, otherwise posting will be executed under the user who created the record in the action queue
+1.7. Select **Batch group id** to restrict posting to certain batch group (optionally)
+1.8. Save the record
 
 2. Set **Transformation JSON** to convert business event JSON message to action queue JSON message.
     ```
@@ -130,12 +130,12 @@ Prerequisites: approval workflow for general journals set up and active and aler
     More information about JSON transformation rules can be found in [JUST.net][just-net] documentation.
 
 3. Set menu item parameters for action type:
-	a. Press the button **Set menu item parameters**
-	b. In **Set menu item parameters** dialog select **Post journal** action and press **OK** button:
+3.1. Press the button **Set menu item parameters**
+3.2. In **Set menu item parameters** dialog select **Post journal** action and press **OK** button:
 ![Set menu item parameters dialog Screen Shot][set-menu-item-parameters-post-journal-screenshot]
-	c. In the next dialog mark **Late selection** checkbox and press **Select** button:
+3.3. In the next dialog mark **Late selection** checkbox and press **Select** button:
 ![Set menu item parameters dialog2 Screen Shot][set-menu-item-parameters-post-journal2-screenshot]
-	d. In **Select** dialog add advanced range filter by **Journal batch number**:
+3.4. In **Select** dialog add advanced range filter by **Journal batch number**:
     ```
     (OneMoreActionQueueParameterValue(JournalNum))
     ```
@@ -143,26 +143,26 @@ Prerequisites: approval workflow for general journals set up and active and aler
     ![Set menu item parameters dialog3 Screen Shot][set-menu-item-parameters-post-journal3-screenshot]
 
     **OneMoreActionQueueParameterValue** is special query range function which allows to read parameter value from JSON message in run-time.
-	f. Finalize set up and close all dialogs by pressing **OK** button.
+3.5. Finalize set up and close all dialogs by pressing **OK** button.
 
 4. Activate created action type by enabling **Enabled** checkbox:
 ![Action type post journal Screen Shot][action-type-post-journal-screenshot]
 
 5. Activate **BusinessEventsAlertEvent** for OneMore action queue endpoint:
-	a. Go to **System administration > Business events > Business events catalog**
-	b. Create new business event endpoint:
-		* Select **OneMore action queue** as endpoint type and press **Next**.
-		* On the next dialog provide endpoint name and select **Action type id** created in previous step:
+5.1. Go to **System administration > Business events > Business events catalog**
+5.2. Create new business event endpoint:
+    * Select **OneMore action queue** as endpoint type and press **Next**.
+    * On the next dialog provide endpoint name and select **Action type id** created in previous step:
       ![Business events endpoint post journal Screen Shot][business-events-endpoint-post-journal-screenshot]
 
-    c. Activate **BusinessEventsAlertEvent** business event for newly created business event endpoint
+    5.3. Activate **BusinessEventsAlertEvent** business event for newly created business event endpoint
 
 6. Create and test an example:
-	a. Create and submit a general journal for approval, approve it, and wait until the business event is created.
-	b. Check that the business event is converted to action queue message and action is processed:
-		* Go to **System administration > OneMore action queue > Setup > Action queue type**
-		* Press **Action queue** button
-		* In the **Action queue** form you can see all actions created for specific action type with the status, original JSON message, transformed JSON message and processing notes:
+6.1. Create and submit a general journal for approval, approve it, and wait until the business event is created.
+6.2. Check that the business event is converted to action queue message and action is processed:
+    * Go to **System administration > OneMore action queue > Setup > Action queue type**
+    * Press **Action queue** button
+    * In the **Action queue** form you can see all actions created for specific action type with the status, original JSON message, transformed JSON message and processing notes:
 ![Action queue Screen Shot][action-queue-screenshot]
 #### Implement journal posting via the business events and custom action handler
 
@@ -214,16 +214,16 @@ When there is no standard operation that can be used with **Menu item** action t
 
 3. Build the solution.
 4. Create a new action queue type record for the custom action:
-	a. Go to **System administration > OneMore action queue > Setup > Action queue type**
-	b. Create new record and set values in fields **Action type Id** and **Description**
-	c. In the **Type** field, select an option **Custom action**
-	d. Select processor class created in previous steps in the opened dialog:
+4.1. Go to **System administration > OneMore action queue > Setup > Action queue type**
+4.2. Create new record and set values in fields **Action type Id** and **Description**
+4.3. In the **Type** field, select an option **Custom action**
+4.4. Select processor class created in previous steps in the opened dialog:
 ![Action type post journal custom Screen Shot][action-type-post-journal-custom-screenshot]
-	e. In the **Processing type** field, select an option **Reliable asynchronous**
-	f. Specify retry parameters in **Retry parameters** field group (optionally)
-	g. Select the system administrator user that will be used to run posting in **Run as** field, otherwise posting will be executed under the user who created the record in the action queue
-	h. Select **Batch group id** to restrict posting to certain batch group (optionally)
-	i. Save the record
+4.5. In the **Processing type** field, select an option **Reliable asynchronous**
+4.6. Specify retry parameters in **Retry parameters** field group (optionally)
+4.7. Select the system administrator user that will be used to run posting in **Run as** field, otherwise posting will be executed under the user who created the record in the action queue
+4.8. Select **Batch group id** to restrict posting to certain batch group (optionally)
+4.9. Save the record
 5. Set **Transformation JSON** to convert business event JSON message to action queue JSON message:
     ```
     {
@@ -232,12 +232,12 @@ When there is no standard operation that can be used with **Menu item** action t
     ```
 6. Activate created action type by enabling **Enabled** checkbox.
 7. Activate **BusinessEventsAlertEvent** for OneMore action queue endpoint:
-	a. Go to **System administration > Business events > Business events catalog**
-	b. Create new business event endpoint:
-		* Select **OneMore action queue** as endpoint type and press **Next**.
-		* On the next dialog provide endpoint name and select **Action type id** created in previous step.
+7.1. Go to **System administration > Business events > Business events catalog**
+7.2. Create new business event endpoint:
+    * Select **OneMore action queue** as endpoint type and press **Next**.
+    * On the next dialog provide endpoint name and select **Action type id** created in previous step.
 
-    c. Activate **BusinessEventsAlertEvent** business event for newly created business event endpoint
+    7.3. Activate **BusinessEventsAlertEvent** business event for newly created business event endpoint
 
 8. Create and test an example as described for **Menu item** type:
 ![Action queue custom Screen Shot][action-queue-custom-screenshot]
