@@ -111,14 +111,14 @@ Prerequisites: approval workflow for general journals set up and active and aler
 #### Implement journal posting via business events and standard multi-posting class
 
 1. Create new action queue type record:
-    a. Go to **System administration > OneMore action queue > Setup > Action queue type**
-	b. Create a new record and set values in fields **Action type Id** and **Description**
-	c. In the **Type** field, select an option **Menu item**
-	d. In the **Processing type** field, select an option **Reliable asynchronous**
-	e. Specify retry parameters in **Retry parameters** field group (optionally)
-	f. Select the system administrator user that will be used to run posting in **Run as** field, otherwise posting will be executed under the user who created the record in the action queue
-	g. Select **Batch group id** to restrict posting to certain batch group (optionally)
-	h. Save the record
+  a. Go to **System administration > OneMore action queue > Setup > Action queue type**
+  b. Create a new record and set values in fields **Action type Id** and **Description**
+  c. In the **Type** field, select an option **Menu item**
+  d. In the **Processing type** field, select an option **Reliable asynchronous**
+  e. Specify retry parameters in **Retry parameters** field group (optionally)
+  f. Select the system administrator user that will be used to run posting in **Run as** field, otherwise posting will be executed under the user who created the record in the action queue
+  g. Select **Batch group id** to restrict posting to certain batch group (optionally)
+  h. Save the record
 
 2. Set **Transformation JSON** to convert business event JSON message to action queue JSON message.
     ```
