@@ -546,7 +546,7 @@ public class OneMoreActionQueueTypeTable extends common
         createdScheduleSeries.initValue();
 
         createdScheduleSeries.Name                  = this.TypeId;
-        createdScheduleSeries.Description           = this.Description;
+        createdScheduleSeries.Description           = this.Description ? this.Description : this.TypeId;
         createdScheduleSeries.OwnerId               = this.RunAsUserId;
         createdScheduleSeries.ProcessScheduleType   = this.processScheduleType().RecId;
         //createdScheduleSeries.IsEnabled             = _scheduleSeriesTmp.IsEnabled;
@@ -679,6 +679,42 @@ public class OneMoreActionQueueTypeTable extends common
                && oneMoreActionQueue.Status == OneMoreActionQueueStatus::Waiting;
 
         return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>renamePrimaryKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void renamePrimaryKey()
+    {
+        OneMoreActionQueueTypeTable originalRecord = this.orig();
+
+        ttsbegin;
+
+        super();
+
+        ProcessScheduleSeries           series;
+
+        update_recordset series
+            setting Name = this.TypeId,
+                    Description = this.Description ? this.Description : this.TypeId
+            where series.Name                   == originalRecord.TypeId
+               && series.ProcessScheduleType    == this.processScheduleType().RecId;
+
+        BusinessEventsTable businessEventsTable;
+
+        select firstonly forupdate businessEventsTable
+            where businessEventsTable.BusinessEventId == OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(originalRecord.TypeId);
+
+        businessEventsTable.Name = this.Description ? this.Description : this.TypeId;
+        businessEventsTable.update();
+
+        businessEventsTable.BusinessEventId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(this.TypeId);
+        businessEventsTable.renamePrimaryKey();
+
+        ttscommit;
     }
 
 ]]></Source>
