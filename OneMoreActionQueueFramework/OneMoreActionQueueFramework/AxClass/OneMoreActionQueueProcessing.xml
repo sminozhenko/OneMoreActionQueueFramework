@@ -302,11 +302,12 @@ internal class OneMoreActionQueueProcessing
 
         OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException != null ? lastException.GetType().FullName : '', infologData, userConnection);
 
-        //Invoke Business Event if status changes to processed
-        //TODO send should be performed in user connection context
+        //Invoke Business Event if status changed to processed
         if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
         {
-            OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable).send();
+            OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
+            oneMoreActionQueueBusinessEvent.parmUserConnection(userConnection);
+            oneMoreActionQueueBusinessEvent.send();
         }
     }
 
