@@ -476,28 +476,9 @@ public class OneMoreActionQueueTypeTable extends common
 
         this.disableSeries();
 
-        this.deleteBusinessEvent();
+        BusinessEventsCatalogHelper::deleteBusinessEvent(OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(this.TypeId));
 
         ttscommit;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>deleteBusinessEvent</Name>
-				<Source><![CDATA[
-    private void deleteBusinessEvent()
-    {
-        BusinessEventsId businessEventsId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(this.TypeId);
-
-        BusinessEventsTable             businessEventsTable;
-        BusinessEventsConfiguration     businessEventsConfiguration;
-
-        delete_from businessEventsTable 
-            where BusinessEventsTable.BusinessEventId == businessEventsId;
-
-        delete_from businessEventsConfiguration 
-            where businessEventsConfiguration.BusinessEventsTable == businessEventsId;
     }
 
 ]]></Source>
