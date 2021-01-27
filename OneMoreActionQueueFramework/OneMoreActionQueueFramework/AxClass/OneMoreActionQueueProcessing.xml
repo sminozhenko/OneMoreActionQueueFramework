@@ -306,8 +306,7 @@ internal class OneMoreActionQueueProcessing
         if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
         {
             OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
-            oneMoreActionQueueBusinessEvent.parmUserConnection(userConnection);
-            oneMoreActionQueueBusinessEvent.send();
+            oneMoreActionQueueBusinessEvent.sendOnUserConnection(userConnection);
         }
     }
 
