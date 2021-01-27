@@ -34,25 +34,27 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
 				<Source><![CDATA[
     public void runActionInternal()
     {
+        DMFDefinitionGroupName definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
+        OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+        DMFExecutionId executionId = DMFUtil::generateExecutionId(definitionGroupName);
+
         try
         {
             #DMF
             
             OneMoreActionQueueContext::oneMoreActionQueueParametersContract = localContract;
             
-            DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
-            OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
-
             info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportExecution", executionId));
             
             DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
 
-            ttsbegin;
-
             DMFEntityExporter exporter = new DMFEntityExporter();
-            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', oneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName, #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
+            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, executionId, oneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName, #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
 
-            if (fileId != '')
+            DMFDefinitionGroupExecution dmfDefinitionGroupExecution = DMFDefinitionGroupExecution::find(definitionGroupName, dmfEntity.EntityName, executionId);
+
+            if (dmfDefinitionGroupExecution.TargetStatus == DMFBatchJobStatus::Finished && fileId != '')
             {
                 SharedServiceUnitURL    downloadUrl = DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
                 System.Uri              uri = new System.Uri(downloadUrl);
@@ -68,23 +70,29 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
                 }
 
                 DMFPackageUtil::deleteFileIgnoreError(filePath);
-
-                if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
-                {
-                    DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
-                    dmfDefinitionGroup.delete();
-                }
             }
             else
             {
                 throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", definitionGroupName));
             }
-
-            ttscommit;
         }
         finally
         {
             OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
+
+            if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
+            {
+                ttsbegin;
+                
+                DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
+
+                if (dmfDefinitionGroup.RecId != 0)
+                {
+                    dmfDefinitionGroup.delete();
+                }
+
+                ttscommit;
+            }
         }
     }
 

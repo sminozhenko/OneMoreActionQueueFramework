@@ -172,7 +172,6 @@ public class OneMoreActionQueueTypeTable extends FormRun
             if (OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport)
             {
                 OneMoreActionQueueTypeDMFExportParameterTable.TypeId        = OneMoreActionQueueTypeTable.TypeId;
-                OneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName = 'XML-Element';
                 
                 ret = super();
             }

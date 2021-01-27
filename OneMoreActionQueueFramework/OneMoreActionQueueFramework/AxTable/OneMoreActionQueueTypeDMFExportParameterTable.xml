@@ -135,7 +135,6 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 			<Name>DMFSourceName</Name>
 			<ExtendedDataType>DMFSourceName</ExtendedDataType>
 			<Mandatory>Yes</Mandatory>
-			<Visible>No</Visible>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
