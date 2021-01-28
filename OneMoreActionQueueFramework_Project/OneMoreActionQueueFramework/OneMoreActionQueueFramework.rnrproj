@@ -371,6 +371,11 @@
       <Name>OneMoreActionQueueLogExceptionTypeName</Name>
       <Link>Extended Data Types\OneMoreActionQueueLogExceptionTypeName</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueLogStackTrace">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogStackTrace</Name>
+      <Link>Extended Data Types\OneMoreActionQueueLogStackTrace</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueMenuItemName">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMenuItemName</Name>

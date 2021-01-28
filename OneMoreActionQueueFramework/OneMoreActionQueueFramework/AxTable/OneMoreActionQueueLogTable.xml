@@ -15,11 +15,11 @@ public class OneMoreActionQueueLogTable extends common
     /// Add infolog
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
-    /// <param name = "_exceptionTypeName">An <c>OneMoreActionQueueLogExceptionTypeName</c> value</param>    
+    /// <param name = "_exception">An <c>System.Exception</c> object</param>
     /// <param name = "_infoLogData">Infolog data</param>
     /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
     [Hookable(false)]
-    public static void addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueLogExceptionTypeName _exceptionTypeName, InfologData _infoLogData, UserConnection _userConnection)
+    public static void addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
     {
         OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId, true, _userConnection);
 
@@ -35,7 +35,12 @@ public class OneMoreActionQueueLogTable extends common
 
         oneMoreActionQueueLogTable.RefRecId             =   _oneMoreActionQueue.RecId;
         oneMoreActionQueueLogTable.InfologData          =   _infoLogData;
-        oneMoreActionQueueLogTable.ExceptionTypeName    =   _exceptionTypeName;
+        
+        if (_exception != null)
+        {
+            oneMoreActionQueueLogTable.ExceptionTypeName    =   _exception.GetType().FullName;
+            oneMoreActionQueueLogTable.StackTrace           =   _exception.StackTrace;
+        }
 
         oneMoreActionQueueLogTable.write();
     }
@@ -128,6 +133,9 @@ public class OneMoreActionQueueLogTable extends common
 				<AxTableFieldGroupField>
 					<DataField>ExceptionTypeName</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>StackTrace</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
@@ -169,6 +177,11 @@ public class OneMoreActionQueueLogTable extends common
 			i:type="AxTableFieldString">
 			<Name>ExceptionTypeName</Name>
 			<ExtendedDataType>OneMoreActionQueueLogExceptionTypeName</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>StackTrace</Name>
+			<ExtendedDataType>OneMoreActionQueueLogStackTrace</ExtendedDataType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
