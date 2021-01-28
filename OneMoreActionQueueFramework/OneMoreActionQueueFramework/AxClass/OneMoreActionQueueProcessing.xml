@@ -300,7 +300,7 @@ internal class OneMoreActionQueueProcessing
     
         oneMoreActionQueueUpd.update();
 
-        OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException != null ? lastException.GetType().FullName : '', infologData, userConnection);
+        OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException, infologData, userConnection);
 
         //Invoke Business Event if status changes to processed
         //TODO send should be performed in user connection context
