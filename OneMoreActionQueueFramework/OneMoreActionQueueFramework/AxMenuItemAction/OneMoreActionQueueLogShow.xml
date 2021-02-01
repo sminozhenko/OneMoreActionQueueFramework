@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxMenuItemAction xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V1">
 	<Name>OneMoreActionQueueLogShow</Name>
-	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueShowLog</Label>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueShowInfoLog</Label>
 	<NeedsRecord>Yes</NeedsRecord>
 	<Object>OneMoreActionQueueLogShow</Object>
 	<ObjectType>Class</ObjectType>

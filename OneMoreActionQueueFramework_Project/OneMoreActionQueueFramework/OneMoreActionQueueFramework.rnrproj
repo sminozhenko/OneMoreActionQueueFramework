@@ -486,6 +486,11 @@
       <Name>OneMoreActionQueue</Name>
       <Link>Forms\OneMoreActionQueue</Link>
     </Content>
+    <Content Include="AxForm\OneMoreActionQueueLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogTable</Name>
+      <Link>Forms\OneMoreActionQueueLogTable</Link>
+    </Content>
     <Content Include="AxForm\OneMoreActionQueueMenuItemLookup">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMenuItemLookup</Name>
@@ -550,6 +555,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueue</Name>
       <Link>Display Menu Items\OneMoreActionQueue</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueueLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogTable</Name>
+      <Link>Display Menu Items\OneMoreActionQueueLogTable</Link>
     </Content>
     <Content Include="AxMenuItemDisplay\OneMoreActionQueueTypeTable">
       <SubType>Content</SubType>

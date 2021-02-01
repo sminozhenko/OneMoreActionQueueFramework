@@ -850,6 +850,7 @@ public class OneMoreActionQueueTypeTable extends FormRun
 									i:nil="true" />
 								<DataMethod>transformationJSONEdit</DataMethod>
 								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTransformationJSON</Caption>
@@ -874,6 +875,7 @@ public class OneMoreActionQueueTypeTable extends FormRun
 									i:nil="true" />
 								<DataMethod>messageExample</DataMethod>
 								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueMessageExample</Caption>
