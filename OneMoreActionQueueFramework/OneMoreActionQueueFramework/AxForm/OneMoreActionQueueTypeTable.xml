@@ -817,6 +817,26 @@ public class OneMoreActionQueueTypeTable extends FormRun
 						<DataGroup>RetryParameters</DataGroup>
 						<DataSource>OneMoreActionQueueTypeTable</DataSource>
 					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormGroupControl">
+						<Name>CleanUp</Name>
+						<Type>Group</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormIntegerControl">
+								<Name>CleanUp_RetentionPeriod</Name>
+								<Type>Integer</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>RetentionPeriod</DataField>
+								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+							</AxFormControl>
+						</Controls>
+						<DataGroup>CleanUp</DataGroup>
+						<DataSource>OneMoreActionQueueTypeTable</DataSource>
+					</AxFormControl>
 				</Controls>
 				<ColumnsMode>Fill</ColumnsMode>
 				<FrameType>None</FrameType>

@@ -44,5 +44,19 @@
       <Moniker>BPWarningFormDesignOrControlsWithCustomPattern</Moniker>
       <Justification>By design. Copy of Simple list with tabular grid, but it doesn't allow multiselect on the grid</Justification>
     </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/OneMoreActionQueueCleanUpService/method/deleteRecords</Path>
+      <Moniker>BPErrorMethodDeleteFromNotUsed</Moniker>
+      <Justification>By design. Delete logic should be executed for each selected line</Justification>
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/OneMoreActionQueueCleanUpService/Method/cleanUp</Path>
+      <Moniker>BPCheckNestedLoopinCode</Moniker>
+      <Justification>The nested data access loop is intentional.</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>

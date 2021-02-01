@@ -411,6 +411,11 @@
       <Name>OneMoreActionQueueReliableAsyncBatchGroupId</Name>
       <Link>Extended Data Types\OneMoreActionQueueReliableAsyncBatchGroupId</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueRetentionPeriod">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueRetentionPeriod</Name>
+      <Link>Extended Data Types\OneMoreActionQueueRetentionPeriod</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueRetryAttemptInterval">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueRetryAttemptInterval</Name>
@@ -570,11 +575,6 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueue</Name>
       <Link>Menus\OneMoreActionQueue</Link>
-    </Content>
-    <Content Include="AxQuery\OneMoreActionQueueCleanUp">
-      <SubType>Content</SubType>
-      <Name>OneMoreActionQueueCleanUp</Name>
-      <Link>Simple Queries\OneMoreActionQueueCleanUp</Link>
     </Content>
     <Content Include="AxQuery\OneMoreActionQueueWaiting">
       <SubType>Content</SubType>
