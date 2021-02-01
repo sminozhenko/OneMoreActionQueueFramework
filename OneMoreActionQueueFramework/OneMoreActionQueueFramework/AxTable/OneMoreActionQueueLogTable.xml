@@ -18,8 +18,11 @@ public class OneMoreActionQueueLogTable extends common
     /// <param name = "_exception">An <c>System.Exception</c> object</param>
     /// <param name = "_infoLogData">Infolog data</param>
     /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
+    /// <returns>
+    /// A created/updated record in the <c>OneMoreActionQueueLogTable</c> table or null if no infolog to be stored.
+    /// </returns>
     [Hookable(false)]
-    public static void addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
+    public static OneMoreActionQueueLogTable addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
     {
         OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId, true, _userConnection);
 
@@ -30,7 +33,7 @@ public class OneMoreActionQueueLogTable extends common
                 oneMoreActionQueueLogTable.delete();
             }
 
-            return;
+            return null;
         }
 
         oneMoreActionQueueLogTable.RefRecId             =   _oneMoreActionQueue.RecId;
@@ -43,6 +46,8 @@ public class OneMoreActionQueueLogTable extends common
         }
 
         oneMoreActionQueueLogTable.write();
+
+        return oneMoreActionQueueLogTable;
     }
 
 ]]></Source>
@@ -83,25 +88,82 @@ public class OneMoreActionQueueLogTable extends common
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>showLog</Name>
+				<Name>findLast</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Show log for <c>OneMoreActionQueue</c>
+    /// Finds the last <c>OneMoreActionQueueLogTable</c> record by <c>RefRecId</c> value order by created date time
     /// </summary>
-    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
+    /// <param name = "_refRecId">An <c>RefRecId</c> value</param>    
+    /// <returns>
+    /// A record in the <c>OneMoreActionQueueLogTable</c> table otherwise, an empty record.
+    /// </returns>
     [Hookable(false)]
-    public static void showLog(OneMoreActionQueue _oneMoreActionQueue)
+    public static OneMoreActionQueueLogTable findLast(RefRecId _refRecId)
     {
-        OneMoreActionQueueLogTable       oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId);
-        
-        if (oneMoreActionQueueLogTable.RecId && oneMoreActionQueueLogTable.InfologData != conNull())
+        OneMoreActionQueueLogTable   ret;
+
+
+        if (_refRecId)
         {
-            infolog.import(oneMoreActionQueueLogTable.InfologData, true);
+            select firstonly ret
+                order by CreatedDateTime desc
+                where ret.RefRecId      ==  _refRecId;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showInfoLog</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Show infolog for current log record
+    /// </summary>    
+    [Hookable(false)]
+    public void showInfoLog()
+    {
+        if (this.RecId && this.InfologData != conNull())
+        {
+            infolog.import(this.InfologData, true);
         }
         else
         {
             info("@OneMoreActionQueueFramework:OneMoreActionQueueNoInfologFound");
         }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getInfoLogText</Name>
+				<Source><![CDATA[
+    [
+        Hookable(false),
+        SysClientCacheDataMethod(false)
+    ]
+    public display InfologText getInfoLogText()
+    {
+        System.Text.StringBuilder   logStr = new System.Text.StringBuilder();
+
+        SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(this.InfologData);
+
+        while (infoEnumerator.moveNext())
+        {
+            SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
+
+            int p = infoMessageStruct.prefixDepth();
+
+            for (int i = 1; i <= p; i++)
+            {
+                logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
+            }
+
+            logStr.AppendLine(infoMessageStruct.message());
+        }
+
+        return logStr.ToString();
     }
 
 ]]></Source>
@@ -131,9 +193,6 @@ public class OneMoreActionQueueLogTable extends common
 					<DataField>InfologData</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
-					<DataField>ExceptionTypeName</DataField>
-				</AxTableFieldGroupField>
-				<AxTableFieldGroupField>
 					<DataField>StackTrace</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
@@ -158,6 +217,21 @@ public class OneMoreActionQueueLogTable extends common
 		<AxTableFieldGroup>
 			<Name>AutoBrowse</Name>
 			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>OverviewGrid</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RefRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ExceptionTypeName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
 		</AxTableFieldGroup>
 	</FieldGroups>
 	<Fields>

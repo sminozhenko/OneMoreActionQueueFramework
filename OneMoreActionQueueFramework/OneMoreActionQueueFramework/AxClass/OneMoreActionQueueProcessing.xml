@@ -289,18 +289,19 @@ internal class OneMoreActionQueueProcessing
             oneMoreActionQueueUpd.Status    = _status;
         }
 
-        InfologData infologData = this.getInfoLogData();
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException, this.getInfoLogData(), userConnection);
 
         oneMoreActionQueueUpd.ProcessingNotes = '';
 
-        if (infologData != conNull())
+        //TODO check if no message
+        if (oneMoreActionQueueLogTable != null)
         {
-            oneMoreActionQueueUpd.ProcessingNotes = this.getInfoLogText(infologData);
+            oneMoreActionQueueUpd.ProcessingNotes = oneMoreActionQueueLogTable.getInfoLogText();
         }
     
         oneMoreActionQueueUpd.update();
 
-        OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException, infologData, userConnection);
+        
 
         //Invoke Business Event if status changes to processed
         //TODO send should be performed in user connection context
@@ -326,34 +327,6 @@ internal class OneMoreActionQueueProcessing
         }
 
         return ret;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>getInfoLogText</Name>
-				<Source><![CDATA[
-    private InfologText getInfoLogText(InfologData _infologData)
-    {
-        System.Text.StringBuilder   logStr = new System.Text.StringBuilder();
-
-        SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(_infologData);
-
-        while (infoEnumerator.moveNext())
-        {
-            SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
-
-            int p = infoMessageStruct.prefixDepth();
-
-            for (int i = 1; i <= p; i++)
-            {
-                logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
-            }
-
-            logStr.AppendLine(infoMessageStruct.message());
-        }
-
-        return logStr.ToString();
     }
 
 ]]></Source>
