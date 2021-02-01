@@ -249,6 +249,15 @@ public class OneMoreActionQueueLogTable extends FormRun
 								<ReferenceField>RefRecId</ReferenceField>
 							</AxFormControl>
 							<AxFormControl xmlns=""
+								i:type="AxFormIntegerControl">
+								<Name>OverviewGrid_RetryCount</Name>
+								<Type>Integer</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>RetryCount</DataField>
+								<DataSource>OneMoreActionQueueLogTable</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
 								<Name>OverviewGrid_ExceptionTypeName</Name>
 								<Type>String</Type>
