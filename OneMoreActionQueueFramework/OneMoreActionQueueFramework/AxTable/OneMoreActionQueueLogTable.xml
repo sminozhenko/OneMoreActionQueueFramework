@@ -9,35 +9,31 @@ public class OneMoreActionQueueLogTable extends common
 ]]></Declaration>
 		<Methods>
 			<Method>
-				<Name>addInfoLogData</Name>
+				<Name>addActionQueueLogTable</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Add infolog
+    /// Adds <c>OneMoreActionQueueLogTable</c> record
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
     /// <param name = "_exception">An <c>System.Exception</c> object</param>
     /// <param name = "_infoLogData">Infolog data</param>
     /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
     /// <returns>
-    /// A created/updated record in the <c>OneMoreActionQueueLogTable</c> table or null if no infolog to be stored.
+    /// A created record in the <c>OneMoreActionQueueLogTable</c> table.
     /// </returns>
     [Hookable(false)]
-    public static OneMoreActionQueueLogTable addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
+    public static OneMoreActionQueueLogTable addActionQueueLogTable(OneMoreActionQueue _oneMoreActionQueue, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
     {
-        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId, true, _userConnection);
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable;
 
-        if (_infoLogData == conNull())
-        {
-            if (oneMoreActionQueueLogTable.RecId != 0)
-            {
-                oneMoreActionQueueLogTable.delete();
-            }
+        oneMoreActionQueueLogTable.setConnection(_userConnection);
 
-            return null;
-        }
+        oneMoreActionQueueLogTable.clear();
+        oneMoreActionQueueLogTable.initValue();
 
         oneMoreActionQueueLogTable.RefRecId             =   _oneMoreActionQueue.RecId;
         oneMoreActionQueueLogTable.InfologData          =   _infoLogData;
+        oneMoreActionQueueLogTable.RetryCount           =   _oneMoreActionQueue.RetryCount;
         
         if (_exception != null)
         {
@@ -45,7 +41,7 @@ public class OneMoreActionQueueLogTable extends common
             oneMoreActionQueueLogTable.StackTrace           =   _exception.StackTrace;
         }
 
-        oneMoreActionQueueLogTable.write();
+        oneMoreActionQueueLogTable.insert();
 
         return oneMoreActionQueueLogTable;
     }
@@ -102,7 +98,6 @@ public class OneMoreActionQueueLogTable extends common
     {
         OneMoreActionQueueLogTable   ret;
 
-
         if (_refRecId)
         {
             select firstonly ret
@@ -147,20 +142,23 @@ public class OneMoreActionQueueLogTable extends common
     {
         System.Text.StringBuilder   logStr = new System.Text.StringBuilder();
 
-        SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(this.InfologData);
-
-        while (infoEnumerator.moveNext())
+        if (this.InfologData != conNull())
         {
-            SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
+            SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(this.InfologData);
 
-            int p = infoMessageStruct.prefixDepth();
-
-            for (int i = 1; i <= p; i++)
+            while (infoEnumerator.moveNext())
             {
-                logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
-            }
+                SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
 
-            logStr.AppendLine(infoMessageStruct.message());
+                int p = infoMessageStruct.prefixDepth();
+
+                for (int i = 1; i <= p; i++)
+                {
+                    logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
+                }
+
+                logStr.AppendLine(infoMessageStruct.message());
+            }
         }
 
         return logStr.ToString();
@@ -178,8 +176,8 @@ public class OneMoreActionQueueLogTable extends common
 	<TitleField1>RefRecId</TitleField1>
 	<CacheLookup>NotInTTS</CacheLookup>
 	<ClusteredIndex>RefRecIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
 	<CreatedDateTime>Yes</CreatedDateTime>
-	<ReplacementKey>RefRecIdx</ReplacementKey>
 	<SaveDataPerCompany>No</SaveDataPerCompany>
 	<DeleteActions />
 	<FieldGroups>
@@ -204,11 +202,7 @@ public class OneMoreActionQueueLogTable extends common
 		<AxTableFieldGroup>
 			<Name>AutoIdentification</Name>
 			<AutoPopulate>Yes</AutoPopulate>
-			<Fields>
-				<AxTableFieldGroupField>
-					<DataField>RefRecId</DataField>
-				</AxTableFieldGroupField>
-			</Fields>
+			<Fields />
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
 			<Name>AutoSummary</Name>
@@ -227,6 +221,9 @@ public class OneMoreActionQueueLogTable extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>RefRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryCount</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>ExceptionTypeName</DataField>
@@ -257,12 +254,20 @@ public class OneMoreActionQueueLogTable extends common
 			<Name>StackTrace</Name>
 			<ExtendedDataType>OneMoreActionQueueLogStackTrace</ExtendedDataType>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetryCount</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueRetryCount</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRun</Label>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
 		<AxTableIndex>
 			<Name>RefRecIdx</Name>
-			<AlternateKey>Yes</AlternateKey>
+			<AllowDuplicates>Yes</AllowDuplicates>
 			<Fields>
 				<AxTableIndexField>
 					<DataField>RefRecId</DataField>

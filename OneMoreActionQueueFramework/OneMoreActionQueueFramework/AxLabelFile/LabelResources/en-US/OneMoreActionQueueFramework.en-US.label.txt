@@ -91,3 +91,5 @@ OneMoreActionQueueDMFExportDataProject=Data project '%1'
 OneMoreActionQueueDoesNotExist=Action queue record with action id '%1' does not exist
 OneMoreActionQueueDoesNotHaveAttachedFiles=Action queue record with action id '%1' does not have attached files
 OneMoreActionQueueLogStackTrace=Stack trace
+OneMoreActionQueueRuns=Runs
+OneMoreActionQueueRun=Run

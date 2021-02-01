@@ -271,11 +271,11 @@ internal class OneMoreActionQueueProcessing
     protected void updateStatus(OneMoreActionQueueStatus _status, boolean _doRetry = true)
     {
         boolean doStatusUpdate = true;
+
+        oneMoreActionQueueUpd.RetryCount += 1;
         
         if (_doRetry && this.useRetry() && _status == OneMoreActionQueueStatus::Error)
         {
-            oneMoreActionQueueUpd.RetryCount += 1;
-
             if (oneMoreActionQueueUpd.RetryCount < this.maxRetryCount())
             {
                 doStatusUpdate = false;
@@ -289,19 +289,11 @@ internal class OneMoreActionQueueProcessing
             oneMoreActionQueueUpd.Status    = _status;
         }
 
-        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException, this.getInfoLogData(), userConnection);
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addActionQueueLogTable(oneMoreActionQueueUpd, lastException, this.getInfoLogData(), userConnection);
 
-        oneMoreActionQueueUpd.ProcessingNotes = '';
-
-        //TODO check if no message
-        if (oneMoreActionQueueLogTable != null)
-        {
-            oneMoreActionQueueUpd.ProcessingNotes = oneMoreActionQueueLogTable.getInfoLogText();
-        }
+        oneMoreActionQueueUpd.ProcessingNotes = oneMoreActionQueueLogTable.getInfoLogText();
     
         oneMoreActionQueueUpd.update();
-
-        
 
         //Invoke Business Event if status changes to processed
         //TODO send should be performed in user connection context
