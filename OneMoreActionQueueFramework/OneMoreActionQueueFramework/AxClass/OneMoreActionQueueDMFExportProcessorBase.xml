@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportProcessorBase</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue base processor class for DMF exports
+/// </summary>
+[
+    OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueDMFExportBusinessEvent))
+]
+abstract class OneMoreActionQueueDMFExportProcessorBase extends OneMoreActionQueueProcessor
+{
+    #DMF
+    
+    protected OneMoreActionQueueDMFExportContract           localContract;
+
+    protected DMFDefinitionGroupName                        definitionGroupName;
+    protected DMFExecutionId                                executionId;
+    protected OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable;
+
+    protected boolean                                       generatePackage;
+    protected boolean                                       fileUploaded;
+    protected SharedServiceUnitFileID                       fileId;
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Initialize</Name>
+				<Source><![CDATA[
+    public void Initialize()
+    {
+        super();
+
+        localContract = contract as OneMoreActionQueueDMFExportContract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+        
+        this.initializeDMFDefinitionGroupName();
+
+        executionId = DMFUtil::generateExecutionId(definitionGroupName);
+
+        fileUploaded = true;
+
+        try
+        {            
+            
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = localContract;
+            
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportExecution", executionId));
+
+            this.runExport();
+
+            if (fileUploaded)
+            {
+                DMFDefinitionGroupExecution dmfDefinitionGroupExecution;
+
+                while select TargetStatus
+                    from dmfDefinitionGroupExecution
+                    where dmfDefinitionGroupExecution.ExecutionId       ==  executionId
+                        && dmfDefinitionGroupExecution.DefinitionGroup   ==  definitionGroupName
+                {
+                    if (dmfDefinitionGroupExecution.TargetStatus != DMFBatchJobStatus::Finished)
+                    {
+                        fileUploaded = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!fileId && fileUploaded)
+            {
+                DMFEntityExportDetails entityExportDetails;
+
+                select firstonly entityExportDetails
+                    where entityExportDetails.ExecutionId       ==  executionId
+                        && entityExportDetails.DefinitionGroup   ==  definitionGroupName;
+                    
+                if (entityExportDetails.PackageUploadFailed)
+                {
+                    fileUploaded = false;
+                }
+                else
+                {
+                    fileId = entityExportDetails.PackageFilePath ? entityExportDetails.PackageFilePath : entityExportDetails.SampleFilePath;
+                }
+            }
+
+            if (fileUploaded)
+            {
+                SharedServiceUnitURL    downloadUrl = generatePackage ? DMFStagingWriter::getDownloadURLFromFileId(fileId) : DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
+                System.Uri              uri = new System.Uri(downloadUrl);
+                str                     fileName = System.IO.Path::GetFileName(uri.LocalPath);
+                
+                System.IO.Stream stream = File::UseFileFromURL(downloadUrl);
+
+                var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
+                DocumentManagement::attachFileToCommon(this.parmOneMoreActionQueue(), DocuType::typeFile(), stream, fileName, mime, fileName);
+            }
+            else
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", definitionGroupName));
+            }
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
+
+            this.finalizeAction();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeDMFDefinitionGroupName</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize data project name
+    /// </summary>
+    abstract protected void initializeDMFDefinitionGroupName()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runExport</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run DMF export
+    /// </summary>
+    abstract protected void runExport()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>finalizeAction</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finalize execution of the action
+    /// </summary>
+    protected void finalizeAction()
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

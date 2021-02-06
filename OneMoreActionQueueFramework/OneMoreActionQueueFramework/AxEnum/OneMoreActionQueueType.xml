@@ -15,7 +15,7 @@
 		</AxEnumValue>
 		<AxEnumValue>
 			<Name>DMFExport</Name>
-			<Label>@OneMoreActionQueueFramework:OneMoreActionQeueueTypeDMFExport</Label>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExport</Label>
 			<Value>2</Value>
 		</AxEnumValue>
 	</EnumValues>

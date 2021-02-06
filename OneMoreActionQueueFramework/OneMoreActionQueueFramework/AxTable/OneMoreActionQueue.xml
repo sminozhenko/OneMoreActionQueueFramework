@@ -402,6 +402,7 @@ public class OneMoreActionQueue extends common
 			<AllowEdit>No</AllowEdit>
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>OneMoreActionQueueRetryCount</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRuns</Label>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">

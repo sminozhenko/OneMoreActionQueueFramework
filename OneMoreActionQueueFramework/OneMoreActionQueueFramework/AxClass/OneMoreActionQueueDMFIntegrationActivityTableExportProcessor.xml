@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFIntegrationActivityTableExportProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using Microsoft.Dynamics.Platform.Integration.Framework.Contracts;
+
+/// <summary>
+/// Action queue processor class for DMF export (recurring job) type
+/// </summary>
+[
+    OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)
+]
+class OneMoreActionQueueDMFIntegrationActivityTableExportProcessor extends OneMoreActionQueueProcessor
+{
+    OneMoreActionQueueDMFExportContract  localContract;
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Initialize</Name>
+				<Source><![CDATA[
+    public void Initialize()
+    {
+        super();
+
+        localContract = contract as OneMoreActionQueueDMFExportContract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+
+        try
+        {   
+            DMFDefinitionGroup  dmfDefinitionGroup = oneMoreActionQueueTypeDMFExportParameterTable.dmfDefinitionGroup();
+
+            if (dmfDefinitionGroup.RecId == 0)
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+            }
+
+            IntegrationActivityTable    integrationActivityTable;
+            
+            select firstonly integrationActivityTable
+                where integrationActivityTable.Name == oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName;
+
+            if (integrationActivityTable.RecId == 0)
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportRecurringJobDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName, oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+            }
+
+            Activity activity = IntegrationPacker::PackActivity(integrationActivityTable);
+
+            if (!this.isExecutingInBatch())
+            {
+                SysIntegrationActivityBatch integrationBatch = SysIntegrationActivityBatch::construct();
+                integrationBatch.parmActivityId(activity.Id);
+                integrationBatch.parmActivityKey(activity.ActivityKey);
+                integrationBatch.runOperation();
+            }
+            else
+            {
+                RunBaseBatch batchTask = SysIntegrationBatch::createBatchTask(activity);
+                batchTask.batchInfo().parmGroupId(this.parmOneMoreActionQueueTypeTable().ReliableAsyncBatchGroupId);
+                batchTask.runOperation();
+            }
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

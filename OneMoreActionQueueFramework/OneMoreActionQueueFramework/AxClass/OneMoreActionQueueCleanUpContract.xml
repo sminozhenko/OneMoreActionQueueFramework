@@ -9,39 +9,8 @@
 [DataContract]
 public class OneMoreActionQueueCleanUpContract
 {
-    private str             packedQuery;
-
 }
 ]]></Declaration>
-		<Methods>
-			<Method>
-				<Name>parmPackedQuery</Name>
-				<Source><![CDATA[
-    [
-        DataMemberAttribute,
-        AifQueryTypeAttribute('_packedQuery', queryStr(OneMoreActionQueueCleanUp)),
-        Hookable(false)
-    ]
-    public str parmPackedQuery(str _packedQuery = packedQuery)
-    {
-        packedQuery = _packedQuery;
-
-        return packedQuery;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>getQuery</Name>
-				<Source><![CDATA[
-    [Hookable(false)]
-    public Query getQuery()
-    {
-        return new Query(SysOperationHelper::base64Decode(packedQuery));
-    }
-
-]]></Source>
-			</Method>
-		</Methods>
+		<Methods />
 	</SourceCode>
 </AxClass>

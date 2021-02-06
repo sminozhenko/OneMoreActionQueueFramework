@@ -10,6 +10,8 @@ internal static final class OneMoreActionQueueConstants
 {
     // 50000 records deleted in one transaction
     internal const int                                                  CleanUpBatchSize = 50000;
+    internal const int                                                  CleanUpDefaulRetentionPeriod = 30;
+
     internal const OneMoreActionQueueRetryAttemptInterval               DefaultRetryAttemptInterval = 3600; //60 minutes
     internal const OneMoreActionQueueProcessAutomationPollingInterval   DefaultProcessAutomationPollingInterval = 60; //60 minutes
 

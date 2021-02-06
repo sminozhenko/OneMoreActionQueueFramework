@@ -139,7 +139,14 @@ public class OneMoreActionQueueTypeTable extends common
     [Hookable(false)]
     public ClassName contractClassName()
     {
-        return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
+        OneMoreActionQueueProcessorAttribute oneMoreActionQueueProcessorAttribute = OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName));
+            
+        if (!oneMoreActionQueueProcessorAttribute)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorAttributeIsNotSpecified", this.ActionClassName));
+        }
+
+        return oneMoreActionQueueProcessorAttribute.parmActionQueueContractClass();
     }
 
 ]]></Source>
@@ -261,9 +268,6 @@ public class OneMoreActionQueueTypeTable extends common
                 {
                     case OneMoreActionQueueType::MenuItem:
                         this.ActionClassName   = classStr(OneMoreActionQueueMenuItemActionProcessor);
-                        break;
-                    case OneMoreActionQueueType::DMFExport:
-                        this.ActionClassName   = classStr(OneMoreActionQueueDMFExportProcessor);
                         break;
                     default:
                         this.ActionClassName   = '';
@@ -407,7 +411,8 @@ public class OneMoreActionQueueTypeTable extends common
     public void insert()
     {
         ttsbegin;
-        
+
+        this.setDefaultRetentionPeriod();
         this.setDefaultProcessAutomationPollingInterval();
         
         super();
@@ -441,6 +446,7 @@ public class OneMoreActionQueueTypeTable extends common
     {
         ttsbegin;
         
+        this.setDefaultRetentionPeriod();
         this.setDefaultProcessAutomationPollingInterval();
         
         super();
@@ -719,6 +725,19 @@ public class OneMoreActionQueueTypeTable extends common
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>setDefaultRetentionPeriod</Name>
+				<Source><![CDATA[
+    internal void setDefaultRetentionPeriod()
+    {
+        if (!this.RetentionPeriod)
+        {
+            this.RetentionPeriod = OneMoreActionQueueConstants::CleanUpDefaulRetentionPeriod;
+        }
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueType</DeveloperDocumentation>
@@ -877,6 +896,15 @@ public class OneMoreActionQueueTypeTable extends common
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>CleanUp</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueCleanUpGroup</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>RetentionPeriod</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
 	</FieldGroups>
 	<Fields>
 		<AxTableField xmlns=""
@@ -941,6 +969,11 @@ public class OneMoreActionQueueTypeTable extends common
 			i:type="AxTableFieldInt">
 			<Name>ProcessAutomationPollingInterval</Name>
 			<ExtendedDataType>OneMoreActionQueueProcessAutomationPollingInterval</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetentionPeriod</Name>
+			<ExtendedDataType>OneMoreActionQueueRetentionPeriod</ExtendedDataType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

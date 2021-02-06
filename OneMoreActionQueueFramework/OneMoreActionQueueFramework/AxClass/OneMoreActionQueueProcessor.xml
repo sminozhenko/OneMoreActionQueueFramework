@@ -7,7 +7,7 @@
 /// Action queue base processor
 /// </summary>
 [OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueBusinessEvent))]
-abstract class OneMoreActionQueueProcessor
+abstract class OneMoreActionQueueProcessor extends SysOperationServiceBase
 {
     protected OneMoreActionQueue              oneMoreActionQueue;
     protected OneMoreActionQueueTypeTable     oneMoreActionQueueTypeTable;
