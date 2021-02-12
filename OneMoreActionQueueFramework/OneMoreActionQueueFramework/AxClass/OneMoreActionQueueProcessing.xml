@@ -289,7 +289,13 @@ internal class OneMoreActionQueueProcessing
             oneMoreActionQueueUpd.Status    = _status;
         }
 
-        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addActionQueueLogTable(oneMoreActionQueueUpd, lastException, this.getInfoLogData(), userConnection);
+        container infoLogData = OneMoreActionQueueContext::oneMoreActionQueueClearedLog;
+
+        OneMoreActionQueueContext::oneMoreActionQueueClearedLog = conNull();
+
+        infoLogData += this.getInfoLogData();
+
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addActionQueueLogTable(oneMoreActionQueueUpd, lastException, infoLogData, userConnection);
 
         oneMoreActionQueueUpd.ProcessingNotes = oneMoreActionQueueLogTable.getInfoLogText();
     

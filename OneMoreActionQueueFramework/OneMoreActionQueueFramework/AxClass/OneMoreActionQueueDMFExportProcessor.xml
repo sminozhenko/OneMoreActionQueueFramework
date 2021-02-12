@@ -68,6 +68,28 @@ class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueDMFExportPr
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>attachExportFileToActionQeueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean attachExportFileToActionQeueue()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateExecutionId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean generateExecutionId()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>

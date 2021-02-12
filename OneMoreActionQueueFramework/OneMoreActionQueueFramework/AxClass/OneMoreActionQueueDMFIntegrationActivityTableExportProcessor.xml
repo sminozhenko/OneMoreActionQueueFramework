@@ -11,71 +11,100 @@ using Microsoft.Dynamics.Platform.Integration.Framework.Contracts;
 [
     OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)
 ]
-class OneMoreActionQueueDMFIntegrationActivityTableExportProcessor extends OneMoreActionQueueProcessor
+class OneMoreActionQueueDMFIntegrationActivityTableExportProcessor extends OneMoreActionQueueDMFExportProcessorBase
 {
-    OneMoreActionQueueDMFExportContract  localContract;
-        
 }
 ]]></Declaration>
 		<Methods>
 			<Method>
-				<Name>Initialize</Name>
+				<Name>initializeDMFDefinitionGroupName</Name>
 				<Source><![CDATA[
-    public void Initialize()
+    [Hookable(false)]
+    protected void initializeDMFDefinitionGroupName()
     {
-        super();
-
-        localContract = contract as OneMoreActionQueueDMFExportContract;
+        definitionGroupName = oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName;
     }
 
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>runActionInternal</Name>
+				<Name>runExport</Name>
 				<Source><![CDATA[
-    public void runActionInternal()
+    [Hookable(false)]
+    protected void runExport()
     {
-        OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+        DMFDefinitionGroup  dmfDefinitionGroup = oneMoreActionQueueTypeDMFExportParameterTable.dmfDefinitionGroup();
 
-        try
-        {   
-            DMFDefinitionGroup  dmfDefinitionGroup = oneMoreActionQueueTypeDMFExportParameterTable.dmfDefinitionGroup();
-
-            if (dmfDefinitionGroup.RecId == 0)
-            {
-                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
-            }
-
-            IntegrationActivityTable    integrationActivityTable;
-            
-            select firstonly integrationActivityTable
-                where integrationActivityTable.Name == oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName;
-
-            if (integrationActivityTable.RecId == 0)
-            {
-                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportRecurringJobDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName, oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
-            }
-
-            Activity activity = IntegrationPacker::PackActivity(integrationActivityTable);
-
-            if (!this.isExecutingInBatch())
-            {
-                SysIntegrationActivityBatch integrationBatch = SysIntegrationActivityBatch::construct();
-                integrationBatch.parmActivityId(activity.Id);
-                integrationBatch.parmActivityKey(activity.ActivityKey);
-                integrationBatch.runOperation();
-            }
-            else
-            {
-                RunBaseBatch batchTask = SysIntegrationBatch::createBatchTask(activity);
-                batchTask.batchInfo().parmGroupId(this.parmOneMoreActionQueueTypeTable().ReliableAsyncBatchGroupId);
-                batchTask.runOperation();
-            }
-        }
-        finally
+        if (dmfDefinitionGroup.RecId == 0)
         {
-            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
         }
+
+        IntegrationActivityTable    integrationActivityTable;
+            
+        select firstonly integrationActivityTable
+            where integrationActivityTable.Name == oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName;
+
+        if (integrationActivityTable.RecId == 0)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportRecurringJobDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName, oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+        }
+
+        Activity activity = IntegrationPacker::PackActivity(integrationActivityTable);
+
+        IntegrationActivityRuntimeTable activityRuntimeTable;
+
+        select firstonly activityRuntimeTable where
+            activityRuntimeTable.ActivityTable == activity.Id;
+
+        Batch batch = this.getCurrentBatchTask();
+
+        SysIntegrationActivityBatchTask integrationActivityBatchTask = SysIntegrationActivityBatchTask::createNewTask(activity.Id, activityRuntimeTable.RecId);
+        integrationActivityBatchTask.parmCurrentBatch(batch);
+        integrationActivityBatchTask.runOperation();
+
+        batch.reread();
+
+        int batchPackVersion;
+        int executionCorrelationPosition;
+
+        [batchPackVersion, executionCorrelationPosition] = SysIntegrationActivityBatchTask::getExecutionCorrelationPositionInfo();
+
+        if (batchPackVersion == RunBase::getVersion(batch.Parameters))
+        {
+            guid executionCorrelationId = conPeek(batch.Parameters, executionCorrelationPosition);
+            
+            IntegrationActivityRuntimeExecutionTable activityRuntimeExecutionTable = IntegrationActivityRuntimeExecutionTable::find(executionCorrelationId, false);
+            
+            if (!executionCorrelationId || activityRuntimeExecutionTable.RecId == 0 || activityRuntimeExecutionTable.Status != DMFBatchJobStatus::Finished)
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+            }
+
+            executionId = activityRuntimeExecutionTable.ExecutionId;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>attachExportFileToActionQeueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean attachExportFileToActionQeueue()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateExecutionId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean generateExecutionId()
+    {
+        return false;
     }
 
 ]]></Source>

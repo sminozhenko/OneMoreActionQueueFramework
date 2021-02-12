@@ -66,6 +66,11 @@
       <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
       <Link>Classes\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Link>
     </Content>
+    <Content Include="AxClass\InfoOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>InfoOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\InfoOneMoreActionQueueFramework_Extension</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueBusinessEvent">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueBusinessEvent</Name>
@@ -336,10 +341,10 @@
       <Name>OneMoreActionQueueServiceRunActionResponse</Name>
       <Link>Classes\OneMoreActionQueueServiceRunActionResponse</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtilCopy">
+    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtil">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueSysQueryRangeUtilCopy</Name>
-      <Link>Classes\OneMoreActionQueueSysQueryRangeUtilCopy</Link>
+      <Name>OneMoreActionQueueSysQueryRangeUtil</Name>
+      <Link>Classes\OneMoreActionQueueSysQueryRangeUtil</Link>
     </Content>
     <Content Include="AxClass\RunBaseBatchOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>

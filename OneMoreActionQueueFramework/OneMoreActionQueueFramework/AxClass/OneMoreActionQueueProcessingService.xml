@@ -10,7 +10,12 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
 {    
     private List            batchBundlingList;
     private BatchHeader     batchHeader;
-    
+    private int             batchBundleSize;
+    private boolean         enableBatchBundling;
+    private boolean         runBatchTaskInSequence;
+
+    private SysOperationServiceController lastTask;
+
 }
 ]]></Declaration>
 		<Methods>
@@ -27,35 +32,20 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
         QueryRun                            queryRun;
         boolean                             throwError;
 
+        enableBatchBundling = _contract.parmEnableBatchBundling();
+        batchBundleSize = _contract.parmBatchBundleSize();
+
         queryRun = new queryRun(_contract.getQuery());
     
         while(queryRun.next())
         {
-            if (_contract.parmEnableBatchBundling() && _contract.parmBatchBundleSize() && this.isExecutingInBatch())
+            if (!this.executeAction(queryRun.get(tableNum(OneMoreActionQueue))))
             {
-                this.addToQueue(_contract, queryRun.get(tableNum(OneMoreActionQueue)));
-            }
-            else
-            {
-                if (!OneMoreActionQueueProcessingService::processSingleRecord(queryRun.get(tableNum(OneMoreActionQueue))))
-                {
-                    throwError = true;
-                }
+                throwError = true;
             }
         }
 
-        if (_contract.parmEnableBatchBundling() && _contract.parmBatchBundleSize() && this.isExecutingInBatch())
-        {
-            if (batchBundlingList)
-            {
-                this.createTask(batchBundlingList.pack());
-            }
-
-            if (batchHeader)
-            {
-                batchHeader.save();
-            }
-        }
+        this.finalizeExecution();
 
         //Batch job should fail if there were errors
         if (throwError)
@@ -71,9 +61,9 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
 				<Name>addToQueue</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    private void addToQueue(OneMoreActionQueueProcessingQueryContract _contract, OneMoreActionQueue _oneMoreActionQueue)
+    private void addToQueue(OneMoreActionQueue _oneMoreActionQueue)
     {
-        if (!batchBundlingList || batchBundlingList.elements() >= _contract.parmBatchBundleSize())
+        if (!batchBundlingList || batchBundlingList.elements() >= batchBundleSize)
         {
             if (batchBundlingList)
             {
@@ -130,6 +120,8 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
         if (this.isExecutingInBatch())
         {
             batchHeader.addRuntimeTask(controller, this.getCurrentBatchTask().RecId);
+
+            this.addTaskDependency(controller);
         }
         else
         {
@@ -200,9 +192,75 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
     {
         SetEnumerator       se = _contract.parmRecordCollection().getEnumerator();
         
+        batchBundleSize = 1;
+        enableBatchBundling = this.isExecutingInBatch();
+        runBatchTaskInSequence = true;
+
         while (se.moveNext())
         {
-            OneMoreActionQueueProcessingService::processSingleRecord(OneMoreActionQueue::findRecId(se.current()));
+            this.executeAction(OneMoreActionQueue::findRecId(se.current()));
+        }
+
+        this.finalizeExecution();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>executeAction</Name>
+				<Source><![CDATA[
+    private boolean executeAction(OneMoreActionQueue _oneMoreActionQueue)
+    {
+        boolean ret = true;
+        
+        if (enableBatchBundling && batchBundleSize && this.isExecutingInBatch())
+        {
+            this.addToQueue(_oneMoreActionQueue);
+        }
+        else
+        {
+            ret = OneMoreActionQueueProcessingService::processSingleRecord(_oneMoreActionQueue);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>finalizeExecution</Name>
+				<Source><![CDATA[
+    private void finalizeExecution()
+    {
+        if (enableBatchBundling && batchBundleSize && this.isExecutingInBatch())
+        {
+            if (batchBundlingList)
+            {
+                this.createTask(batchBundlingList.pack());
+            }
+
+            if (batchHeader)
+            {
+                batchHeader.save();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addTaskDependency</Name>
+				<Source><![CDATA[
+    private void addTaskDependency(SysOperationServiceController _currentTask)
+    {
+        if (runBatchTaskInSequence)
+        {
+            if (lastTask)
+            {
+                batchHeader.addDependency(_currentTask, lastTask, BatchDependencyStatus::FinishedOrError);
+            }
+
+            lastTask = _currentTask;
         }
     }
 

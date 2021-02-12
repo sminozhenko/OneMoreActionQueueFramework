@@ -111,3 +111,4 @@ OneMoreActionQueueDMFExportIntegrationActivityIsNotSpecified=Recurring job shoul
 OneMoreActionQueueDMFExportSourceNameIsNotSpecified=Source name should be specified
 OneMoreActionQueueDMFExportDataProjectDoesNotExist=Data project '%1' does not exist
 OneMoreActionQueueDMFExportRecurringJobDoesNotExist=Recurring job '%1' for data project '%2' does not exist
+OneMoreActionQueueContractNotFoundInStaticContext=OneMoreActionQueueContract was not found in static context
