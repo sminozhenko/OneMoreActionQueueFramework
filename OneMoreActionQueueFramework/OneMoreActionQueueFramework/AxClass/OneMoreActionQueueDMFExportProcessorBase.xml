@@ -72,6 +72,11 @@ abstract class OneMoreActionQueueDMFExportProcessorBase extends OneMoreActionQue
                        && entityExportDetails.DefinitionGroup   ==  definitionGroupName;
                     
                 fileId = generatePackage ? entityExportDetails.PackageFilePath : entityExportDetails.SampleFilePath;
+
+                if (!fileId)
+                {
+                    fileUploaded = false;
+                }
             }
 
             if (fileUploaded)
