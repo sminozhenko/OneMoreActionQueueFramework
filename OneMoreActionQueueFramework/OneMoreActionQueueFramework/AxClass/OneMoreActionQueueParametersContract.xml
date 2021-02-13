@@ -54,6 +54,39 @@ class OneMoreActionQueueParametersContract extends OneMoreActionQueueContract
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>getParameterValueInternal</Name>
+				<Source><![CDATA[
+    protected container getParameterValueInternal(str _parameterName)
+    {
+        boolean isFound;
+        anytype parameterValue;
+
+        [isFound, parameterValue] = super(_parameterName);
+
+        if (!isFound)
+        {
+            ListEnumerator                              li = parameters.getEnumerator();
+            OneMoreActionQueueParameterContract         parameter;
+
+            while (li.moveNext())
+            {
+                parameter = li.current();
+
+                if (parameter.parmParameterName() == _parameterName)
+                {
+                    parameterValue = parameter.parmParameterValue();
+                    isFound = true;
+                    break;
+                }
+            }
+        }
+
+        return [isFound, parameterValue];
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>

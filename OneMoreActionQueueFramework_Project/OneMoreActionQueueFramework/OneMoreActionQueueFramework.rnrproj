@@ -66,6 +66,11 @@
       <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
       <Link>Classes\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Link>
     </Content>
+    <Content Include="AxClass\InfoOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>InfoOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\InfoOneMoreActionQueueFramework_Extension</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueBusinessEvent">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueBusinessEvent</Name>
@@ -136,6 +141,11 @@
       <Name>OneMoreActionQueueContract</Name>
       <Link>Classes\OneMoreActionQueueContract</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFDataProjectExportProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFDataProjectExportProcessor</Name>
+      <Link>Classes\OneMoreActionQueueDMFDataProjectExportProcessor</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueDMFExportBusinessEvent">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportBusinessEvent</Name>
@@ -156,10 +166,20 @@
       <Name>OneMoreActionQueueDMFExportProcessor</Name>
       <Link>Classes\OneMoreActionQueueDMFExportProcessor</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFExportProcessorBase">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportProcessorBase</Name>
+      <Link>Classes\OneMoreActionQueueDMFExportProcessorBase</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueDMFExportQueryParameters">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportQueryParameters</Name>
       <Link>Classes\OneMoreActionQueueDMFExportQueryParameters</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFIntegrationActivityTableExportProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFIntegrationActivityTableExportProcessor</Name>
+      <Link>Classes\OneMoreActionQueueDMFIntegrationActivityTableExportProcessor</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueIMenuItemLookupCaller">
       <SubType>Content</SubType>
@@ -321,10 +341,10 @@
       <Name>OneMoreActionQueueServiceRunActionResponse</Name>
       <Link>Classes\OneMoreActionQueueServiceRunActionResponse</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtilCopy">
+    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtil">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueSysQueryRangeUtilCopy</Name>
-      <Link>Classes\OneMoreActionQueueSysQueryRangeUtilCopy</Link>
+      <Name>OneMoreActionQueueSysQueryRangeUtil</Name>
+      <Link>Classes\OneMoreActionQueueSysQueryRangeUtil</Link>
     </Content>
     <Content Include="AxClass\RunBaseBatchOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>
@@ -460,6 +480,11 @@
       <SubType>Content</SubType>
       <Name>ModuleAxapta.OneMoreActionQueueFrameworkExtension</Name>
       <Link>Base Enum Extensions\ModuleAxapta.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueDMFExportType">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportType</Name>
+      <Link>Base Enums\OneMoreActionQueueDMFExportType</Link>
     </Content>
     <Content Include="AxEnum\OneMoreActionQueueProcessingType">
       <SubType>Content</SubType>

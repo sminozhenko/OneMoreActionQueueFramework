@@ -139,7 +139,14 @@ public class OneMoreActionQueueTypeTable extends common
     [Hookable(false)]
     public ClassName contractClassName()
     {
-        return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
+        OneMoreActionQueueProcessorAttribute oneMoreActionQueueProcessorAttribute = OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName));
+            
+        if (!oneMoreActionQueueProcessorAttribute)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorAttributeIsNotSpecified", this.ActionClassName));
+        }
+
+        return oneMoreActionQueueProcessorAttribute.parmActionQueueContractClass();
     }
 
 ]]></Source>
@@ -261,9 +268,6 @@ public class OneMoreActionQueueTypeTable extends common
                 {
                     case OneMoreActionQueueType::MenuItem:
                         this.ActionClassName   = classStr(OneMoreActionQueueMenuItemActionProcessor);
-                        break;
-                    case OneMoreActionQueueType::DMFExport:
-                        this.ActionClassName   = classStr(OneMoreActionQueueDMFExportProcessor);
                         break;
                     default:
                         this.ActionClassName   = '';

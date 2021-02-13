@@ -33,7 +33,6 @@ public class OneMoreActionQueueTypeTable extends FormRun
         DMFExport.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport);
         OneMoreActionQueueMenuItemParameters.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
         OneMoreActionQueueMenuItemParameters.enabled(element.isActionQueueTypeDisabled());
-        OneMoreActionQueueDMFExportQueryParameters.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport);
         OneMoreActionQueueDMFExportQueryParameters.enabled(element.isActionQueueTypeDisabled());
     }
 
@@ -53,6 +52,25 @@ public class OneMoreActionQueueTypeTable extends FormRun
         OneMoreActionQueueTypeTable_ds.object(fieldNum(OneMoreActionQueueTypeTable, RetryAttemptInterval)).enabled(OneMoreActionQueueTypeTable.ProcessingType != OneMoreActionQueueProcessingType::Synchronous);
         OneMoreActionQueueTypeTable_ds.object(fieldNum(OneMoreActionQueueTypeTable, ProcessAutomationPollingInterval)).enabled(OneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation);
         OneMoreActionQueueTypeTable_ds.object(fieldNum(OneMoreActionQueueTypeTable, RetryAttemptInterval)).visible(OneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::ReliableAsynchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>enableDMFExportControls</Name>
+				<Source><![CDATA[
+    private void enableDMFExportControls()
+    {
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFEntityName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFEntityName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, KeepDataProject)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFSourceName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFSourceName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFDefinitionGroupName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::DataProject || OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFDefinitionGroupName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::DataProject || OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFIntegrationActivityName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFIntegrationActivityName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueDMFExportQueryParameters.visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
     }
 
 ]]></Source>
@@ -84,6 +102,7 @@ public class OneMoreActionQueueTypeTable extends FormRun
             element.enableActionTypeControls();
             element.enableTransformationJSON();
             element.enableProcessingTypeControls();
+            element.enableDMFExportControls();
     
             return ret;
         }
@@ -172,7 +191,6 @@ public class OneMoreActionQueueTypeTable extends FormRun
             if (OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport)
             {
                 OneMoreActionQueueTypeDMFExportParameterTable.TypeId        = OneMoreActionQueueTypeTable.TypeId;
-                OneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName = 'XML-Element';
                 
                 ret = super();
             }
@@ -210,6 +228,27 @@ public class OneMoreActionQueueTypeTable extends FormRun
             public void lookup(FormControl _formControl, str _filterStr)
             {
                 DMFUtil::lookupEntity(_formControl);
+            }
+
+]]></Source>
+							</Method>
+						</Methods>
+					</Field>
+					<Field>
+						<DataField>DMFExportType</DataField>
+						<Methods>
+							<Method>
+								<Name>modified</Name>
+								<Source><![CDATA[
+            public void modified()
+            {
+                super();
+
+                oneMoreActionQueueTypeDMFExportParameterTable.setActionQueueTypeActionClassName(oneMoreActionQueueTypeTable);
+
+                element.enableDMFExportControls();
+
+
             }
 
 ]]></Source>
@@ -343,7 +382,16 @@ public class OneMoreActionQueueTypeTable extends FormRun
 			<Table>OneMoreActionQueueTypeDMFExportParameterTable</Table>
 			<Fields>
 				<AxFormDataSourceField>
+					<DataField>DMFDefinitionGroupName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
 					<DataField>DMFEntityName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DMFExportType</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DMFIntegrationActivityName</DataField>
 				</AxFormDataSourceField>
 				<AxFormDataSourceField>
 					<DataField>DMFSourceName</DataField>
@@ -666,6 +714,16 @@ public class OneMoreActionQueueTypeTable extends FormRun
 							i:nil="true" />
 						<Controls>
 							<AxFormControl xmlns=""
+								i:type="AxFormComboBoxControl">
+								<Name>DMFExport_DMFExportType</Name>
+								<Type>ComboBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFExportType</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+								<Items />
+							</AxFormControl>
+							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
 								<Name>DMFExport_DMFEntityName</Name>
 								<Type>String</Type>
@@ -692,6 +750,24 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<DataField>KeepDataProject</DataField>
 								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
 								<Items />
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>DMFExport_DMFDefinitionGroupName</Name>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFDefinitionGroupName</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>DMFExport_DMFIntegrationActivityName</Name>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFIntegrationActivityName</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
 							</AxFormControl>
 						</Controls>
 						<DataGroup>DMFExport</DataGroup>

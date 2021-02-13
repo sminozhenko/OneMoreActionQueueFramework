@@ -26,7 +26,7 @@ public final class SysQueryRangeUtilOneMoreActionQueueFramework_Extension
     ]
     public static str OneMoreActionQueueParameterValue(str _parameterName)
     {
-        return OneMoreActionQueueSysQueryRangeUtilCopy::actionQueueParameterValue(_parameterName);
+        return OneMoreActionQueueSysQueryRangeUtil::actionQueueParameterValue(_parameterName);
     }
 
 ]]></Source>
