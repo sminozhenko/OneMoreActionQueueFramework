@@ -34,3 +34,15 @@ jobs:
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
+    
+   - job: Build_10_0_17 PEAP
+    displayName: 'Build for 10.0.17 PEAP'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.5934.16945'
+      Application.BuildXpp.Version: '10.0.761.16'
+      Platform.CompilerPackage.Version: '7.0.5934.16945'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
