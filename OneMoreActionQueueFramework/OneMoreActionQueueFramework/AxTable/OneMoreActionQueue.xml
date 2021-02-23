@@ -96,6 +96,7 @@ public class OneMoreActionQueue extends common
         super();
 
         this.ActionId = newGuid();
+        this.Status = OneMoreActionQueueStatus::NotRun;
     }
 
 ]]></Source>
@@ -220,6 +221,16 @@ public class OneMoreActionQueue extends common
                 docuRef.delete();
             }
         }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deserializedContract</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueContract deserializedContract()
+    {
+        return FormJsonSerializer::deserializeObject(className2Id(this.oneMoreActionQueueTypeTable().contractClassName()), this.transformedMessage());
     }
 
 ]]></Source>
@@ -382,6 +393,7 @@ public class OneMoreActionQueue extends common
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
 			<Name>ActionMessage</Name>
+			<AllowEdit>No</AllowEdit>
 			<ExtendedDataType>OneMoreActionQueueMessage</ExtendedDataType>
 		</AxTableField>
 		<AxTableField xmlns=""

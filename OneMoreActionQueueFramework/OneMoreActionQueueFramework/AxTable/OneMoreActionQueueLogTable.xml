@@ -15,6 +15,7 @@ public class OneMoreActionQueueLogTable extends common
     /// Adds <c>OneMoreActionQueueLogTable</c> record
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
+    /// <param name = "_stage">An <c>OneMoreActionQueueProcessingStage</c> value</param>
     /// <param name = "_exception">An <c>System.Exception</c> object</param>
     /// <param name = "_infoLogData">Infolog data</param>
     /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
@@ -22,7 +23,7 @@ public class OneMoreActionQueueLogTable extends common
     /// A created record in the <c>OneMoreActionQueueLogTable</c> table.
     /// </returns>
     [Hookable(false)]
-    public static OneMoreActionQueueLogTable addActionQueueLogTable(OneMoreActionQueue _oneMoreActionQueue, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
+    public static OneMoreActionQueueLogTable addActionQueueLogTable(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingStage _stage, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
     {
         OneMoreActionQueueLogTable oneMoreActionQueueLogTable;
 
@@ -31,6 +32,7 @@ public class OneMoreActionQueueLogTable extends common
         oneMoreActionQueueLogTable.clear();
         oneMoreActionQueueLogTable.initValue();
 
+        oneMoreActionQueueLogTable.Stage                =   _stage;
         oneMoreActionQueueLogTable.RefRecId             =   _oneMoreActionQueue.RecId;
         oneMoreActionQueueLogTable.InfologData          =   _infoLogData;
         oneMoreActionQueueLogTable.RetryCount           =   _oneMoreActionQueue.RetryCount;
@@ -44,41 +46,6 @@ public class OneMoreActionQueueLogTable extends common
         oneMoreActionQueueLogTable.insert();
 
         return oneMoreActionQueueLogTable;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>findByRefRecId</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Finds <c>OneMoreActionQueueLogTable</c> record by <c>RefRecId</c> value
-    /// </summary>
-    /// <param name = "_refRecId">An <c>RefRecId</c> value</param>
-    /// <param name = "_forupdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
-    /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
-    /// <returns>
-    /// A record in the <c>OneMoreActionQueueLogTable</c> table otherwise, an empty record.
-    /// </returns>
-    [Hookable(false)]
-    public static OneMoreActionQueueLogTable findByRefRecId(RefRecId _refRecId, boolean _forupdate = false, UserConnection _userConnection = null)
-    {
-        OneMoreActionQueueLogTable   ret;
-
-        ret.selectForUpdate(_forupdate);
-
-        if (_userConnection)
-        {
-            ret.setConnection(_userConnection);
-        }
-
-        if (_refRecId)
-        {
-            select firstonly ret
-                where ret.RefRecId      ==  _refRecId;
-        }
-
-        return ret;
     }
 
 ]]></Source>
@@ -217,6 +184,9 @@ public class OneMoreActionQueueLogTable extends common
 			<Label>@SYS9039</Label>
 			<Fields>
 				<AxTableFieldGroupField>
+					<DataField>Stage</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
 					<DataField>CreatedDateTime</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
@@ -261,6 +231,11 @@ public class OneMoreActionQueueLogTable extends common
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>OneMoreActionQueueRetryCount</ExtendedDataType>
 			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRun</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Stage</Name>
+			<EnumType>OneMoreActionQueueProcessingStage</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

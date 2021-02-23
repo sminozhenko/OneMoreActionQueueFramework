@@ -47,6 +47,25 @@ public class OneMoreActionQueue extends FormRun
 
 ]]></Source>
 					</Method>
+					<Method>
+						<Name>write</Name>
+						<Source><![CDATA[
+        public void write()
+        {
+            boolean isInsert = OneMoreActionQueue.RecId == 0;
+            
+            super();
+
+            if (isInsert)
+            {
+                OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(OneMoreActionQueue);
+
+                OneMoreActionQueue.reread();
+            }
+        }
+
+]]></Source>
+					</Method>
 				</Methods>
 				<Fields />
 			</DataSource>

@@ -16,6 +16,8 @@ internal static final class OneMoreActionQueueConstants
     internal const OneMoreActionQueueProcessAutomationPollingInterval   DefaultProcessAutomationPollingInterval = 60; //60 minutes
 
     internal const LabelId                                              OneMoreActionQueueProcessing = 'OneMoreActionQueueProcessing';
+
+    internal const str                                                  DataAreaIdFieldName = 'DataAreaId';
 }
 ]]></Declaration>
 		<Methods />

@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue processing service class
 /// </summary>
-class OneMoreActionQueueProcessingService extends SysOperationServiceBase
+internal class OneMoreActionQueueProcessingService extends SysOperationServiceBase
 {    
     private List            batchBundlingList;
     private BatchHeader     batchHeader;
@@ -89,11 +89,11 @@ class OneMoreActionQueueProcessingService extends SysOperationServiceBase
     [Hookable(false)]
     public static boolean processSingleRecord(OneMoreActionQueue _oneMoreActionQueue)
     {
-        OneMoreActionQueueProcessing oneMoreActionQueueProcessing = OneMoreActionQueueProcessing::construct();
-        oneMoreActionQueueProcessing.parmOneMoreActionQueue(_oneMoreActionQueue);
-        oneMoreActionQueueProcessing.run();
+        var oneMoreActionQueueProcessingEngine = OneMoreActionQueueProcessingEngine::construct();
+        oneMoreActionQueueProcessingEngine.parmOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueueProcessingEngine.run();
 
-        return oneMoreActionQueueProcessing.getProcessedSuccessfully();
+        return oneMoreActionQueueProcessingEngine.getProcessedSuccessfully();
     }
 
 ]]></Source>

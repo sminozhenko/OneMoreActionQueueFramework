@@ -117,7 +117,7 @@ abstract class OneMoreActionQueueProcessor extends SysOperationServiceBase
     /// </summary>
     protected void initializeContract()
     {
-        contract = FormJsonSerializer::deserializeObject(className2Id(oneMoreActionQueueTypeTable.contractClassName()), oneMoreActionQueue.transformedMessage());
+        contract = oneMoreActionQueue.deserializedContract();
     }
 
 ]]></Source>
@@ -130,32 +130,6 @@ abstract class OneMoreActionQueueProcessor extends SysOperationServiceBase
     /// </summary>
     protected void initialize()
     {
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>checkContractDataAreaId</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Check of company id field is not empty and exists
-    /// </summary>
-    /// <returns>True if company id is not empty and exists otherwise false</returns>
-    private boolean checkContractDataAreaId()
-    {
-        boolean ret = true;
-
-        if (!contract.parmDataAreaId())
-        {
-            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueFieldIsNotSpecified", 'DataAreaId'));
-        }
-
-        if (ret && !xDataArea::exist(contract.parmDataAreaId()))
-        {
-            ret = checkFailed(strFmt("@SYS10666", contract.parmDataAreaId()));
-        }
-    
-        return ret;
     }
 
 ]]></Source>
@@ -197,12 +171,7 @@ abstract class OneMoreActionQueueProcessor extends SysOperationServiceBase
     {
         this.initializeContract();
 
-        if (!this.checkContractDataAreaId())
-        {
-            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
-        }
-        
-        changecompany(contract.parmDataAreaId())
+        changecompany(oneMoreActionQueue.CompanyId)
         {
             this.initialize();
 

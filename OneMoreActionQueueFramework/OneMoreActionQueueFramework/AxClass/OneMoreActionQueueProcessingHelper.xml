@@ -6,7 +6,7 @@
 /// <summary>
 /// OneMore action queue helper class
 /// </summary>
-public static class OneMoreActionQueueProcessingHelper
+internal static class OneMoreActionQueueProcessingHelper
 {
 }
 ]]></Declaration>
@@ -88,42 +88,48 @@ public static class OneMoreActionQueueProcessingHelper
         str                                                     notes;
         OneMoreActionQueueServiceRunActionResponse              response = new OneMoreActionQueueServiceRunActionResponse();
         
-        //If message was added to the queue and processing enabled
-        if (_oneMoreActionQueue.RecId != 0)
+        if (_oneMoreActionQueueTypeTable.Enabled && _oneMoreActionQueue.RecId != 0)
         {
-            if (_oneMoreActionQueueTypeTable.Enabled)
+            OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(_oneMoreActionQueue);
+
+            _oneMoreActionQueue.reread();
+        
+            if (_oneMoreActionQueue.Status != OneMoreActionQueueStatus::Error)
             {
-                switch (_processingType)
+                if (_oneMoreActionQueueTypeTable.Enabled)
                 {
-                    case OneMoreActionQueueProcessingType::ReliableAsynchronous:
-                        OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous);
-                        break;
+                    switch (_processingType)
+                    {
+                        case OneMoreActionQueueProcessingType::ReliableAsynchronous:
+                            OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous);
+                            break;
 
-                    case OneMoreActionQueueProcessingType::Synchronous:
-                        OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::Synchronous);
+                        case OneMoreActionQueueProcessingType::Synchronous:
+                            OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::Synchronous);
 
-                        _oneMoreActionQueue.reread();
+                            _oneMoreActionQueue.reread();
 
-                        switch (_oneMoreActionQueue.Status)
-                        {
-                            case OneMoreActionQueueStatus::Processed:
-                                responseType = OneMoreActionQueueResponseType::OK;
-                                notes = _oneMoreActionQueue.ProcessingNotes;
-                                break;
+                            switch (_oneMoreActionQueue.Status)
+                            {
+                                case OneMoreActionQueueStatus::Processed:
+                                    responseType = OneMoreActionQueueResponseType::OK;
+                                    notes = _oneMoreActionQueue.ProcessingNotes;
+                                    break;
 
-                            case OneMoreActionQueueStatus::Error:
-                                throw error(_oneMoreActionQueue.ProcessingNotes);
+                                case OneMoreActionQueueStatus::Error:
+                                    throw error(_oneMoreActionQueue.ProcessingNotes);
 
-                            default:
-                                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueUnknownError");
-                        }
-                        break;
+                                default:
+                                    throw error("@OneMoreActionQueueFramework:OneMoreActionQueueUnknownError");
+                            }
+                            break;
+                    }
                 }
-            }
-            else
-            {
-                notes = strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionTypeIsNotEnabled", _oneMoreActionQueueTypeTable.TypeId);
-                responseType = OneMoreActionQueueResponseType::Warning;
+                else
+                {
+                    notes = strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionTypeIsNotEnabled", _oneMoreActionQueueTypeTable.TypeId);
+                    responseType = OneMoreActionQueueResponseType::Warning;
+                }
             }
         }
 
