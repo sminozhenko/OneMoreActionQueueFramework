@@ -6,7 +6,7 @@
 /// <summary>
 /// Service class for action queue clean-up operation
 /// </summary>
-class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
+internal class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
 {
     private     RecordInsertList                oneMoreActionQueueCleanUpTmpRIL;
     protected   OneMoreActionQueueCleanUpTmp    oneMoreActionQueueCleanUpTmp;

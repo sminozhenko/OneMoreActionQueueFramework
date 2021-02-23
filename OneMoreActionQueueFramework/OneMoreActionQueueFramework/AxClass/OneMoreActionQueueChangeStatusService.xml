@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue change status service class
 /// </summary>
-class OneMoreActionQueueChangeStatusService
+internal class OneMoreActionQueueChangeStatusService
 {
 }
 ]]></Declaration>

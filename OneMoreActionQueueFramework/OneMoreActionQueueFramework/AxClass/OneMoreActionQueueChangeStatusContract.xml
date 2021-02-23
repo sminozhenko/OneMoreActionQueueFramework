@@ -7,11 +7,10 @@
 /// Action queue change status contract
 /// </summary>
 [DataContract]
-class OneMoreActionQueueChangeStatusContract
+internal class OneMoreActionQueueChangeStatusContract implements SysOperationValidatable
 {
     private Set recordCollection;
     private OneMoreActionQueueStatus newStatus;
-
 
 }
 ]]></Declaration>
@@ -44,6 +43,24 @@ class OneMoreActionQueueChangeStatusContract
     {
         newStatus = _newStatus;
         return newStatus;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean validate()
+    {
+        boolean ret = true;
+
+        if (newStatus != OneMoreActionQueueStatus::Waiting && newStatus != OneMoreActionQueueStatus::Processed)
+        {
+            ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueChangeStatusNewStatusIsNotValid");
+        }
+
+        return ret;
     }
 
 ]]></Source>

@@ -7,7 +7,7 @@
 /// Action queue processing contract for manual processing
 /// </summary>
 [DataContract]
-class OneMoreActionQueueProcessingManualContract
+internal class OneMoreActionQueueProcessingManualContract
 {
     private Set recordCollection;
 

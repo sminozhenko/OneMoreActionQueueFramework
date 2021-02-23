@@ -186,6 +186,11 @@
       <Name>OneMoreActionQueueIMenuItemLookupCaller</Name>
       <Link>Classes\OneMoreActionQueueIMenuItemLookupCaller</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueIPreProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueIPreProcessor</Name>
+      <Link>Classes\OneMoreActionQueueIPreProcessor</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueLogShow">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueLogShow</Name>
@@ -246,15 +251,30 @@
       <Name>OneMoreActionQueueParametersContract</Name>
       <Link>Classes\OneMoreActionQueueParametersContract</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueProcessing">
+    <Content Include="AxClass\OneMoreActionQueuePreProcessingEngine">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueProcessing</Name>
-      <Link>Classes\OneMoreActionQueueProcessing</Link>
+      <Name>OneMoreActionQueuePreProcessingEngine</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessingEngine</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessorCompanyResolve">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessorCompanyResolve</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessorCompanyResolve</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingBaseEngine">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingBaseEngine</Name>
+      <Link>Classes\OneMoreActionQueueProcessingBaseEngine</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingBatchTaskBundleContract">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingBatchTaskBundleContract</Name>
       <Link>Classes\OneMoreActionQueueProcessingBatchTaskBundleContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingEngine">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingEngine</Name>
+      <Link>Classes\OneMoreActionQueueProcessingEngine</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingHelper">
       <SubType>Content</SubType>
@@ -485,6 +505,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportType</Name>
       <Link>Base Enums\OneMoreActionQueueDMFExportType</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueProcessingStage">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingStage</Name>
+      <Link>Base Enums\OneMoreActionQueueProcessingStage</Link>
     </Content>
     <Content Include="AxEnum\OneMoreActionQueueProcessingType">
       <SubType>Content</SubType>

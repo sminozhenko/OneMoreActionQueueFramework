@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueuePreProcessingEngine</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Pre-processing engine class
+/// </summary>
+internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueProcessingBaseEngine
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    internal static OneMoreActionQueuePreProcessingEngine construct()
+    {
+        return new OneMoreActionQueuePreProcessingEngine();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runPreProcessorForAction</Name>
+				<Source><![CDATA[
+    internal static void runPreProcessorForAction(OneMoreActionQueue _oneMoreActionQueue)
+    {
+        var oneMoreActionQueuePreProcessingEngine = OneMoreActionQueuePreProcessingEngine::construct();
+        oneMoreActionQueuePreProcessingEngine.parmOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueuePreProcessingEngine.run();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>selectOneMoreActionQueueUpdReadPast</Name>
+				<Source><![CDATA[
+    protected boolean selectOneMoreActionQueueUpdReadPast()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkActionQueue</Name>
+				<Source><![CDATA[
+    protected boolean checkActionQueue()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingStage</Name>
+				<Source><![CDATA[
+    protected OneMoreActionQueueProcessingStage processingStage()
+    {
+        return OneMoreActionQueueProcessingStage::PreProcessing;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runInternal</Name>
+				<Source><![CDATA[
+    protected void runInternal()
+    {
+        newActionQueueStatus = OneMoreActionQueueStatus::Waiting;
+        
+        Array providerList = OneMoreActionQueuePreProcessingEngine::getProviders();
+
+        OneMoreActionQueueContract contract;
+
+        try
+        {
+            contract = oneMoreActionQueueUpd.deserializedContract();
+        }
+        catch
+        {
+            error("@OneMoreActionQueueFramework:OneMoreActionQueueDeserializationFailed");
+            newActionQueueStatus = OneMoreActionQueueStatus::Error;
+        }
+            
+        if (newActionQueueStatus != OneMoreActionQueueStatus::Error)
+        {
+            for (int counter = 1; counter <= providerList.lastIndex(); counter++)
+            {
+                boolean failOnError;
+            
+                OneMoreActionQueueIPreProcessor preProcessor = providerList.value(counter);
+
+                try
+                {
+                    if (preProcessor != null)
+                    {
+                        failOnError = preProcessor.failOnError();
+                        preProcessor.run(oneMoreActionQueueUpd, contract);
+                        
+                    }
+                    else
+                    {
+                        throw error("@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessorIsNull");
+                    }
+                }
+                catch
+                {
+                    if (failOnError)
+                    {
+                        newActionQueueStatus = OneMoreActionQueueStatus::Error;
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getProviders</Name>
+				<Source><![CDATA[
+    private static Array getProviders()
+    {
+        SysPluginMetadataCollection metadataCollection = new SysPluginMetadataCollection();
+        
+        return SysPluginFactory::Instances('Dynamics.AX.Application', classStr(OneMoreActionQueueIPreProcessor), metadataCollection);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

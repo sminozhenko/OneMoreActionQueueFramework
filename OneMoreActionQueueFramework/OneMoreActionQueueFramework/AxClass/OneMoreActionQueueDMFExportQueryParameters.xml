@@ -6,7 +6,7 @@
 /// <summary>
 /// Set DMF export parameters for action queue
 /// </summary>
-class OneMoreActionQueueDMFExportQueryParameters extends RunBase
+internal class OneMoreActionQueueDMFExportQueryParameters extends RunBase
 {
     private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
     

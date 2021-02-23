@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingBaseEngine</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Base processing engine
+/// </summary>
+internal abstract class OneMoreActionQueueProcessingBaseEngine
+{
+    OneMoreActionQueue                                      oneMoreActionQueueCaller;
+    OneMoreActionQueue                                      oneMoreActionQueueUpd;
+
+    OneMoreActionQueueStatus                                newActionQueueStatus;
+    int                                                     infologFromLine;
+    UserConnection                                          userConnection;
+    System.Exception                                        lastException;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmOneMoreActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Caller <c>OneMoreActionQueue</c> record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueCaller">Caller <c>OneMoreActionQueue</c> record</param>
+    /// <returns>Caller <c>OneMoreActionQueue</c> record</returns>
+    [Hookable(false)]
+    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueueCaller = oneMoreActionQueueCaller)
+    {
+        oneMoreActionQueueCaller = _oneMoreActionQueueCaller;
+    
+        return oneMoreActionQueueCaller;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run
+    /// </summary>
+    [Hookable(false)]
+    public void run()
+    {
+        setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPrefix", oneMoreActionQueueCaller.ActionId));
+    
+        try
+        {
+            userConnection = new UserConnection();
+
+            //Start action queue connection transaction
+            userConnection.ttsbegin();
+
+            this.initializeOneMoreActionQueueUpd();
+
+            if (!this.checkActionQueue())
+            {
+                return;
+            }
+
+            infologFromLine = infologLine();
+
+            this.runInternal();
+
+            this.updateStatus();
+
+            //Commit action queue connection transaction
+            userConnection.ttscommit();
+        }
+        catch
+        {
+            //Most like issue is related to status update on action queue
+            newActionQueueStatus = OneMoreActionQueueStatus::Error;
+            this.updateStatus();
+        }
+        finally
+        {
+            //Finalize action queue user connection to prevent user connection leak
+            if (userConnection)
+            {
+                userConnection.finalize();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeOneMoreActionQueueUpd</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize <c>OneMoreActionQueue</c> for update
+    /// </summary>
+    private void initializeOneMoreActionQueueUpd()
+    {
+        //Apply pessimistic concurency model to avoid double-processing of the same action at the same time
+        oneMoreActionQueueUpd.readPast(this.selectOneMoreActionQueueUpdReadPast());
+        oneMoreActionQueueUpd.selectForUpdate(true);
+        oneMoreActionQueueUpd.setConnection(userConnection);
+
+        select firstonly oneMoreActionQueueUpd
+            where oneMoreActionQueueUpd.RecId  ==  oneMoreActionQueueCaller.RecId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateStatus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update status and write log
+    /// </summary>    
+    protected void updateStatus()
+    {
+        oneMoreActionQueueUpd.Status    = newActionQueueStatus;
+
+        container infoLogData = OneMoreActionQueueContext::oneMoreActionQueueClearedLog;
+
+        OneMoreActionQueueContext::oneMoreActionQueueClearedLog = conNull();
+
+        infoLogData += this.getInfoLogData();
+
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addActionQueueLogTable(oneMoreActionQueueUpd, this.processingStage(), lastException, infoLogData, userConnection);
+
+        oneMoreActionQueueUpd.ProcessingNotes = oneMoreActionQueueLogTable.getInfoLogText();
+    
+        oneMoreActionQueueUpd.update();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getInfoLogData</Name>
+				<Source><![CDATA[
+    private InfologData getInfoLogData()
+    {
+        int             currentLine = infologLine();
+        InfologData     ret;
+       
+        if (currentLine > infologFromLine)
+        {
+            ret = infolog.copy(infologFromLine + 1,  currentLine);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>selectOneMoreActionQueueUpdReadPast</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Use read past hint when selecting action queue record
+    /// </summary>
+    /// <returns>Use read past hint when selecting action queue record</returns>
+    protected abstract boolean selectOneMoreActionQueueUpdReadPast()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runInternal</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run processing logic
+    /// </summary>
+    protected abstract void runInternal()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check action queue record before processing
+    /// </summary>
+    /// <returns>True if processing can be started, otherwise false</returns>
+    protected abstract boolean checkActionQueue()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingStage</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Processing stage
+    /// </summary>
+    /// <returns>Processing stage</returns>
+    protected abstract OneMoreActionQueueProcessingStage processingStage()
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue query processing controller
 /// </summary>
-class OneMoreActionQueueProcessingQueryController extends SysOperationServiceController
+internal class OneMoreActionQueueProcessingQueryController extends SysOperationServiceController
 {
 }
 ]]></Declaration>

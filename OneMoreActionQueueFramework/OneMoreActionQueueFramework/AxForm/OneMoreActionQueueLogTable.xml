@@ -180,6 +180,16 @@ public class OneMoreActionQueueLogTable extends FormRun
 									i:nil="true" />
 								<Controls>
 									<AxFormControl xmlns=""
+										i:type="AxFormComboBoxControl">
+										<Name>Overview_Stage</Name>
+										<Type>ComboBox</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>Stage</DataField>
+										<DataSource>OneMoreActionQueueLogTable</DataSource>
+										<Items />
+									</AxFormControl>
+									<AxFormControl xmlns=""
 										i:type="AxFormReferenceGroupControl">
 										<Name>Overview_RefRecId</Name>
 										<Type>ReferenceGroup</Type>
@@ -188,6 +198,15 @@ public class OneMoreActionQueueLogTable extends FormRun
 										<Controls />
 										<DataSource>OneMoreActionQueueLogTable</DataSource>
 										<ReferenceField>RefRecId</ReferenceField>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormIntegerControl">
+										<Name>Overview_RetryCount</Name>
+										<Type>Integer</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>RetryCount</DataField>
+										<DataSource>OneMoreActionQueueLogTable</DataSource>
 									</AxFormControl>
 									<AxFormControl xmlns=""
 										i:type="AxFormStringControl">
@@ -238,6 +257,16 @@ public class OneMoreActionQueueLogTable extends FormRun
 						<FormControlExtension
 							i:nil="true" />
 						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormComboBoxControl">
+								<Name>OverviewGrid_Stage</Name>
+								<Type>ComboBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>Stage</DataField>
+								<DataSource>OneMoreActionQueueLogTable</DataSource>
+								<Items />
+							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormReferenceGroupControl">
 								<Name>OverviewGrid_RefRecId</Name>
