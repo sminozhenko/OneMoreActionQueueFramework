@@ -10,7 +10,7 @@ using System.ComponentModel.Composition;
 /// </summary>
 [Export(identifierStr(Dynamics.AX.Application.ProcessScheduleITypeRegistration))]
 [ExportMetadata(classStr(ProcessScheduleITypeRegistration), classStr(OneMoreActionQueueProcessScheduleTypeRegistration))]
-class OneMoreActionQueueProcessScheduleTypeRegistration implements ProcessScheduleITypeRegistration
+internal class OneMoreActionQueueProcessScheduleTypeRegistration implements ProcessScheduleITypeRegistration
 {
 }
 ]]></Declaration>

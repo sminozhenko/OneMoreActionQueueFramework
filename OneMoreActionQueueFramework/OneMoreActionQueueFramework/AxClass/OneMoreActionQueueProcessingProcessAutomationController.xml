@@ -6,7 +6,7 @@
 /// <summary>
 /// The <c>OneMoreActionQueueProcessingProcessAutomationController</c> class is the <c>SysOperationServiceController</c> class for action queue processing.
 /// </summary>
-public class OneMoreActionQueueProcessingProcessAutomationController extends SysOperationServiceController
+internal class OneMoreActionQueueProcessingProcessAutomationController extends SysOperationServiceController
 {
     private ProcessExecutionSourceLinkItem processExecutionSourceLinkItem;
 

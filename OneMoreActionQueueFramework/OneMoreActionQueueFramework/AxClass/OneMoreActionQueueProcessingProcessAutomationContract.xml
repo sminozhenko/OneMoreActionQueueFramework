@@ -7,7 +7,7 @@
 /// The <c>OneMoreActionQueueProcessingProcessAutomationContract</c> class holds information for the <c>OneMoreActionQueueProcessingProcessAutomationController</c>.
 /// </summary>
 [DataContract]
-public final class OneMoreActionQueueProcessingProcessAutomationContract extends ProcessScheduleWorkItem
+internal final class OneMoreActionQueueProcessingProcessAutomationContract extends ProcessScheduleWorkItem
 {
     private OneMoreActionQueueTypeId actionQueueTypeId;
 

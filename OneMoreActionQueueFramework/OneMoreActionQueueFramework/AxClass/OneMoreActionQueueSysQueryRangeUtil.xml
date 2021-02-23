@@ -6,10 +6,9 @@
 /// <summary>
 /// Query range utils for action queues
 /// </summary>
-class OneMoreActionQueueSysQueryRangeUtil
+internal class OneMoreActionQueueSysQueryRangeUtil
 {
 }
-
 ]]></Declaration>
 		<Methods>
 			<Method>

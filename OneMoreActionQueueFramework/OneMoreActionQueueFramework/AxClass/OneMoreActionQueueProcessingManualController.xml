@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue single record processing controller
 /// </summary>
-class OneMoreActionQueueProcessingManualController extends SysOperationServiceController
+internal class OneMoreActionQueueProcessingManualController extends SysOperationServiceController
 {
 }
 ]]></Declaration>
