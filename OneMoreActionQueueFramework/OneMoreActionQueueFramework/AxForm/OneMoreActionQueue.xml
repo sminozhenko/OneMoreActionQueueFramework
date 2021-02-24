@@ -42,7 +42,7 @@ public class OneMoreActionQueue extends FormRun
         {
             super();
 
-            this.queryBuildDataSource().addSortField(fieldNum(OneMoreActionQueue, CreatedDateTime), SortOrder::Descending);
+            this.queryBuildDataSource().addSortField(fieldNum(OneMoreActionQueue, ULIDStamp), SortOrder::Descending);
         }
 
 ]]></Source>
