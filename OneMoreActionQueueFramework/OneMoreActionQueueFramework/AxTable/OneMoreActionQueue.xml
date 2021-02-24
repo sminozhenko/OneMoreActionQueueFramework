@@ -91,6 +91,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>initValue</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public void initValue()
     {
         super();
@@ -172,6 +173,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>docuRef</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public DocuRef docuRef()
     {
         DocuRef docuRef;
@@ -191,6 +193,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>delete</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public void delete()
     {
         ttsbegin;
@@ -207,7 +210,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>deleteAttachements</Name>
 				<Source><![CDATA[
-    //Delete all attachements associated with action queue record
+    [Hookable(false)]
     public void deleteAttachements()
     {
         DocuRef docuRef;
@@ -228,9 +231,23 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>deserializedContract</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public OneMoreActionQueueContract deserializedContract()
     {
         return FormJsonSerializer::deserializeObject(className2Id(this.oneMoreActionQueueTypeTable().contractClassName()), this.transformedMessage());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void insert()
+    {
+        this.ULIDStamp = NUlid.Ulid::NewUlid().ToString();
+        
+        super();
     }
 
 ]]></Source>
@@ -260,6 +277,9 @@ public class OneMoreActionQueue extends common
 			<Fields>
 				<AxTableFieldGroupField>
 					<DataField>ActionId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ULIDStamp</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>TypeId</DataField>
@@ -423,6 +443,13 @@ public class OneMoreActionQueue extends common
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>SelectableDataArea</ExtendedDataType>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ULIDStamp</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueULIDStamp</ExtendedDataType>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
@@ -462,6 +489,15 @@ public class OneMoreActionQueue extends common
 			<Fields>
 				<AxTableIndexField>
 					<DataField>CompanyId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>ULIDStampIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ULIDStamp</DataField>
 				</AxTableIndexField>
 			</Fields>
 		</AxTableIndex>

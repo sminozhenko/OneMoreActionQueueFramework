@@ -491,6 +491,11 @@
       <Name>OneMoreActionQueueTypeId</Name>
       <Link>Extended Data Types\OneMoreActionQueueTypeId</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueULIDStamp">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueULIDStamp</Name>
+      <Link>Extended Data Types\OneMoreActionQueueULIDStamp</Link>
+    </Content>
     <Content Include="AxEnumExtension\BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension">
       <SubType>Content</SubType>
       <Name>BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension</Name>
@@ -741,6 +746,10 @@
     <Reference Include="JUST.net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>JUST.net</Name>
       <HintPath>K:\AosService\PackagesLocalDirectory\OneMoreActionQueueFramework\bin\JUST.net.dll</HintPath>
+    </Reference>
+    <Reference Include="NUlid, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>NUlid</Name>
+      <HintPath>K:\AosService\PackagesLocalDirectory\OneMoreActionQueueFramework\bin\NUlid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />

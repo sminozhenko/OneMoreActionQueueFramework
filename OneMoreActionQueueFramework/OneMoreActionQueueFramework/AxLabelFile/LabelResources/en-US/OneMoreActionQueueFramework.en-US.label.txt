@@ -119,3 +119,4 @@ OneMoreActionQueueProcessingStageProcessing=Processing
 OneMoreActionQueueProcessingStagePreProcessing=Pre-processing
 OneMoreActionQueuePreProcessorIsNull=Pre-processor is null
 OneMoreActionQueueDeserializationFailed=Deserialization failed. Check the transformed message if it matches to action contract
+OneMoreActionQueueULIDStamp=ULID stamp
