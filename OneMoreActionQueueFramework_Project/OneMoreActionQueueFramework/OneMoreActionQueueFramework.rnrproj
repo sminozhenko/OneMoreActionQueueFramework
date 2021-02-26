@@ -261,6 +261,26 @@
       <Name>OneMoreActionQueuePreProcessorCompanyResolve</Name>
       <Link>Classes\OneMoreActionQueuePreProcessorCompanyResolve</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleAutomationTask">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleAutomationTask</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleAutomationTask</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleController</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleScheduleSeriesRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleScheduleSeriesRegistration</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleScheduleSeriesRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleScheduleTypeRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingBaseEngine">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingBaseEngine</Name>

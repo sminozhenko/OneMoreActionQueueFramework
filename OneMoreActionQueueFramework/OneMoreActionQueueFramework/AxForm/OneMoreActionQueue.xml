@@ -58,9 +58,7 @@ public class OneMoreActionQueue extends FormRun
 
             if (isInsert)
             {
-                OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(OneMoreActionQueue);
-
-                OneMoreActionQueue.reread();
+                info("@OneMoreActionQueueFramework:OneMoreActionQueueManualCreatedActionConfirmation");
             }
         }
 

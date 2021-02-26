@@ -15,7 +15,12 @@ internal static final class OneMoreActionQueueConstants
     internal const OneMoreActionQueueRetryAttemptInterval               DefaultRetryAttemptInterval = 3600; //60 minutes
     internal const OneMoreActionQueueProcessAutomationPollingInterval   DefaultProcessAutomationPollingInterval = 60; //60 minutes
 
-    internal const LabelId                                              OneMoreActionQueueProcessing = 'OneMoreActionQueueProcessing';
+    internal const int                                                  OneMoreActionQueuePreProcessStaleAutomationPollingInterval = 1;
+    internal const int                                                  OneMoreActionQueuePreProcessSecondBeforeBecomeStale = 60;
+
+    internal const LabelId                                              OneMoreActionQueueProcessingScheduleTypeName = 'OneMoreActionQueueProcessing';
+    internal const LabelId                                              OneMoreActionQueuePreProcessStaleScheduleTypeName = 'OneMoreActionQueuePreProcessStale';
+    internal const LabelId                                              OneMoreActionQueuePreProcessStaleScheduleSeriesName = 'OneMoreActionQueuePreProcessStale';
 
     internal const str                                                  DataAreaIdFieldName = 'DataAreaId';
 }
