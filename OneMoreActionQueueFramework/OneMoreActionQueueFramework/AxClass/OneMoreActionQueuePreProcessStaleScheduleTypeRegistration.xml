@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueProcessScheduleTypeRegistration</Name>
+	<Name>OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 using System.ComponentModel.Composition;
 
 /// <summary>
-/// Implements the <c>ProcessScheduleITypeRegistration</c> to register the one more action queue process task 'Type' with the Process Automation.
+/// Implements the <c>ProcessScheduleITypeRegistration</c> to register the one more action queue pre-process stale actions task 'Type' with the Process Automation.
 /// </summary>
 [Export(identifierStr(Dynamics.AX.Application.ProcessScheduleITypeRegistration))]
 [ExportMetadata(classStr(ProcessScheduleITypeRegistration), classStr(OneMoreActionQueueProcessScheduleTypeRegistration))]
-internal class OneMoreActionQueueProcessScheduleTypeRegistration implements ProcessScheduleITypeRegistration
+internal final class OneMoreActionQueuePreProcessStaleScheduleTypeRegistration implements ProcessScheduleITypeRegistration
 {
 }
 ]]></Declaration>
@@ -23,9 +23,9 @@ internal class OneMoreActionQueueProcessScheduleTypeRegistration implements Proc
     {
         ProcessScheduleTypeRegistrationItem processScheduleTypeRegistrationItem = ProcessScheduleTypeRegistrationItem::construct();
         processScheduleTypeRegistrationItem.parmCompanyScope(ProcessScheduleTypeCompanyScope::Global);
-        processScheduleTypeRegistrationItem.parmLabelId(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueProcessing"));
-        processScheduleTypeRegistrationItem.parmName(OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
-        processScheduleTypeRegistrationItem.parmProcessAutomationTaskClassName(classStr(OneMoreActionQueueProcessingProcessAutomationTask));
+        processScheduleTypeRegistrationItem.parmLabelId(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessStale"));
+        processScheduleTypeRegistrationItem.parmName(OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleTypeName);
+        processScheduleTypeRegistrationItem.parmProcessAutomationTaskClassName(classStr(OneMoreActionQueuePreProcessStaleAutomationTask));
         processScheduleTypeRegistrationItem.parmScheduleType(ProcessScheduleProcessType::Polled);
         processScheduleTypeRegistrationItem.parmIsEnabled(true);
 

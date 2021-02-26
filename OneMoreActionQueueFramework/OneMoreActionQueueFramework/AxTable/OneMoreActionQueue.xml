@@ -252,6 +252,32 @@ public class OneMoreActionQueue extends common
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>hasStalePreProcessMessagesInQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if action type has unprocessed messages in the queue
+    /// </summary>
+    /// <returns>True if action type has unprocessed messages in the queue otherwise False</returns>
+    [Hookable(false)]
+    internal static boolean hasStalePreProcessMessagesInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+        
+        select firstonly RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.Status             == OneMoreActionQueueStatus::NotRun
+               && oneMoreActionQueue.CreatedDateTime    <  DateTimeUtil::addSeconds(DateTimeUtil::getSystemDateTime(), -OneMoreActionQueueConstants::OneMoreActionQueuePreProcessSecondBeforeBecomeStale)
+        exists join oneMoreActionQueueTypeTable
+            where oneMoreActionQueueTypeTable.TypeId    == oneMoreActionQueue.TypeId
+               && oneMoreActionQueueTypeTable.Enabled   == NoYes::Yes;
+
+        return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueue</DeveloperDocumentation>

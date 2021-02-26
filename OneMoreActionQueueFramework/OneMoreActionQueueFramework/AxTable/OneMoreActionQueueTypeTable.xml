@@ -513,14 +513,14 @@ public class OneMoreActionQueueTypeTable extends common
 				<Source><![CDATA[
     private void updateProcessAutomationSeries()
     {
-        ProcessScheduleSeriesPollingDetails processScheduleSeriesPollingDetails = ProcessScheduleSeries::getPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessing, this.TypeId);
+        ProcessScheduleSeriesPollingDetails processScheduleSeriesPollingDetails = ProcessScheduleSeries::getPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName, this.TypeId);
 
         if (processScheduleSeriesPollingDetails && processScheduleSeriesPollingDetails.parmInterval() != this.ProcessAutomationPollingInterval)
         {
             processScheduleSeriesPollingDetails.parmInterval(this.ProcessAutomationPollingInterval);
             processScheduleSeriesPollingDetails.parmUnit(ProcessScheduleUnit::Minute);
 
-            ProcessScheduleSeries::setPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessing, this.TypeId, processScheduleSeriesPollingDetails);
+            ProcessScheduleSeries::setPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName, this.TypeId, processScheduleSeriesPollingDetails);
         }
     }
 
@@ -534,7 +534,7 @@ public class OneMoreActionQueueTypeTable extends common
         ProcessScheduleType type;
 
         select firstonly type
-            where type.Name == OneMoreActionQueueConstants::OneMoreActionQueueProcessing;
+            where type.Name == OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName;
 
         return type;
     }

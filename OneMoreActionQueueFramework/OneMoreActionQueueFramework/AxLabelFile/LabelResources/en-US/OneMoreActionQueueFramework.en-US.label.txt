@@ -120,3 +120,6 @@ OneMoreActionQueueProcessingStagePreProcessing=Pre-processing
 OneMoreActionQueuePreProcessorIsNull=Pre-processor is null
 OneMoreActionQueueDeserializationFailed=Deserialization failed. Check the transformed message if it matches to action contract
 OneMoreActionQueueULIDStamp=ULID stamp
+OneMoreActionQueuePreProcessStale=OneMore action queue pre-process stale actions
+OneMoreActionQueueProcessingPreProcessStaleAutomationTaskCaption=The backgroung processing task used to pre-process stale action queue messages in batch
+OneMoreActionQueueManualCreatedActionConfirmation=Processing will be started according to action queue type parameters
