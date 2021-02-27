@@ -58,5 +58,12 @@
       <Moniker>BPCheckNestedLoopinCode</Moniker>
       <Justification>The nested data access loop is intentional.</Justification>
     </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>CodeAnalysis</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Table/OneMoreActionQueueBatchJobCorrelation</Path>
+      <Moniker>BPCheckAlternateKeyAbsent</Moniker>
+      <Justification>Table doesn't have alternate key.</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>

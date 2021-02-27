@@ -123,3 +123,4 @@ OneMoreActionQueueULIDStamp=ULID stamp
 OneMoreActionQueuePreProcessStale=OneMore action queue pre-process stale actions
 OneMoreActionQueueProcessingPreProcessStaleAutomationTaskCaption=The backgroung processing task used to pre-process stale action queue messages in batch
 OneMoreActionQueueManualCreatedActionConfirmation=Processing will be started according to action queue type parameters
+OneMoreActionQueueBatchJobCorrelation=OneMore action queue batch job correlation
