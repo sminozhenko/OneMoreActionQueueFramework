@@ -4,7 +4,7 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
-/// The <c>VendInvoicePostController</c> class is the <c>SysOperationServiceController</c> class for posting vendor invoices.
+/// The <c>OneMoreActionQueuePreProcessStaleController</c> class is the <c>SysOperationServiceController</c> class for pre-processing of stale messages in the queue.
 /// </summary>
 internal class OneMoreActionQueuePreProcessStaleController extends SysOperationServiceController
 {

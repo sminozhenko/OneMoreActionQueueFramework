@@ -54,6 +54,7 @@
     <Folder Include="Services\" />
     <Folder Include="Simple Queries\" />
     <Folder Include="Tables\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AxClass\BusinessEventsCatalogHelperOneMoreActionQueue_Extension">
@@ -380,6 +381,26 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessScheduleTypeRegistration</Name>
       <Link>Classes\OneMoreActionQueueProcessScheduleTypeRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingAutomationTask">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingAutomationTask</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingAutomationTask</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingController</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueService">
       <SubType>Content</SubType>
@@ -770,6 +791,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTypeTransformation</Name>
       <Link>Tables\OneMoreActionQueueTypeTransformation</Link>
+    </Content>
+    <Content Include="AxView\OneMoreActionQueueBatchJobCorrelationView">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBatchJobCorrelationView</Name>
+      <Link>Views\OneMoreActionQueueBatchJobCorrelationView</Link>
     </Content>
     <Content Include="OneMoreActionQueueFramework.en-US.label.txt">
       <SubType>Content</SubType>
