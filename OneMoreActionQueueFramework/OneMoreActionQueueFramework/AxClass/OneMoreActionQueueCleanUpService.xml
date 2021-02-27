@@ -101,21 +101,15 @@ internal class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
     {
         OneMoreActionQueue oneMoreActionQueue;
 
-        oneMoreActionQueue.skipDeleteActions(true);
-        oneMoreActionQueue.skipDataMethods(true);
-        oneMoreActionQueue.skipDatabaseLog(true);
-        oneMoreActionQueue.skipEvents(true);
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueue);
 
         delete_from oneMoreActionQueue
-            exists join oneMoreActionQueueCleanUpTmp
+        exists join oneMoreActionQueueCleanUpTmp
             where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueue.RecId;
         
         OneMoreActionQueueLogTable oneMoreActionQueueLogTable;
         
-        oneMoreActionQueueLogTable.skipDeleteActions(true);
-        oneMoreActionQueueLogTable.skipDataMethods(true);
-        oneMoreActionQueueLogTable.skipDatabaseLog(true);
-        oneMoreActionQueueLogTable.skipEvents(true);
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueLogTable);
 
         delete_from oneMoreActionQueueLogTable
         notexists join oneMoreActionQueue
@@ -130,6 +124,29 @@ internal class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
         {
             docuRef.delete();
         }
+
+        OneMoreActionQueueBatchJobCorrelation oneMoreActionQueueBatchJobCorrelation;
+
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueBatchJobCorrelation);
+
+        delete_from oneMoreActionQueueBatchJobCorrelation
+        notexists join oneMoreActionQueue
+            where oneMoreActionQueueBatchJobCorrelation.OneMoreActionQueueRecId == oneMoreActionQueue.RecId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>skipTableMethods</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static void skipTableMethods(Common _common)
+    {
+        _common.skipDeleteActions(true);
+        _common.skipDataMethods(true);
+        _common.skipAosValidation(true);
+        _common.skipDatabaseLog(true);
+        _common.skipEvents(true);
     }
 
 ]]></Source>

@@ -716,6 +716,11 @@
       <Name>OneMoreActionQueue</Name>
       <Link>Tables\OneMoreActionQueue</Link>
     </Content>
+    <Content Include="AxTable\OneMoreActionQueueBatchJobCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBatchJobCorrelation</Name>
+      <Link>Tables\OneMoreActionQueueBatchJobCorrelation</Link>
+    </Content>
     <Content Include="AxTable\OneMoreActionQueueBusinessEventsEndpoint">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueBusinessEventsEndpoint</Name>

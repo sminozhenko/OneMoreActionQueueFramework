@@ -52,6 +52,8 @@ internal static class OneMoreActionQueueProcessingHelper
         switch (_sysOperationExecutionMode)
         {
             case SysOperationExecutionMode::ReliableAsynchronous:
+                ttsbegin;
+
                 controller.parmReliableAsyncBatchGroupId(_oneMoreActionQueueTypeTable.ReliableAsyncBatchGroupId);
                 
                 BatchInfo batchInfo = controller.batchInfo();
@@ -62,7 +64,11 @@ internal static class OneMoreActionQueueProcessingHelper
                     batchInfo.parmBatchHeader().parmExecutingBy(_oneMoreActionQueueTypeTable.RunAsUserId);
                 }
                 
-                controller.doBatch();
+                Batch batch = controller.doBatch();
+
+                OneMoreActionQueueBatchJobCorrelation::addCorrelation(_oneMoreActionQueue.RecId, batch.BatchJobId);
+
+                ttscommit;
                 break;
             default:
                 controller.startOperation();
