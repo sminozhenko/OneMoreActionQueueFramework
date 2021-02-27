@@ -40,7 +40,7 @@ internal class OneMoreActionQueueProcessingProcessAutomationController extends S
 
         ProcessExecutionSourceLink::insertSourceLink(processExecutionSourceLinkItem);
         
-        OneMoreActionQueueProcessingQueryController oneMoreActionQueueProcessingQueryController = OneMoreActionQueueProcessingQueryController::construct();
+        OneMoreActionQueueProcessingQueryProcessAutomationController oneMoreActionQueueProcessingQueryController = OneMoreActionQueueProcessingQueryProcessAutomationController::construct();
         
         OneMoreActionQueueProcessingQueryContract oneMoreActionQueueProcessingQueryContract = oneMoreActionQueueProcessingQueryController.getDataContractInfoObject().dataContractObject();
 

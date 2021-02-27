@@ -326,6 +326,11 @@
       <Name>OneMoreActionQueueProcessingProcessAutomationTask</Name>
       <Link>Classes\OneMoreActionQueueProcessingProcessAutomationTask</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryBatchController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryBatchController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryBatchController</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingQueryContract">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingQueryContract</Name>
@@ -335,6 +340,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingQueryController</Name>
       <Link>Classes\OneMoreActionQueueProcessingQueryController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryProcessAutomationController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryProcessAutomationController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryProcessAutomationController</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingQueryUIBuilder">
       <SubType>Content</SubType>
