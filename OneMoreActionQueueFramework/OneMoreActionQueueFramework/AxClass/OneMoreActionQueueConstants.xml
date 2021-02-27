@@ -18,9 +18,13 @@ internal static final class OneMoreActionQueueConstants
     internal const int                                                  OneMoreActionQueuePreProcessStaleAutomationPollingInterval = 1;
     internal const int                                                  OneMoreActionQueuePreProcessSecondBeforeBecomeStale = 60;
 
+    internal const int                                                  OneMoreActionQueueScheduleStaleWaitingAutomationPollingInterval = 1;
+
     internal const LabelId                                              OneMoreActionQueueProcessingScheduleTypeName = 'OneMoreActionQueueProcessing';
     internal const LabelId                                              OneMoreActionQueuePreProcessStaleScheduleTypeName = 'OneMoreActionQueuePreProcessStale';
     internal const LabelId                                              OneMoreActionQueuePreProcessStaleScheduleSeriesName = 'OneMoreActionQueuePreProcessStale';
+    internal const LabelId                                              OneMoreActionQueueScheduleStaleWaitingScheduleTypeName = 'OneMoreActionQueueScheduleStaleWaiting';
+    internal const LabelId                                              OneMoreActionQueueScheduleStaleWaitingScheduleSeriesName = 'OneMoreActionQueueScheduleStaleWaiting';
 
     internal const str                                                  DataAreaIdFieldName = 'DataAreaId';
 }

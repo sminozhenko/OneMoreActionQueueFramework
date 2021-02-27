@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueuePreProcessStaleAutomationTask</Name>
+	<Name>OneMoreActionQueueScheduleStaleWaitingAutomationTask</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 using System.ComponentModel.Composition;
 
 /// <summary>
-/// The <c>OneMoreActionQueuePreProcessStaleAutomationTask</c> fulfills the contract needed for <c>ProcessAutomationTask</c>.
+/// The <c>OneMoreActionQueueScheduleStaleWaitingAutomationTask</c> fulfills the contract needed for <c>ProcessAutomationTask</c>.
 /// </summary>
-[ExportMetadata(classStr(ProcessAutomationTask), classStr(OneMoreActionQueuePreProcessStaleAutomationTask))]
+[ExportMetadata(classStr(ProcessAutomationTask), classStr(OneMoreActionQueueScheduleStaleWaitingAutomationTask))]
 [Export(identifierStr('Microsoft.Dynamics.AX.Application.ProcessAutomationTask'))]
-internal class OneMoreActionQueuePreProcessStaleAutomationTask extends ProcessAutomationTask
+internal class OneMoreActionQueueScheduleStaleWaitingAutomationTask extends ProcessAutomationTask
 {
 }
 ]]></Declaration>
@@ -24,7 +24,7 @@ internal class OneMoreActionQueuePreProcessStaleAutomationTask extends ProcessAu
     /// <returns>true if there is one or more stale action for pre-processing in the queue; otherwise, false.</returns>
     internal boolean isProcessAutomationEnabledForThisTask()
     {
-        return OneMoreActionQueue::hasStalePreProcessMessagesInQueue();
+        return OneMoreActionQueue::hasStaleWaitingMessagesInQueue();
     }
 
 ]]></Source>
@@ -33,14 +33,14 @@ internal class OneMoreActionQueuePreProcessStaleAutomationTask extends ProcessAu
 				<Name>getListOfWorkToBePerformed</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Submits a <c>OneMoreActionQueuePreProcessStaleController</c> to the <c>ProcessAutomation</c>.
+    /// Submits a <c>OneMoreActionQueueScheduleStaleWaitingController</c> to the <c>ProcessAutomation</c>.
     /// </summary>
-    /// <returns>A one element list of <c>OneMoreActionQueuePreProcessStaleController</c> object.</returns>
+    /// <returns>A one element list of <c>OneMoreActionQueueScheduleStaleWaitingController</c> object.</returns>
     internal List getListOfWorkToBePerformed()
     {
-        OneMoreActionQueuePreProcessStaleController preProcessStaleController = new OneMoreActionQueuePreProcessStaleController(
-            classStr(OneMoreActionQueuePreProcessStaleController),
-            methodStr(OneMoreActionQueuePreProcessStaleController, initProcessExecutionSourceLinkItem),
+        OneMoreActionQueueScheduleStaleWaitingController preProcessStaleController = new OneMoreActionQueueScheduleStaleWaitingController(
+            classStr(OneMoreActionQueueScheduleStaleWaitingController),
+            methodStr(OneMoreActionQueueScheduleStaleWaitingController, initProcessExecutionSourceLinkItem),
             SysOperationExecutionMode::ReliableAsynchronous);
 
         List workList = new List(Types::Class);
@@ -60,7 +60,7 @@ internal class OneMoreActionQueuePreProcessStaleAutomationTask extends ProcessAu
     /// <returns>The caption for the batch job.</returns>
     internal BatchCaption batchJobCaption()
     {
-        return "@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPreProcessStaleAutomationTaskCaption";
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueProcessingScheduleStaleWaitingAutomationTaskCaption";
     }
 
 ]]></Source>

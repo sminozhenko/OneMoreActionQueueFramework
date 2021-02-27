@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueScheduleStaleWaitingController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueScheduleStaleWaitingController</c> class is the <c>SysOperationServiceController</c> class for re-scheduling of stale waiting messages.
+/// </summary>
+internal class OneMoreActionQueueScheduleStaleWaitingController extends SysOperationServiceController
+{
+    private ProcessExecutionSourceLinkItem processExecutionSourceLinkItem;
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initProcessExecutionSourceLinkItem</Name>
+				<Source><![CDATA[
+    internal void initProcessExecutionSourceLinkItem(ProcessScheduleWorkItem _processScheduleWorkItem)
+    {
+        processExecutionSourceLinkItem = ProcessExecutionSourceLinkItem::newFromProcessScheduleWorkItemAndStatus(_processScheduleWorkItem, ProcessExecutionSourceStatus::Success);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    internal static OneMoreActionQueueScheduleStaleWaitingController construct()
+    {
+        return new OneMoreActionQueueScheduleStaleWaitingController(classStr(OneMoreActionQueueScheduleStaleWaitingController), methodStr(OneMoreActionQueueScheduleStaleWaitingController, run), SysOperationExecutionMode::ReliableAsynchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;        
+        OneMoreActionQueueBatchJobCorrelationView oneMoreActionQueueBatchJobCorrelationView;
+
+        while select oneMoreActionQueue
+            order by ULIDStamp
+            where oneMoreActionQueue.Status                     == OneMoreActionQueueStatus::Waiting
+        join oneMoreActionQueueTypeTable
+            where oneMoreActionQueueTypeTable.TypeId            == oneMoreActionQueue.TypeId
+               && oneMoreActionQueueTypeTable.Enabled           == NoYes::Yes
+               && oneMoreActionQueueTypeTable.ProcessingType    == OneMoreActionQueueProcessingType::ReliableAsynchronous
+        notexists join oneMoreActionQueueBatchJobCorrelationView
+            where oneMoreActionQueueBatchJobCorrelationView.OneMoreActionQueueRecId == oneMoreActionQueue.RecId
+        {
+            try
+            {
+                OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, OneMoreActionQueueProcessingType::ReliableAsynchronous);
+            }
+            catch
+            {
+                exceptionTextFallThrough();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
