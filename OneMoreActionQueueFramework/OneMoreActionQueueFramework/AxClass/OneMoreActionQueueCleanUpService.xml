@@ -131,7 +131,15 @@ internal class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
 
         delete_from oneMoreActionQueueBatchJobCorrelation
         notexists join oneMoreActionQueue
-            where oneMoreActionQueueBatchJobCorrelation.OneMoreActionQueueRecId == oneMoreActionQueue.RecId;
+            where oneMoreActionQueueBatchJobCorrelation.ActionQueueRecId == oneMoreActionQueue.RecId;
+
+        OneMoreActionQueueDocumentCorrelation oneMoreActionQueueDocumentCorrelation;
+
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueDocumentCorrelation);
+
+        delete_from oneMoreActionQueueDocumentCorrelation
+        notexists join oneMoreActionQueue
+            where oneMoreActionQueueDocumentCorrelation.ActionQueueRecId == oneMoreActionQueue.RecId;
     }
 
 ]]></Source>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueFormExtender</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// FormRun menu extender class
+/// </summary>
+internal final class OneMoreActionQueueFormExtender
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>SysSystemDefinedButtons_onAddingButtonsToActionPane</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// On adding buttong to action pane handler
+    /// </summary>
+    /// <param name = "_formRun">An <c>FormRun</c> object</param>
+    /// <param name = "_actionPane">An <c>FormActionPaneControl</c> object</param>
+    [SubscribesTo(classStr(SysSystemDefinedButtons), delegateStr(SysSystemDefinedButtons, onAddingButtonsToActionPane))]
+    public static void SysSystemDefinedButtons_onAddingButtonsToActionPane(FormRun _formRun, FormActionPaneControl _actionPane)
+    {
+        OneMoreActionQueueFormExtender extender = new OneMoreActionQueueFormExtender();
+        extender.addActionQueueButtons(_formRun, _actionPane);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addActionQueueButtons</Name>
+				<Source><![CDATA[
+    private void addActionQueueButtons(FormRun _formRun, FormActionPaneControl _actionPane)
+    {
+        #SysSystemDefinedButtons
+        #ResAppl
+        
+        if (!_formRun.isDataInteractionSupported())
+        {
+            return;
+        }
+
+        if (!hasMenuItemAccess(menuItemDisplayStr(OneMoreActionQueue), MenuItemType::Display))
+        {        
+            return;
+        }
+
+        FormDataSource mainFDS = _formRun.dataSource();
+
+        if (!mainFDS || !OneMoreActionQueueTypeDocumentCorrelation::hasDocumentCorrelationSetUp(mainFDS.table()))
+        {
+            return;
+        }
+
+        FormButtonGroupControl buttonGroupControl;
+        const str groupName = 'OneMoreActionQueueButtonGroupControl';
+
+        FormCommandButtonControl attachButton = _formRun.control(_formRun.controlId(#SystemDefinedAttachButton)) as FormCommandButtonControl;
+
+        if (attachButton)
+        {
+            buttonGroupControl = attachButton.parentControl() as FormButtonGroupControl;
+        }
+
+        if (!buttonGroupControl)
+        {
+            // If button group exists, don't continue.
+            buttonGroupControl = _formRun.design().controlName(groupName) as FormButtonGroupControl;
+        
+            if (buttonGroupControl)
+            {
+                return;
+            }
+            
+            buttonGroupControl = _actionPane.addControl(FormControlType::ButtonGroup, groupName);
+            buttonGroupControl.allowUserSetup(FormAllowUserSetup::No);
+            buttonGroupControl.caption("@OneMoreActionQueueFramework:OneMoreActionQueueMainMenu");
+            buttonGroupControl.hideIfEmpty(true);
+        }
+
+        FormFunctionButtonControl actionQueueButton = buttonGroupControl.addControl(FormControlType::MenuFunctionButton, 'OneMoreActionQueueButtonControl');
+        actionQueueButton.menuItemName(menuItemDisplayStr(OneMoreActionQueue));
+        actionQueueButton.menuItemType(MenuItemType::Display);
+        actionQueueButton.visible(true);
+
+        //actionQueueButton.text('0');
+        //actionQueueButton.buttonDisplay(ButtonDisplay::TextWithImageLeft);
+        actionQueueButton.buttonDisplay(ButtonDisplay::ImageOnly);
+
+        buttonGroupControl.moveControl(actionQueueButton.id());
+
+        actionQueueButton.imageLocation(SysImageLocation::Symbol);
+        actionQueueButton.normalImage(ImageReferenceSymbol::Assign);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

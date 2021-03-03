@@ -10,6 +10,7 @@ using System.ComponentModel.Composition;
 /// </summary>
 [Export(identifierStr(Dynamics.AX.Application.OneMoreActionQueueIPreProcessor))]
 [ExportMetadata(classStr(OneMoreActionQueueIPreProcessor), classStr(OneMoreActionQueuePreProcessorCompanyResolve))]
+[OneMoreActionQueueProcessingOrderAttribute(1)]
 internal class OneMoreActionQueuePreProcessorCompanyResolve implements OneMoreActionQueueIPreProcessor
 {
 }

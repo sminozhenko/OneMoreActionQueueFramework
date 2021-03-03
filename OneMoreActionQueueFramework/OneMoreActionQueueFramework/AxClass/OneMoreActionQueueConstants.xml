@@ -27,6 +27,9 @@ internal static final class OneMoreActionQueueConstants
     internal const LabelId                                              OneMoreActionQueueScheduleStaleWaitingScheduleSeriesName = 'OneMoreActionQueueScheduleStaleWaiting';
 
     internal const str                                                  DataAreaIdFieldName = 'DataAreaId';
+
+    internal const str                                                  QueryEditIcon = 'Edit';
+    internal const str                                                  QueryFilterIcon = 'Filter';
 }
 ]]></Declaration>
 		<Methods />

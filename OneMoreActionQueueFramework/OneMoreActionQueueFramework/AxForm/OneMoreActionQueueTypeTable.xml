@@ -473,6 +473,14 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<MenuItemType>Action</MenuItemType>
 								<NeedsRecord>Yes</NeedsRecord>
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueTypeDocumentCorrelation</MenuItemName>
+							</AxFormControl>
 						</Controls>
 						<Caption>@SYS116749</Caption>
 					</AxFormControl>

@@ -38,8 +38,8 @@ public class OneMoreActionQueueBatchJobCorrelationView extends common
 	<Fields>
 		<AxViewField xmlns=""
 			i:type="AxViewFieldBound">
-			<Name>OneMoreActionQueueRecId</Name>
-			<DataField>OneMoreActionQueueRecId</DataField>
+			<Name>ActionQueueRecId</Name>
+			<DataField>ActionQueueRecId</DataField>
 			<DataSource>OneMoreActionQueueBatchJobCorrelation</DataSource>
 		</AxViewField>
 		<AxViewField xmlns=""
