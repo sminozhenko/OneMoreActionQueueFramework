@@ -43,6 +43,21 @@ public class OneMoreActionQueue extends FormRun
             super();
 
             this.queryBuildDataSource().addSortField(fieldNum(OneMoreActionQueue, ULIDStamp), SortOrder::Descending);
+
+            if (element.args().record() && element.args().record().TableId != tableNum(OneMoreActionQueueTypeTable))
+            {
+                Common callerRecord = element.args().record();
+
+                QueryBuildDataSource qbds = this.queryBuildDataSource();
+
+                qbds = qbds.addDataSource(tableNum(OneMoreActionQueueDocumentCorrelation));
+                qbds.joinMode(JoinMode::ExistsJoin);
+                qbds.relations(true);
+
+
+                qbds.addRange(fieldNum(OneMoreActionQueueDocumentCorrelation, DocumentTableId)).value(queryValue(callerRecord.TableId));
+                qbds.addRange(fieldNum(OneMoreActionQueueDocumentCorrelation, DocumentRecId)).value(queryValue(callerRecord.RecId));
+            }
         }
 
 ]]></Source>
@@ -68,7 +83,38 @@ public class OneMoreActionQueue extends FormRun
 				<Fields />
 			</DataSource>
 		</DataSources>
-		<DataControls xmlns="" />
+		<DataControls xmlns="">
+			<Control>
+				<Name>OneMoreActionQueueDocumentCorrelation_DocumentDetails</Name>
+				<Type>String</Type>
+				<Methods>
+					<Method>
+						<Name>jumpRef</Name>
+						<Source><![CDATA[
+        public void jumpRef()
+        {
+            DictTable dictTable = new DictTable(OneMoreActionQueueDocumentCorrelation.DocumentTableId);
+
+            str formRefMenu = dictTable.formRef(true);
+
+            if (formRefMenu)
+            {
+                Args jumpArgs = new Args();
+                jumpArgs.record(OneMoreActionQueueDocumentCorrelation);
+                var menuFunction = new MenuFunction(formRefMenu, MenuItemType::Display);
+                menuFunction.run(jumpArgs);
+            }
+            else
+            {
+                error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorrelationFormRefIsNotSpecifiedForTable", OneMoreActionQueueDocumentCorrelation.documentTableName()));
+            }
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+		</DataControls>
 		<Members xmlns="" />
 	</SourceCode>
 	<DataSources>
@@ -117,6 +163,39 @@ public class OneMoreActionQueue extends FormRun
 				</AxFormDataSourceField>
 			</Fields>
 			<ReferencedDataSources />
+			<InsertAtEnd>No</InsertAtEnd>
+			<InsertIfEmpty>No</InsertIfEmpty>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+		<AxFormDataSource xmlns="">
+			<Name>OneMoreActionQueueDocumentCorrelation</Name>
+			<Table>OneMoreActionQueueDocumentCorrelation</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>ActionQueueRecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DocumentRecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DocumentTableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>OneMoreActionQueue</JoinSource>
+			<AllowCreate>No</AllowCreate>
+			<AllowDelete>No</AllowDelete>
+			<AllowEdit>No</AllowEdit>
 			<InsertAtEnd>No</InsertAtEnd>
 			<InsertIfEmpty>No</InsertIfEmpty>
 			<DataSourceLinks />
@@ -412,6 +491,46 @@ public class OneMoreActionQueue extends FormRun
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTransformedMessage</Caption>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormTabPageControl">
+						<Name>DocumentCorrelationTabPage</Name>
+						<Pattern>ToolbarList</Pattern>
+						<PatternVersion>1.2</PatternVersion>
+						<Type>TabPage</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormGridControl">
+								<Name>DocumentCorrelationGrid</Name>
+								<Type>Grid</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>OneMoreActionQueueDocumentCorrelation_DocumentTableName</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataMethod>documentTableName</DataMethod>
+										<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>OneMoreActionQueueDocumentCorrelation_DocumentDetails</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataMethod>documentDetails</DataMethod>
+										<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+									</AxFormControl>
+								</Controls>
+								<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+							</AxFormControl>
+						</Controls>
+						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelation</Caption>
 					</AxFormControl>
 					<AxFormControl xmlns=""
 						i:type="AxFormTabPageControl">

@@ -49,7 +49,7 @@ internal class OneMoreActionQueueScheduleStaleWaitingController extends SysOpera
                && oneMoreActionQueueTypeTable.Enabled           == NoYes::Yes
                && oneMoreActionQueueTypeTable.ProcessingType    == OneMoreActionQueueProcessingType::ReliableAsynchronous
         notexists join oneMoreActionQueueBatchJobCorrelationView
-            where oneMoreActionQueueBatchJobCorrelationView.OneMoreActionQueueRecId == oneMoreActionQueue.RecId
+            where oneMoreActionQueueBatchJobCorrelationView.ActionQueueRecId == oneMoreActionQueue.RecId
         {
             try
             {

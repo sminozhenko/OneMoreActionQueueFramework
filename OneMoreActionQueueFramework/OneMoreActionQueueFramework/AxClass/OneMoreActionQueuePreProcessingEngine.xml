@@ -70,8 +70,6 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
     {
         newActionQueueStatus = OneMoreActionQueueStatus::Waiting;
         
-        Array providerList = OneMoreActionQueuePreProcessingEngine::getProviders();
-
         OneMoreActionQueueContract contract;
 
         try
@@ -86,11 +84,15 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
             
         if (newActionQueueStatus != OneMoreActionQueueStatus::Error)
         {
-            for (int counter = 1; counter <= providerList.lastIndex(); counter++)
+            Map providerMap = OneMoreActionQueuePreProcessingEngine::getProviders();
+
+            MapEnumerator me = providerMap.getEnumerator();
+
+            while (me.moveNext())
             {
                 boolean failOnError;
             
-                OneMoreActionQueueIPreProcessor preProcessor = providerList.value(counter);
+                OneMoreActionQueueIPreProcessor preProcessor = me.currentValue();
 
                 try
                 {
@@ -110,6 +112,7 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
                     if (failOnError)
                     {
                         newActionQueueStatus = OneMoreActionQueueStatus::Error;
+                        break;
                     }
                 }
             }
@@ -121,11 +124,39 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
 			<Method>
 				<Name>getProviders</Name>
 				<Source><![CDATA[
-    private static Array getProviders()
+    private static Map getProviders()
     {
-        SysPluginMetadataCollection metadataCollection = new SysPluginMetadataCollection();
+        SysPluginMetadataCollection metadataCollection = new SysPluginMetadataCollection();        
         
-        return SysPluginFactory::Instances('Dynamics.AX.Application', classStr(OneMoreActionQueueIPreProcessor), metadataCollection);
+        Map ret = new Map(Types::Integer, Types::Class);
+        Array providerList = SysPluginFactory::Instances(identifierStr(Dynamics.AX.Application), classStr(OneMoreActionQueueIPreProcessor), metadataCollection);
+
+        int defaultProcessingOrder = 999;
+
+        for (int counter = 1; counter <= providerList.lastIndex(); counter++)
+        {
+            int currentProcessingOrder;
+            
+            SysDictClass dc = new SysDictClass(classIdGet(providerList.value(counter)));
+
+            OneMoreActionQueueProcessingOrderAttribute processingOrderAttribute = dc.getAttribute(classStr(OneMoreActionQueueProcessingOrderAttribute));
+
+            if (processingOrderAttribute)
+            {
+                currentProcessingOrder = processingOrderAttribute.parmProcessingOrder();
+            }
+            else
+            {
+                currentProcessingOrder = defaultProcessingOrder;
+                defaultProcessingOrder++;
+            }
+
+            currentProcessingOrder = currentProcessingOrder * 100; //Reserve 100 element in the map in case if there are multiples processing classes with the same order
+
+            ret.add(currentProcessingOrder, providerList.value(counter));
+        }
+
+        return ret;
     }
 
 ]]></Source>

@@ -19,8 +19,8 @@ public class OneMoreActionQueueBatchJobCorrelation extends common
         oneMoreActionQueueBatchJobCorrelation.clear();
         oneMoreActionQueueBatchJobCorrelation.initValue();
 
-        oneMoreActionQueueBatchJobCorrelation.OneMoreActionQueueRecId   =   _oneMoreActionQueueRecId;
-        oneMoreActionQueueBatchJobCorrelation.BatchJobRecId             =   _batchJobId;
+        oneMoreActionQueueBatchJobCorrelation.ActionQueueRecId = _oneMoreActionQueueRecId;
+        oneMoreActionQueueBatchJobCorrelation.BatchJobRecId = _batchJobId;
 
         oneMoreActionQueueBatchJobCorrelation.doInsert();
     }
@@ -34,7 +34,7 @@ public class OneMoreActionQueueBatchJobCorrelation extends common
 	<SubscriberAccessLevel>
 		<Read>Allow</Read>
 	</SubscriberAccessLevel>
-	<TitleField1>OneMoreActionQueueRecId</TitleField1>
+	<TitleField1>ActionQueueRecId</TitleField1>
 	<TitleField2>BatchJobRecId</TitleField2>
 	<CacheLookup>NotInTTS</CacheLookup>
 	<ClusteredIndex>OneMoreActionQueueRecIdBatchJobIdx</ClusteredIndex>
@@ -45,7 +45,7 @@ public class OneMoreActionQueueBatchJobCorrelation extends common
 			<Name>AutoReport</Name>
 			<Fields>
 				<AxTableFieldGroupField>
-					<DataField>OneMoreActionQueueRecId</DataField>
+					<DataField>ActionQueueRecId</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>BatchJobRecId</DataField>
@@ -73,7 +73,7 @@ public class OneMoreActionQueueBatchJobCorrelation extends common
 	<Fields>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldInt64">
-			<Name>OneMoreActionQueueRecId</Name>
+			<Name>ActionQueueRecId</Name>
 			<ExtendedDataType>RefRecId</ExtendedDataType>
 		</AxTableField>
 		<AxTableField xmlns=""
@@ -88,7 +88,7 @@ public class OneMoreActionQueueBatchJobCorrelation extends common
 			<Name>OneMoreActionQueueRecIdBatchJobIdx</Name>
 			<Fields>
 				<AxTableIndexField>
-					<DataField>OneMoreActionQueueRecId</DataField>
+					<DataField>ActionQueueRecId</DataField>
 				</AxTableIndexField>
 				<AxTableIndexField>
 					<DataField>BatchJobRecId</DataField>
@@ -108,8 +108,8 @@ public class OneMoreActionQueueBatchJobCorrelation extends common
 			<Constraints>
 				<AxTableRelationConstraint xmlns=""
 					i:type="AxTableRelationConstraintField">
-					<Name>OneMoreActionQueueRecId</Name>
-					<Field>OneMoreActionQueueRecId</Field>
+					<Name>ActionQueueRecId</Name>
+					<Field>ActionQueueRecId</Field>
 					<RelatedField>RecId</RelatedField>
 				</AxTableRelationConstraint>
 			</Constraints>

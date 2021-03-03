@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueuePreProcessorDocumentCorrelation</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// Pre-processor for document correlation 
+/// </summary>
+[Export(identifierStr(Dynamics.AX.Application.OneMoreActionQueueIPreProcessor))]
+[ExportMetadata(classStr(OneMoreActionQueueIPreProcessor), classStr(OneMoreActionQueuePreProcessorDocumentCorrelation))]
+[OneMoreActionQueueProcessingOrderAttribute(2)]
+internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneMoreActionQueueIPreProcessor
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueContract _contract)
+    {
+        OneMoreActionQueueTypeDocumentCorrelation oneMoreActionQueueTypeDocumentCorrelation;
+        RecordInsertList                          rilOneMoreActionQueueDocumentCorrelation;
+
+        try
+        {
+            //TODO move to base engine implementation
+            OneMoreActionQueueContext::oneMoreActionQueueContract = _contract;
+            
+            changecompany (_oneMoreActionQueue.CompanyId)
+            {
+                while select oneMoreActionQueueTypeDocumentCorrelation
+                    where oneMoreActionQueueTypeDocumentCorrelation.TypeId == _oneMoreActionQueue.TypeId
+                {
+                    try
+                    {
+                        QueryRun qr = new QueryRun(oneMoreActionQueueTypeDocumentCorrelation.QueryData);
+
+                        while (qr.next())
+                        {
+                            OneMoreActionQueueDocumentCorrelation oneMoreActionQueueDocumentCorrelation;
+
+                            Common documentRecord = qr.getNo(1);
+
+                            oneMoreActionQueueDocumentCorrelation.clear();
+                            oneMoreActionQueueDocumentCorrelation.initValue();
+
+                            oneMoreActionQueueDocumentCorrelation.ActionQueueRecId = _oneMoreActionQueue.RecId;
+                            oneMoreActionQueueDocumentCorrelation.DocumentTableId  = documentRecord.TableId;
+                            oneMoreActionQueueDocumentCorrelation.DocumentRecId  = documentRecord.RecId;
+                    
+                            if (!rilOneMoreActionQueueDocumentCorrelation)
+                            {
+                                rilOneMoreActionQueueDocumentCorrelation = new RecordInsertList(tableNum(OneMoreActionQueueDocumentCorrelation), true, true, true, true, true);
+                            }
+
+                            rilOneMoreActionQueueDocumentCorrelation.add(oneMoreActionQueueDocumentCorrelation);
+                        }
+                    }
+                    catch
+                    {
+                        exceptionTextFallThrough();
+                    }
+                }
+            }
+
+            if (rilOneMoreActionQueueDocumentCorrelation)
+            {
+                rilOneMoreActionQueueDocumentCorrelation.insertDatabase();
+            }
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueContract = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>failOnError</Name>
+				<Source><![CDATA[
+    public boolean failOnError()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
