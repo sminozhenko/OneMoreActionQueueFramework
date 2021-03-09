@@ -67,6 +67,31 @@ public class OneMoreActionQueueDocumentCorrelation extends common
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>jumpRef</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    static internal void jumpRef(OneMoreActionQueueDocumentCorrelation _oneMoreActionQueueDocumentCorrelation)
+    {
+        DictTable dictTable = new DictTable(_oneMoreActionQueueDocumentCorrelation.DocumentTableId);
+
+        str formRefMenu = dictTable.formRef(true);
+
+        if (formRefMenu)
+        {
+            Args jumpArgs = new Args();
+            jumpArgs.record(_oneMoreActionQueueDocumentCorrelation);
+            var menuFunction = new MenuFunction(formRefMenu, MenuItemType::Display);
+            menuFunction.run(jumpArgs);
+        }
+        else
+        {
+            error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorrelationFormRefIsNotSpecifiedForTable", _oneMoreActionQueueDocumentCorrelation.documentTableName()));
+        }
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorrelation</DeveloperDocumentation>
