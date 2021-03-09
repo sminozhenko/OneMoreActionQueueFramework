@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueParameters</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueParameters extends common
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>delete</Name>
+				<Source><![CDATA[
+    void delete()
+    {
+        throw error("@SYS23721");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    void update()
+    {
+        super();
+
+        flush OneMoreActionQueueParameters;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateDelete</Name>
+				<Source><![CDATA[
+    boolean validateDelete()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueueParameters</c>
+    /// </summary>
+    /// <param name = "_forupdate"> A Boolean value that indicates whether to read the record for update</param>
+    /// <param name = "_concurrencyModel">Concurrency model</param>
+    /// <returns>A record in the <c>OneMoreActionQueueParameters</c> table</returns>
+    [Hookable(false)]
+    static OneMoreActionQueueParameters find(boolean _forupdate = false, ConcurrencyModel _concurrencyModel = ConcurrencyModel::Auto)
+    {
+        OneMoreActionQueueParameters parameter;
+
+        if (_forUpdate)
+        {
+            parameter.selectForUpdate(_forUpdate);
+            if (_concurrencyModel != ConcurrencyModel::Auto)
+            {
+                parameter.concurrencyModel(_concurrencyModel);
+            }
+        }
+
+        parameter.selectLocked(_forUpdate);
+
+        select firstonly parameter
+            index Key
+            where parameter.Key == 0;
+
+        if (!parameter && !parameter.isTmp())
+        {
+            Company::createParameter(parameter);
+        }
+
+        return parameter;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>documentCorrelationLimit</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static OneMoreActionQueueDocumentCorrelationLimit documentCorrelationLimit()
+    {
+        OneMoreActionQueueParameters paramters = OneMoreActionQueueParameters::find();
+
+        if (!paramters.DocumentCorrelationLimit)
+        {
+            ttsbegin;
+
+            paramters = OneMoreActionQueueParameters::find(true, ConcurrencyModel::Pessimistic);
+
+            if (!paramters.DocumentCorrelationLimit)
+            {
+                paramters.DocumentCorrelationLimit = OneMoreActionQueueConstants::OneMoreActionQueueDocumentCorrelationLimitDefault;
+                paramters.update();
+            }
+
+            ttscommit;
+        }
+
+        return paramters.DocumentCorrelationLimit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueParameters</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueParameters</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueParameters</Label>
+	<TableGroup>Parameter</TableGroup>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>Key</ClusteredIndex>
+	<ModifiedBy>Yes</ModifiedBy>
+	<ModifiedDateTime>Yes</ModifiedDateTime>
+	<PrimaryIndex>Key</PrimaryIndex>
+	<ReplacementKey>Key</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<TableContents>DefaultData</TableContents>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>Key</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>Key</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>DocumentCorrelation</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelation</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DocumentCorrelationLimit</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>Key</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ParametersKey</ExtendedDataType>
+			<Visible>No</Visible>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>DocumentCorrelationLimit</Name>
+			<ExtendedDataType>OneMoreActionQueueDocumentCorrelationLimit</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>Key</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>Key</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

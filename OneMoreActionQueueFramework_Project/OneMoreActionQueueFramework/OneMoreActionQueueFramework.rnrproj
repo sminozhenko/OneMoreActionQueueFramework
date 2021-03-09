@@ -477,6 +477,11 @@
       <Name>OneMoreActionQueueDocumentCorrelationDetails</Name>
       <Link>Extended Data Types\OneMoreActionQueueDocumentCorrelationDetails</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueDocumentCorrelationLimit">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDocumentCorrelationLimit</Name>
+      <Link>Extended Data Types\OneMoreActionQueueDocumentCorrelationLimit</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueDocumentCorrelationTableName">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDocumentCorrelationTableName</Name>
@@ -657,6 +662,11 @@
       <Name>OneMoreActionQueueMenuItemParametersDialog</Name>
       <Link>Forms\OneMoreActionQueueMenuItemParametersDialog</Link>
     </Content>
+    <Content Include="AxForm\OneMoreActionQueueParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameters</Name>
+      <Link>Forms\OneMoreActionQueueParameters</Link>
+    </Content>
     <Content Include="AxForm\OneMoreActionQueueTypeDocumentCorrelation">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
@@ -722,6 +732,11 @@
       <Name>OneMoreActionQueueLogTable</Name>
       <Link>Display Menu Items\OneMoreActionQueueLogTable</Link>
     </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueueParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameters</Name>
+      <Link>Display Menu Items\OneMoreActionQueueParameters</Link>
+    </Content>
     <Content Include="AxMenuItemDisplay\OneMoreActionQueueTypeDocumentCorrelation">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
@@ -771,6 +786,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMaintain</Name>
       <Link>Security Privileges\OneMoreActionQueueMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueParametersMaintain">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParametersMaintain</Name>
+      <Link>Security Privileges\OneMoreActionQueueParametersMaintain</Link>
     </Content>
     <Content Include="AxSecurityPrivilege\OneMoreActionQueueView">
       <SubType>Content</SubType>
@@ -826,6 +846,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueLogTable</Name>
       <Link>Tables\OneMoreActionQueueLogTable</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameters</Name>
+      <Link>Tables\OneMoreActionQueueParameters</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueStaging">
       <SubType>Content</SubType>

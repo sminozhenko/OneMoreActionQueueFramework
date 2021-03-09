@@ -34,6 +34,11 @@
 			<Elements>
 				<AxMenuElement xmlns=""
 					i:type="AxMenuElementMenuItem">
+					<Name>OneMoreActionQueueParameters</Name>
+					<MenuItemName>OneMoreActionQueueParameters</MenuItemName>
+				</AxMenuElement>
+				<AxMenuElement xmlns=""
+					i:type="AxMenuElementMenuItem">
 					<Name>OneMoreActionQueueTypeTable</Name>
 					<MenuItemName>OneMoreActionQueueTypeTable</MenuItemName>
 				</AxMenuElement>

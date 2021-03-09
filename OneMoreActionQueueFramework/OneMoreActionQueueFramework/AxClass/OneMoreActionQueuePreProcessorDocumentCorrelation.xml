@@ -25,6 +25,8 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
         RecordInsertList                          rilOneMoreActionQueueDocumentCorrelation;
         boolean                                   hashFound;
         str                                       sequenceString;
+        int                                       numOfDocuments;
+        int                                       maxNumOfDocuments = OneMoreActionQueueParameters::documentCorrelationLimit();
 
         try
         {
@@ -36,6 +38,17 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
                 while select oneMoreActionQueueTypeDocumentCorrelation
                     where oneMoreActionQueueTypeDocumentCorrelation.TypeId == _oneMoreActionQueue.TypeId
                 {
+                    if (numOfDocuments >= maxNumOfDocuments)
+                    {
+                        break;
+                    }
+
+                    if (!SysQuery::isPackedOk(oneMoreActionQueueTypeDocumentCorrelation.QueryData))
+                    {
+                        error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorellationQueryUnpackError", oneMoreActionQueueTypeDocumentCorrelation.DocumentTableName));
+                        continue;                        
+                    }
+                    
                     container sequenceFields = OneMoreActionQueueTypeDocumentCorrelationSequenceField::getSequenceFields(oneMoreActionQueueTypeDocumentCorrelation.RecId);
                     TableId   currentTableId = tableName2Id(oneMoreActionQueueTypeDocumentCorrelation.DocumentTableName);
                     
@@ -57,6 +70,12 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
 
                         while (qr.next())
                         {
+                            if (numOfDocuments >= maxNumOfDocuments)
+                            {
+                                warning(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorellationLimitWarning", maxNumOfDocuments));
+                                break;
+                            }
+                            
                             OneMoreActionQueueDocumentCorrelation oneMoreActionQueueDocumentCorrelation;
 
                             Common documentRecord = qr.getNo(1);
@@ -85,6 +104,8 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
                                     sequenceString += OneMoreActionQueueTypeDocumentCorrelationSequenceField::sequenceValue2Str(documentRecord.(fieldName2Id(currentTableId, conPeek(sequenceFields, i))));
                                 }
                             }
+
+                            numOfDocuments++;
                         }
 
                         if (hashFound)
