@@ -307,6 +307,49 @@ public class OneMoreActionQueue extends common
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>hasPrevWaitingMessagesInQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if action type has earlier waiting messages in the queue
+    /// </summary>
+    /// <returns>True if action type has earlier waiting messages in the queue otherwise False</returns>
+    [Hookable(false)]
+    internal boolean hasPrevWaitingMessagesInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;        
+        
+        select firstonly RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.SequenceGroupHash          == this.SequenceGroupHash
+               && oneMoreActionQueue.Status                     == OneMoreActionQueueStatus::Waiting
+               && oneMoreActionQueue.ULIDStamp                  <  this.ULIDStamp
+               && oneMoreActionQueue.RecId                      != this.RecId;
+
+        return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>nextWaitingMessageInQueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal OneMoreActionQueue nextWaitingMessageInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        
+        select firstonly oneMoreActionQueue
+            where oneMoreActionQueue.SequenceGroupHash          == this.SequenceGroupHash
+               && oneMoreActionQueue.Status                     == OneMoreActionQueueStatus::Waiting
+               && oneMoreActionQueue.ULIDStamp                  >=  this.ULIDStamp
+               && oneMoreActionQueue.RecId                      != this.RecId;
+
+        return oneMoreActionQueue;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueue</DeveloperDocumentation>
@@ -395,6 +438,9 @@ public class OneMoreActionQueue extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SequenceGroupHash</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -505,6 +551,11 @@ public class OneMoreActionQueue extends common
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>OneMoreActionQueueULIDStamp</ExtendedDataType>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SequenceGroupHash</Name>
+			<ExtendedDataType>OneMoreActionQueueSequenceGroupHash</ExtendedDataType>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
@@ -551,6 +602,21 @@ public class OneMoreActionQueue extends common
 			<Name>ULIDStampIdx</Name>
 			<AllowDuplicates>Yes</AllowDuplicates>
 			<Fields>
+				<AxTableIndexField>
+					<DataField>ULIDStamp</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>SequenceGroupHashStatusULIDStampIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>SequenceGroupHash</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Status</DataField>
+				</AxTableIndexField>
 				<AxTableIndexField>
 					<DataField>ULIDStamp</DataField>
 				</AxTableIndexField>

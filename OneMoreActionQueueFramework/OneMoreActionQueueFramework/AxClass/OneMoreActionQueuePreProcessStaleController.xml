@@ -40,7 +40,7 @@ internal class OneMoreActionQueuePreProcessStaleController extends SysOperationS
         OneMoreActionQueue oneMoreActionQueue;
         OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
 
-        while select firstonly RecId
+        while select RecId
             from oneMoreActionQueue
             where oneMoreActionQueue.Status             == OneMoreActionQueueStatus::NotRun
                && oneMoreActionQueue.CreatedDateTime    <  DateTimeUtil::addSeconds(DateTimeUtil::getSystemDateTime(), -OneMoreActionQueueConstants::OneMoreActionQueuePreProcessSecondBeforeBecomeStale)

@@ -70,6 +70,8 @@ internal abstract class OneMoreActionQueueProcessingBaseEngine
 
             //Commit action queue connection transaction
             userConnection.ttscommit();
+
+            this.postRun();
         }
         catch
         {
@@ -197,6 +199,19 @@ internal abstract class OneMoreActionQueueProcessingBaseEngine
     /// </summary>
     /// <returns>Processing stage</returns>
     protected abstract OneMoreActionQueueProcessingStage processingStage()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Post run
+    /// </summary>
+    [Hookable(false)]
+    protected void postRun()
     {
     }
 

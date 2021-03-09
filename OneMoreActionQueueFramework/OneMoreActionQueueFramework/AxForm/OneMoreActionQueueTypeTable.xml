@@ -807,6 +807,15 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<DataField>Enabled</DataField>
 								<DataSource>OneMoreActionQueueTypeTable</DataSource>
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormCheckBoxControl">
+								<Name>Parameters_ProcessInSequence</Name>
+								<Type>CheckBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>ProcessInSequence</DataField>
+								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+							</AxFormControl>
 						</Controls>
 						<DataGroup>Parameters</DataGroup>
 						<DataSource>OneMoreActionQueueTypeTable</DataSource>

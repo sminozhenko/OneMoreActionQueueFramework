@@ -16,7 +16,7 @@ internal static final class OneMoreActionQueueConstants
     internal const OneMoreActionQueueProcessAutomationPollingInterval   DefaultProcessAutomationPollingInterval = 60; //60 minutes
 
     internal const int                                                  OneMoreActionQueuePreProcessStaleAutomationPollingInterval = 1;
-    internal const int                                                  OneMoreActionQueuePreProcessSecondBeforeBecomeStale = 60;
+    internal const int                                                  OneMoreActionQueuePreProcessSecondBeforeBecomeStale = 300;
 
     internal const int                                                  OneMoreActionQueueScheduleStaleWaitingAutomationPollingInterval = 1;
 

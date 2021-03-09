@@ -264,6 +264,28 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Post run
+    /// </summary>
+    [Hookable(false)]
+    protected void postRun()
+    {
+        if (oneMoreActionQueueTypeTable.ProcessInSequence && oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::ReliableAsynchronous)
+        {
+            OneMoreActionQueue oneMoreActionQueueNext = oneMoreActionQueueUpd.nextWaitingMessageInQueue();
+            
+            if (oneMoreActionQueueNext)
+            {
+                OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueueNext, OneMoreActionQueueProcessingType::ReliableAsynchronous);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>
