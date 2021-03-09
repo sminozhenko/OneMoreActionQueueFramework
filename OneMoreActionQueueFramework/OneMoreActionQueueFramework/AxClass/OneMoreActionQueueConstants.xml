@@ -20,6 +20,8 @@ internal static final class OneMoreActionQueueConstants
 
     internal const int                                                  OneMoreActionQueueScheduleStaleWaitingAutomationPollingInterval = 1;
 
+    internal const int                                                  OneMoreActionQueueDocumentCorrelationLimitDefault = 10;
+
     internal const LabelId                                              OneMoreActionQueueProcessingScheduleTypeName = 'OneMoreActionQueueProcessing';
     internal const LabelId                                              OneMoreActionQueuePreProcessStaleScheduleTypeName = 'OneMoreActionQueuePreProcessStale';
     internal const LabelId                                              OneMoreActionQueuePreProcessStaleScheduleSeriesName = 'OneMoreActionQueuePreProcessStale';
