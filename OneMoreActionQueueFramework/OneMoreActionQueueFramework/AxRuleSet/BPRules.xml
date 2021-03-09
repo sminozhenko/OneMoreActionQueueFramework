@@ -66,57 +66,6 @@
 			<Moniker>BPErrorFormStringTitleFieldWithDesignStyleAuto</Moniker>
 		</Rule>
 		<Rule>
-			<Moniker>BPErrorDimensionFieldNameDAVC</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionLedgerDimBaseType</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionNameDAVCRelation</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionLedgerDimName</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionTypeDAVCRelation</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionRelationName</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionRelationType</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>BPErrorDimensionBaseTypeUse</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldIncorrectAccessModifier</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldDataSourceMismatch</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldDataSourceMultipleRelations</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldMissingAssociatedField</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldMissingJoinRelation</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldDataSourceIsReadOnly</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldDataSourceJoinMode</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldDataSourceUseRelations</Moniker>
-		</Rule>
-		<Rule>
-			<Moniker>DataEntityDimensionFieldAssociatedFieldPropertyUnused</Moniker>
-		</Rule>
-		<Rule>
 			<Moniker>MetadataExtensionNamingWithExtensionOnly</Moniker>
 		</Rule>
 		<Rule>
