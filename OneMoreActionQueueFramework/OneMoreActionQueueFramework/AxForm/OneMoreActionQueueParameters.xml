@@ -143,7 +143,6 @@ public class OneMoreActionQueueParameters extends FormRun
 									<AxFormControl xmlns=""
 										i:type="AxFormTabPageControl">
 										<Name>GeneralTabPage</Name>
-										<CountryRegionCodes>JP</CountryRegionCodes>
 										<ElementPosition>572662304</ElementPosition>
 										<FilterExpression>%1</FilterExpression>
 										<HeightMode>Auto</HeightMode>
