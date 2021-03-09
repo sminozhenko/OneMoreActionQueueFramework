@@ -93,20 +93,17 @@ public class OneMoreActionQueue extends FormRun
 						<Source><![CDATA[
         public void jumpRef()
         {
-            DictTable dictTable = new DictTable(OneMoreActionQueueDocumentCorrelation.DocumentTableId);
 
-            str formRefMenu = dictTable.formRef(true);
-
-            if (formRefMenu)
+            if (OneMoreActionQueue.CompanyId && curExt() != OneMoreActionQueue.CompanyId)
             {
-                Args jumpArgs = new Args();
-                jumpArgs.record(OneMoreActionQueueDocumentCorrelation);
-                var menuFunction = new MenuFunction(formRefMenu, MenuItemType::Display);
-                menuFunction.run(jumpArgs);
+                changecompany(OneMoreActionQueue.CompanyId)
+                {
+                    OneMoreActionQueueDocumentCorrelation::jumpRef(OneMoreActionQueueDocumentCorrelation);
+                }
             }
             else
             {
-                error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorrelationFormRefIsNotSpecifiedForTable", OneMoreActionQueueDocumentCorrelation.documentTableName()));
+                OneMoreActionQueueDocumentCorrelation::jumpRef(OneMoreActionQueueDocumentCorrelation);
             }
         }
 
