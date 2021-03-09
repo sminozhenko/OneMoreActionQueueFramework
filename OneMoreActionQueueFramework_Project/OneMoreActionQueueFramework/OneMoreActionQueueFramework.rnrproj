@@ -527,6 +527,11 @@
       <Name>OneMoreActionQueueProcessingNotes</Name>
       <Link>Extended Data Types\OneMoreActionQueueProcessingNotes</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueProcessInSequence">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessInSequence</Name>
+      <Link>Extended Data Types\OneMoreActionQueueProcessInSequence</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueReliableAsyncBatchGroupId">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueReliableAsyncBatchGroupId</Name>
@@ -556,6 +561,16 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueRunAsUserId</Name>
       <Link>Extended Data Types\OneMoreActionQueueRunAsUserId</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueSequenceFieldName">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSequenceFieldName</Name>
+      <Link>Extended Data Types\OneMoreActionQueueSequenceFieldName</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueSequenceGroupHash">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSequenceGroupHash</Name>
+      <Link>Extended Data Types\OneMoreActionQueueSequenceGroupHash</Link>
     </Content>
     <Content Include="AxEdt\OneMoreActionQueueTransformationJSON">
       <SubType>Content</SubType>
@@ -826,6 +841,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
       <Link>Tables\OneMoreActionQueueTypeDocumentCorrelation</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeDocumentCorrelationSequenceField">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeDocumentCorrelationSequenceField</Name>
+      <Link>Tables\OneMoreActionQueueTypeDocumentCorrelationSequenceField</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueTypeMenuItemParameterTable">
       <SubType>Content</SubType>

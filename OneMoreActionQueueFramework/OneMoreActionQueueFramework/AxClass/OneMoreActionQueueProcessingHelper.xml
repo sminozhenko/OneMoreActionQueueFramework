@@ -24,6 +24,11 @@ internal static class OneMoreActionQueueProcessingHelper
     [Hookable(false)]
     public static void processActionQueueInController(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, SysOperationExecutionMode _sysOperationExecutionMode, OneMoreActionQueueRetryAttemptInterval _retryAttemptInterval = 0)
     {
+        if (_oneMoreActionQueueTypeTable.ProcessInSequence && _oneMoreActionQueue.hasPrevWaitingMessagesInQueue())
+        {
+            return;
+        }
+        
         SysOperationServiceController               controller = new SysOperationServiceController(classStr(OneMoreActionQueueProcessingService), methodStr(OneMoreActionQueueProcessingService, processActionQueueRecord));
 
         OneMoreActionQueueProcessingSingleContract  contract = controller.getDataContractInfoObject().dataContractObject() as OneMoreActionQueueProcessingSingleContract;
@@ -96,7 +101,10 @@ internal static class OneMoreActionQueueProcessingHelper
         
         if (_oneMoreActionQueueTypeTable.Enabled && _oneMoreActionQueue.RecId != 0)
         {
-            OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(_oneMoreActionQueue);
+            if (_oneMoreActionQueue.Status == OneMoreActionQueueStatus::NotRun)
+            {
+                OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(_oneMoreActionQueue);
+            }
 
             _oneMoreActionQueue.reread();
         

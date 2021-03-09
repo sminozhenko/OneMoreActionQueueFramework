@@ -23,6 +23,8 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
     {
         OneMoreActionQueueTypeDocumentCorrelation oneMoreActionQueueTypeDocumentCorrelation;
         RecordInsertList                          rilOneMoreActionQueueDocumentCorrelation;
+        boolean                                   hashFound;
+        str                                       sequenceString;
 
         try
         {
@@ -34,9 +36,24 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
                 while select oneMoreActionQueueTypeDocumentCorrelation
                     where oneMoreActionQueueTypeDocumentCorrelation.TypeId == _oneMoreActionQueue.TypeId
                 {
+                    container sequenceFields = OneMoreActionQueueTypeDocumentCorrelationSequenceField::getSequenceFields(oneMoreActionQueueTypeDocumentCorrelation.RecId);
+                    TableId   currentTableId = tableName2Id(oneMoreActionQueueTypeDocumentCorrelation.DocumentTableName);
+                    
                     try
                     {
                         QueryRun qr = new QueryRun(oneMoreActionQueueTypeDocumentCorrelation.QueryData);
+
+                        QueryBuildDataSource qbds = qr.query().dataSourceNo(1);
+
+                        qbds.addSelectionField(fieldName2Id(currentTableId, identifierStr(RecId)));
+
+                        if (!hashFound && conLen(sequenceFields) != 0)
+                        {
+                            for (int i = 1; i <= conLen(sequenceFields); i++)
+                            {
+                                qbds.addSelectionField(currentTableId, fieldName2Id(currentTableId, conPeek(sequenceFields, i)));
+                            }
+                        }
 
                         while (qr.next())
                         {
@@ -57,6 +74,22 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
                             }
 
                             rilOneMoreActionQueueDocumentCorrelation.add(oneMoreActionQueueDocumentCorrelation);
+
+                            if (!hashFound && conLen(sequenceFields) != 0)
+                            {
+                                hashFound = true;
+
+                                for (int i = 1; i <= conLen(sequenceFields); i++)
+                                {
+                                    sequenceString += sequenceString != '' ? '#' : '';
+                                    sequenceString += OneMoreActionQueueTypeDocumentCorrelationSequenceField::sequenceValue2Str(documentRecord.(fieldName2Id(currentTableId, conPeek(sequenceFields, i))));
+                                }
+                            }
+                        }
+
+                        if (hashFound)
+                        {
+                            _oneMoreActionQueue.SequenceGroupHash = HashFunctions::ComputeHashAsBase64String(sequenceString, HashType::xxHash64);
                         }
                     }
                     catch

@@ -65,5 +65,12 @@
       <Moniker>BPCheckAlternateKeyAbsent</Moniker>
       <Justification>Table doesn't have alternate key.</Justification>
     </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>CodeAnalysis</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>dynamics://Class/OneMoreActionQueueCleanUpService/Method/deleteRecords</Path>
+      <Moniker>BPCheckSkipStatementValidation</Moniker>
+      <Justification>Done in separate method</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>

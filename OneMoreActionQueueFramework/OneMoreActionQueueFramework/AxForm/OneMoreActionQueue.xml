@@ -315,6 +315,15 @@ public class OneMoreActionQueue extends FormRun
 									i:nil="true" />
 								<Controls>
 									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>Overview_TypeId</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>TypeId</DataField>
+										<DataSource>OneMoreActionQueue</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
 										i:type="AxFormGuidControl">
 										<Name>Overview_ActionId</Name>
 										<Type>Guid</Type>
@@ -325,11 +334,11 @@ public class OneMoreActionQueue extends FormRun
 									</AxFormControl>
 									<AxFormControl xmlns=""
 										i:type="AxFormStringControl">
-										<Name>Overview_TypeId</Name>
+										<Name>Overview_CompanyId</Name>
 										<Type>String</Type>
 										<FormControlExtension
 											i:nil="true" />
-										<DataField>TypeId</DataField>
+										<DataField>CompanyId</DataField>
 										<DataSource>OneMoreActionQueue</DataSource>
 									</AxFormControl>
 									<AxFormControl xmlns=""
@@ -349,6 +358,15 @@ public class OneMoreActionQueue extends FormRun
 										<FormControlExtension
 											i:nil="true" />
 										<DataField>RetryCount</DataField>
+										<DataSource>OneMoreActionQueue</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>Overview_SequenceGroupHash</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>SequenceGroupHash</DataField>
 										<DataSource>OneMoreActionQueue</DataSource>
 									</AxFormControl>
 								</Controls>

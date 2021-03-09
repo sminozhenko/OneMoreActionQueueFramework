@@ -40,6 +40,7 @@ internal class OneMoreActionQueueScheduleStaleWaitingController extends SysOpera
         OneMoreActionQueue oneMoreActionQueue;
         OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;        
         OneMoreActionQueueBatchJobCorrelationView oneMoreActionQueueBatchJobCorrelationView;
+        Set skipHashGroups = new Set(Types::Container);
 
         while select oneMoreActionQueue
             order by ULIDStamp
@@ -53,6 +54,21 @@ internal class OneMoreActionQueueScheduleStaleWaitingController extends SysOpera
         {
             try
             {
+                if (oneMoreActionQueueTypeTable.ProcessInSequence)
+                {
+                    if (skipHashGroups.in([oneMoreActionQueueTypeTable.TypeId, oneMoreActionQueue.SequenceGroupHash]))
+                    {
+                        continue;
+                    }
+
+                    if (oneMoreActionQueue.hasPrevWaitingMessagesInQueue())
+                    {
+                        skipHashGroups.add([oneMoreActionQueueTypeTable.TypeId, oneMoreActionQueue.SequenceGroupHash]);
+
+                        continue;
+                    }
+                }
+
                 OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, OneMoreActionQueueProcessingType::ReliableAsynchronous);
             }
             catch

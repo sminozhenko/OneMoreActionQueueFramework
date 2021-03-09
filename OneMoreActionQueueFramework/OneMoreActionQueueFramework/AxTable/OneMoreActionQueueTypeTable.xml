@@ -861,6 +861,9 @@ public class OneMoreActionQueueTypeTable extends common
 				<AxTableFieldGroupField>
 					<DataField>Enabled</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ProcessInSequence</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
@@ -974,6 +977,12 @@ public class OneMoreActionQueueTypeTable extends common
 			i:type="AxTableFieldInt">
 			<Name>RetentionPeriod</Name>
 			<ExtendedDataType>OneMoreActionQueueRetentionPeriod</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ProcessInSequence</Name>
+			<ExtendedDataType>OneMoreActionQueueProcessInSequence</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
