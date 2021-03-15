@@ -71,7 +71,7 @@ public class OneMoreActionQueueDocumentCorrelation extends common
 				<Name>jumpRef</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    static internal void jumpRef(OneMoreActionQueueDocumentCorrelation _oneMoreActionQueueDocumentCorrelation)
+    static internal void jumpRef(OneMoreActionQueueDocumentCorrelation _oneMoreActionQueueDocumentCorrelation, FormRun _callerForm = null)
     {
         DictTable dictTable = new DictTable(_oneMoreActionQueueDocumentCorrelation.DocumentTableId);
 
@@ -81,6 +81,7 @@ public class OneMoreActionQueueDocumentCorrelation extends common
         {
             Args jumpArgs = new Args();
             jumpArgs.record(_oneMoreActionQueueDocumentCorrelation);
+            jumpArgs.caller(_callerForm);
             var menuFunction = new MenuFunction(formRefMenu, MenuItemType::Display);
             menuFunction.run(jumpArgs);
         }
