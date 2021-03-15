@@ -170,6 +170,22 @@ public class OneMoreActionQueueDocumentCorrelation extends common
 				</AxTableIndexField>
 			</Fields>
 		</AxTableIndex>
+		<AxTableIndex>
+			<Name>DocumentTableIdDocumentRecIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>DocumentTableId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>DocumentRecId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>ActionQueueRecId</DataField>
+					<IncludedColumn>Yes</IncludedColumn>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
 	</Indexes>
 	<Mappings />
 	<Relations>
