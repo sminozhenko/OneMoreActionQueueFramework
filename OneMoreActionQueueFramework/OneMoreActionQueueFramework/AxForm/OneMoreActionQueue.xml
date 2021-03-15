@@ -9,7 +9,6 @@
 [Form]
 public class OneMoreActionQueue extends FormRun
 {
-
 }
 ]]></Source>
 			</Method>
@@ -94,17 +93,9 @@ public class OneMoreActionQueue extends FormRun
         public void jumpRef()
         {
 
-            if (OneMoreActionQueue.CompanyId && curExt() != OneMoreActionQueue.CompanyId)
-            {
-                changecompany(OneMoreActionQueue.CompanyId)
-                {
-                    OneMoreActionQueueDocumentCorrelation::jumpRef(OneMoreActionQueueDocumentCorrelation);
-                }
-            }
-            else
-            {
-                OneMoreActionQueueDocumentCorrelation::jumpRef(OneMoreActionQueueDocumentCorrelation);
-            }
+            appl.setDefaultCompany(OneMoreActionQueue.CompanyId);
+             
+            OneMoreActionQueueDocumentCorrelation::jumpRef(OneMoreActionQueueDocumentCorrelation, element);
         }
 
 ]]></Source>
@@ -543,6 +534,7 @@ public class OneMoreActionQueue extends FormRun
 									</AxFormControl>
 								</Controls>
 								<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+								<MultiSelect>No</MultiSelect>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelation</Caption>
