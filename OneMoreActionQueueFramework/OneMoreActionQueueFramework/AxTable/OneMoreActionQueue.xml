@@ -268,7 +268,7 @@ public class OneMoreActionQueue extends common
         select firstonly RecId
             from oneMoreActionQueue
             where oneMoreActionQueue.Status             == OneMoreActionQueueStatus::NotRun
-               && oneMoreActionQueue.CreatedDateTime    <  DateTimeUtil::addSeconds(DateTimeUtil::getSystemDateTime(), -OneMoreActionQueueConstants::OneMoreActionQueuePreProcessSecondBeforeBecomeStale)
+               && oneMoreActionQueue.CreatedDateTime    <  DateTimeUtil::addSeconds(DateTimeUtil::getSystemDateTime(), -OneMoreActionQueueParameters::preProcessSecondBeforeBecomeStale())
         exists join oneMoreActionQueueTypeTable
             where oneMoreActionQueueTypeTable.TypeId    == oneMoreActionQueue.TypeId
                && oneMoreActionQueueTypeTable.Enabled   == NoYes::Yes;

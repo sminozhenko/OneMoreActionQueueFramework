@@ -297,6 +297,11 @@
       <Name>OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Name>
       <Link>Classes\OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessAutomationHelper">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessAutomationHelper</Name>
+      <Link>Classes\OneMoreActionQueueProcessAutomationHelper</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingBaseEngine">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingBaseEngine</Name>

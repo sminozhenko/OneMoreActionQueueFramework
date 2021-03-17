@@ -24,7 +24,7 @@ internal class OneMoreActionQueuePreProcessStaleAutomationTask extends ProcessAu
     /// <returns>true if there is one or more stale action for pre-processing in the queue; otherwise, false.</returns>
     internal boolean isProcessAutomationEnabledForThisTask()
     {
-        return OneMoreActionQueue::hasStalePreProcessMessagesInQueue();
+        return !OneMoreActionQueueParameters::find().DisablePreProcessStaleAutomationPolling && OneMoreActionQueue::hasStalePreProcessMessagesInQueue();
     }
 
 ]]></Source>
