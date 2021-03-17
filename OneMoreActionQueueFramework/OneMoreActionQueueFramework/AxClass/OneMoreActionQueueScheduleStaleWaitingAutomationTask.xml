@@ -24,7 +24,7 @@ internal class OneMoreActionQueueScheduleStaleWaitingAutomationTask extends Proc
     /// <returns>true if there is one or more stale action for pre-processing in the queue; otherwise, false.</returns>
     internal boolean isProcessAutomationEnabledForThisTask()
     {
-        return OneMoreActionQueue::hasStaleWaitingMessagesInQueue();
+        return !OneMoreActionQueueParameters::find().DisableStaleWaitingAutomationPolling && OneMoreActionQueue::hasStaleWaitingMessagesInQueue();
     }
 
 ]]></Source>

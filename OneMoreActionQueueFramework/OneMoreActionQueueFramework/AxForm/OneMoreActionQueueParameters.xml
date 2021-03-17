@@ -36,6 +36,12 @@ public class OneMoreActionQueueParameters extends FormRun
 			<Table>OneMoreActionQueueParameters</Table>
 			<Fields>
 				<AxFormDataSourceField>
+					<DataField>DisablePreProcessStaleAutomationPolling</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DisableStaleWaitingAutomationPolling</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
 					<DataField>DocumentCorrelationLimit</DataField>
 				</AxFormDataSourceField>
 				<AxFormDataSourceField>
@@ -51,7 +57,16 @@ public class OneMoreActionQueueParameters extends FormRun
 					<DataField>Partition</DataField>
 				</AxFormDataSourceField>
 				<AxFormDataSourceField>
+					<DataField>PreProcessSecondBeforeBecomeStale</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>PreProcessStaleAutomationPollingInterval</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
 					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>StaleWaitingAutomationPollingInterval</DataField>
 				</AxFormDataSourceField>
 				<AxFormDataSourceField>
 					<DataField>TableId</DataField>
@@ -172,6 +187,73 @@ public class OneMoreActionQueueParameters extends FormRun
 													</AxFormControl>
 												</Controls>
 												<DataGroup>DocumentCorrelation</DataGroup>
+												<DataSource>OneMoreActionQueueParameters</DataSource>
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormGroupControl">
+												<Name>PreProcessStaleAutomationPolling</Name>
+												<Type>Group</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Controls>
+													<AxFormControl xmlns=""
+														i:type="AxFormCheckBoxControl">
+														<Name>PreProcessStaleAutomationPolling_DisablePreProcessStaleAutomationPolling</Name>
+														<Type>CheckBox</Type>
+														<FormControlExtension
+															i:nil="true" />
+														<DataField>DisablePreProcessStaleAutomationPolling</DataField>
+														<DataSource>OneMoreActionQueueParameters</DataSource>
+													</AxFormControl>
+													<AxFormControl xmlns=""
+														i:type="AxFormIntegerControl">
+														<Name>PreProcessStaleAutomationPolling_PreProcessStaleAutomationPollingInterval</Name>
+														<Type>Integer</Type>
+														<FormControlExtension
+															i:nil="true" />
+														<DataField>PreProcessStaleAutomationPollingInterval</DataField>
+														<DataSource>OneMoreActionQueueParameters</DataSource>
+													</AxFormControl>
+													<AxFormControl xmlns=""
+														i:type="AxFormIntegerControl">
+														<Name>PreProcessStaleAutomationPolling_PreProcessSecondBeforeBecomeStale</Name>
+														<Type>Integer</Type>
+														<FormControlExtension
+															i:nil="true" />
+														<DataField>PreProcessSecondBeforeBecomeStale</DataField>
+														<DataSource>OneMoreActionQueueParameters</DataSource>
+													</AxFormControl>
+												</Controls>
+												<DataGroup>PreProcessStaleAutomationPolling</DataGroup>
+												<DataSource>OneMoreActionQueueParameters</DataSource>
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormGroupControl">
+												<Name>StaleWaitingAutomationPolling</Name>
+												<Type>Group</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Controls>
+													<AxFormControl xmlns=""
+														i:type="AxFormCheckBoxControl">
+														<Name>StaleWaitingAutomationPolling_DisableStaleWaitingAutomationPolling</Name>
+														<Type>CheckBox</Type>
+														<FormControlExtension
+															i:nil="true" />
+														<DataField>DisableStaleWaitingAutomationPolling</DataField>
+														<DataSource>OneMoreActionQueueParameters</DataSource>
+													</AxFormControl>
+													<AxFormControl xmlns=""
+														i:type="AxFormIntegerControl">
+														<Name>StaleWaitingAutomationPolling_StaleWaitingAutomationPollingInterval</Name>
+														<Type>Integer</Type>
+														<FormControlExtension
+															i:nil="true" />
+														<DataField>StaleWaitingAutomationPollingInterval</DataField>
+														<DataSource>OneMoreActionQueueParameters</DataSource>
+													</AxFormControl>
+												</Controls>
+												<DataGroup>StaleWaitingAutomationPolling</DataGroup>
 												<DataSource>OneMoreActionQueueParameters</DataSource>
 											</AxFormControl>
 										</Controls>

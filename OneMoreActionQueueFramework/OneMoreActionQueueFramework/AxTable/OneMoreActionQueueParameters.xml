@@ -6,21 +6,6 @@
 public class OneMoreActionQueueParameters extends common
 {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 ]]></Declaration>
 		<Methods>
@@ -39,7 +24,32 @@ public class OneMoreActionQueueParameters extends common
 				<Source><![CDATA[
     void update()
     {
+        ttsbegin;
+        
+        OneMoreActionQueueProcessAutomationHelper::updateProcessAutomationSeries(OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleSeriesName, OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleTypeName, this.PreProcessStaleAutomationPollingInterval);
+        OneMoreActionQueueProcessAutomationHelper::updateProcessAutomationSeries(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleSeriesName, OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleTypeName, this.StaleWaitingAutomationPollingInterval);
+
+        if (this.DisablePreProcessStaleAutomationPolling)
+        {
+            OneMoreActionQueueProcessAutomationHelper::disableSeries(OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleSeriesName, OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleTypeName);
+        }
+        else
+        {
+            OneMoreActionQueueProcessAutomationHelper::enableSeries(OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleSeriesName, OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleScheduleTypeName);
+        }
+
+        if (this.DisableStaleWaitingAutomationPolling)
+        {
+            OneMoreActionQueueProcessAutomationHelper::disableSeries(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleSeriesName, OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleTypeName);
+        }
+        else
+        {
+            OneMoreActionQueueProcessAutomationHelper::enableSeries(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleSeriesName, OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleTypeName);
+        }
+
         super();
+
+        ttscommit;
 
         flush OneMoreActionQueueParameters;
     }
@@ -96,29 +106,73 @@ public class OneMoreActionQueueParameters extends common
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>documentCorrelationLimit</Name>
+				<Name>getParameterValueOrDefault</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    internal static OneMoreActionQueueDocumentCorrelationLimit documentCorrelationLimit()
+    internal static anytype getParameterValueOrDefault(FieldId _parameterFieldId, anytype _defaultValue)
     {
         OneMoreActionQueueParameters paramters = OneMoreActionQueueParameters::find();
 
-        if (!paramters.DocumentCorrelationLimit)
+        if (!paramters.(_parameterFieldId))
         {
             ttsbegin;
 
             paramters = OneMoreActionQueueParameters::find(true, ConcurrencyModel::Pessimistic);
 
-            if (!paramters.DocumentCorrelationLimit)
+            if (!paramters.(_parameterFieldId))
             {
-                paramters.DocumentCorrelationLimit = OneMoreActionQueueConstants::OneMoreActionQueueDocumentCorrelationLimitDefault;
+                paramters.(_parameterFieldId) = _defaultValue;
                 paramters.update();
             }
 
             ttscommit;
         }
 
-        return paramters.DocumentCorrelationLimit;
+        return paramters.(_parameterFieldId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>documentCorrelationLimit</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static OneMoreActionQueueDocumentCorrelationLimit documentCorrelationLimit()
+    {
+        return OneMoreActionQueueParameters::getParameterValueOrDefault(fieldNum(OneMoreActionQueueParameters, DocumentCorrelationLimit), OneMoreActionQueueConstants::OneMoreActionQueueDocumentCorrelationLimitDefault);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>preProcessStaleAutomationPollingInterval</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static Minutes preProcessStaleAutomationPollingInterval()
+    {
+        return OneMoreActionQueueParameters::getParameterValueOrDefault(fieldNum(OneMoreActionQueueParameters, PreProcessStaleAutomationPollingInterval), OneMoreActionQueueConstants::OneMoreActionQueuePreProcessStaleAutomationPollingInterval);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>preProcessSecondBeforeBecomeStale</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static Seconds preProcessSecondBeforeBecomeStale()
+    {
+        return OneMoreActionQueueParameters::getParameterValueOrDefault(fieldNum(OneMoreActionQueueParameters, PreProcessSecondBeforeBecomeStale), OneMoreActionQueueConstants::OneMoreActionQueuePreProcessSecondBeforeBecomeStale);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>staleWaitingAutomationPollingInterval</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static Minutes staleWaitingAutomationPollingInterval()
+    {
+        return OneMoreActionQueueParameters::getParameterValueOrDefault(fieldNum(OneMoreActionQueueParameters, StaleWaitingAutomationPollingInterval), OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingAutomationPollingInterval);
     }
 
 ]]></Source>
@@ -177,6 +231,33 @@ public class OneMoreActionQueueParameters extends common
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>StaleWaitingAutomationPolling</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueStaleWaitingAutomationPolling</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DisableStaleWaitingAutomationPolling</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>StaleWaitingAutomationPollingInterval</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>PreProcessStaleAutomationPolling</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessStaleAutomationPolling</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DisablePreProcessStaleAutomationPolling</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>PreProcessStaleAutomationPollingInterval</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>PreProcessSecondBeforeBecomeStale</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
 	</FieldGroups>
 	<Fields>
 		<AxTableField xmlns=""
@@ -192,6 +273,38 @@ public class OneMoreActionQueueParameters extends common
 			i:type="AxTableFieldInt">
 			<Name>DocumentCorrelationLimit</Name>
 			<ExtendedDataType>OneMoreActionQueueDocumentCorrelationLimit</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DisableStaleWaitingAutomationPolling</Name>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueDisableStaleWaitingAutomationPolling</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DisablePreProcessStaleAutomationPolling</Name>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueDisablePreProcessStaleAutomationPolling</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>PreProcessStaleAutomationPollingInterval</Name>
+			<ExtendedDataType>Minutes</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessStaleAutomationPollingInterval</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>PreProcessSecondBeforeBecomeStale</Name>
+			<ExtendedDataType>Seconds</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessSecondBeforeBecomeStale</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>StaleWaitingAutomationPollingInterval</Name>
+			<ExtendedDataType>Minutes</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueStaleWaitingAutomationPollingInterval</Label>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
