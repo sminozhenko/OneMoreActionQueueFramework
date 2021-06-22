@@ -1,6 +1,6 @@
 jobs:
   - job: Build_10_0_18
-    displayName: 'Build for 10.0.19'
+    displayName: 'Build for 10.0.18'
     pool:
       vmImage: 'vs2017-win2016'
     variables:
