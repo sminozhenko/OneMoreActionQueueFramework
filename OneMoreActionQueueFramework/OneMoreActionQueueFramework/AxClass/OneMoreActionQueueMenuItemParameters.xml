@@ -6,7 +6,7 @@
 /// <summary>
 /// Set menu item parameter for action queue
 /// </summary>
-class OneMoreActionQueueMenuItemParameters extends RunBase
+internal class OneMoreActionQueueMenuItemParameters extends RunBase
 {
     private OneMoreActionQueueMenuItemName              menuItemName;
     private ClassId                                     jobClassId;

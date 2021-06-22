@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEdt xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxEdtInt">
+	<Name>OneMoreActionQueueRetentionPeriod</Name>
+	<Extends>Days</Extends>
+	<HelpText>@OneMoreActionQueueFramework:OneMoreActionQueueRetentionPeriodHelpText</HelpText>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRetentionPeriod</Label>
+	<ArrayElements />
+	<Relations />
+	<TableReferences />
+	<AllowNegative>No</AllowNegative>
+</AxEdt>

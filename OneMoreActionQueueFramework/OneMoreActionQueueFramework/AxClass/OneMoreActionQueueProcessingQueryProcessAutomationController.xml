@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingQueryProcessAutomationController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue query process automation processing controller
+/// </summary>
+internal class OneMoreActionQueueProcessingQueryProcessAutomationController extends OneMoreActionQueueProcessingQueryController
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Main
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    [Hookable(false)]
+    public static void main(Args _args)
+    {
+        OneMoreActionQueueProcessingQueryProcessAutomationController::newFromArgs(_args).startOperation();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Construct <c>OneMoreActionQueueProcessingQueryController</c>
+    /// </summary>
+    /// <returns>Created <c>OneMoreActionQueueProcessingQueryController</c> object</returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueProcessingQueryProcessAutomationController construct()
+    {
+        return new OneMoreActionQueueProcessingQueryProcessAutomationController();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromArgs</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from arguments
+    /// </summary>
+    /// <param name = "_args">Arguments</param>
+    /// <returns>New class</returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueProcessingQueryProcessAutomationController newFromArgs(Args _args)
+    {
+        OneMoreActionQueueProcessingQueryProcessAutomationController ret = OneMoreActionQueueProcessingQueryProcessAutomationController::construct();
+    
+        ret.initializeFromArgs(_args);
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingType</Name>
+				<Source><![CDATA[
+    public OneMoreActionQueueProcessingType processingType()
+    {
+        return OneMoreActionQueueProcessingType::ProcessAutomation;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

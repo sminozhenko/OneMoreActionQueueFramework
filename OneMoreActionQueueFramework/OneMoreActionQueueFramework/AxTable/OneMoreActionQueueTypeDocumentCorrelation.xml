@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeDocumentCorrelation extends common
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>validateWrite</Name>
+				<Source><![CDATA[
+    public boolean validateWrite()
+    {
+        boolean ret;
+    
+        ret = super();
+
+        if (this.DocumentTableName && !tableName2Id(this.DocumentTableName))
+        {
+            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueTableWasNotFound", this.DocumentTableName));
+        }
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>hasDocumentCorrelationSetUp</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static boolean hasDocumentCorrelationSetUp(TableId _tableId)
+    {
+        OneMoreActionQueueTypeDocumentCorrelation oneMoreActionQueueTypeDocumentCorrelation;
+
+        select firstonly TypeId
+            from oneMoreActionQueueTypeDocumentCorrelation
+            where oneMoreActionQueueTypeDocumentCorrelation.DocumentTableName == tableId2Name(_tableId);
+
+        return oneMoreActionQueueTypeDocumentCorrelation.TypeId != '';
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelation</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeDocumentCorrelation</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelation</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>TypeId</TitleField1>
+	<TitleField2>DocumentTableName</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>TypeIdx</ClusteredIndex>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DocumentTableName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TypeId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueTypeId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldContainer">
+			<Name>QueryData</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>KeyData</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>DocumentTableName</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>TableName</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TypeIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TypeId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>DocumentTableNameIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>DocumentTableName</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeTable</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>TypeId</Name>
+					<Field>TypeId</Field>
+					<RelatedField>TypeId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

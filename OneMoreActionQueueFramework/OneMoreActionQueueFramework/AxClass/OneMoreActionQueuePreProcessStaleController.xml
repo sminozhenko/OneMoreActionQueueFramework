@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueuePreProcessStaleController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueuePreProcessStaleController</c> class is the <c>SysOperationServiceController</c> class for pre-processing of stale messages in the queue.
+/// </summary>
+internal class OneMoreActionQueuePreProcessStaleController extends SysOperationServiceController
+{
+    private ProcessExecutionSourceLinkItem processExecutionSourceLinkItem;
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initProcessExecutionSourceLinkItem</Name>
+				<Source><![CDATA[
+    internal void initProcessExecutionSourceLinkItem(ProcessScheduleWorkItem _processScheduleWorkItem)
+    {
+        processExecutionSourceLinkItem = ProcessExecutionSourceLinkItem::newFromProcessScheduleWorkItemAndStatus(_processScheduleWorkItem, ProcessExecutionSourceStatus::Success);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    internal static OneMoreActionQueuePreProcessStaleController construct()
+    {
+        return new OneMoreActionQueuePreProcessStaleController(classStr(OneMoreActionQueuePreProcessStaleController), methodStr(OneMoreActionQueuePreProcessStaleController, run), SysOperationExecutionMode::ReliableAsynchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+
+        while select RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.Status             == OneMoreActionQueueStatus::NotRun
+               && oneMoreActionQueue.CreatedDateTime    <  DateTimeUtil::addSeconds(DateTimeUtil::getSystemDateTime(), -OneMoreActionQueueParameters::preProcessSecondBeforeBecomeStale())
+        exists join oneMoreActionQueueTypeTable
+            where oneMoreActionQueueTypeTable.TypeId    == oneMoreActionQueue.TypeId
+               && oneMoreActionQueueTypeTable.Enabled   == NoYes::Yes
+        {
+            try
+            {
+                OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(oneMoreActionQueue);
+            }
+            catch
+            {
+                exceptionTextFallThrough();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

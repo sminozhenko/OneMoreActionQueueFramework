@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue change status controller
 /// </summary>
-class OneMoreActionQueueChangeStatusController extends SysOperationServiceController
+internal class OneMoreActionQueueChangeStatusController extends SysOperationServiceController
 {
 }
 ]]></Declaration>

@@ -6,7 +6,7 @@
 /// <summary>
 /// The <c>OneMoreActionQueueMenuItemLookupTreeBuilder</c> class manages a tree control as part of lookup to display menu items available for menu item action queue processing 
 /// </summary>
-class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuilder
+internal class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuilder
 {
 }
 ]]></Declaration>

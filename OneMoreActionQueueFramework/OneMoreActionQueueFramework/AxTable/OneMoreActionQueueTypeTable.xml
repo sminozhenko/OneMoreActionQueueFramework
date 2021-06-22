@@ -139,7 +139,14 @@ public class OneMoreActionQueueTypeTable extends common
     [Hookable(false)]
     public ClassName contractClassName()
     {
-        return OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName)).parmActionQueueContractClass();
+        OneMoreActionQueueProcessorAttribute oneMoreActionQueueProcessorAttribute = OneMoreActionQueueTypeTable::getActionQueueAttributeFromProcessorClass(className2Id(this.ActionClassName));
+            
+        if (!oneMoreActionQueueProcessorAttribute)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorAttributeIsNotSpecified", this.ActionClassName));
+        }
+
+        return oneMoreActionQueueProcessorAttribute.parmActionQueueContractClass();
     }
 
 ]]></Source>
@@ -261,9 +268,6 @@ public class OneMoreActionQueueTypeTable extends common
                 {
                     case OneMoreActionQueueType::MenuItem:
                         this.ActionClassName   = classStr(OneMoreActionQueueMenuItemActionProcessor);
-                        break;
-                    case OneMoreActionQueueType::DMFExport:
-                        this.ActionClassName   = classStr(OneMoreActionQueueDMFExportProcessor);
                         break;
                     default:
                         this.ActionClassName   = '';
@@ -407,7 +411,8 @@ public class OneMoreActionQueueTypeTable extends common
     public void insert()
     {
         ttsbegin;
-        
+
+        this.setDefaultRetentionPeriod();
         this.setDefaultProcessAutomationPollingInterval();
         
         super();
@@ -415,15 +420,15 @@ public class OneMoreActionQueueTypeTable extends common
         if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
         {
             this.findOrCreateprocessScheduleSeries();
-            this.updateProcessAutomationSeries();
+            OneMoreActionQueueProcessAutomationHelper::updateProcessAutomationSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName, this.ProcessAutomationPollingInterval);
             
             if (this.Enabled)
             {
-                this.enableSeries();
+                OneMoreActionQueueProcessAutomationHelper::enableSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
             }
             else
             {
-                this.disableSeries();
+                OneMoreActionQueueProcessAutomationHelper::disableSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
             }
         }
 
@@ -441,6 +446,7 @@ public class OneMoreActionQueueTypeTable extends common
     {
         ttsbegin;
         
+        this.setDefaultRetentionPeriod();
         this.setDefaultProcessAutomationPollingInterval();
         
         super();
@@ -448,15 +454,15 @@ public class OneMoreActionQueueTypeTable extends common
         if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
         {
             this.findOrCreateprocessScheduleSeries();
-            this.updateProcessAutomationSeries();
+            OneMoreActionQueueProcessAutomationHelper::updateProcessAutomationSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName, this.ProcessAutomationPollingInterval);
             
             if (this.Enabled)
             {
-                this.enableSeries();
+                OneMoreActionQueueProcessAutomationHelper::enableSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
             }
             else
             {
-                this.disableSeries();
+                OneMoreActionQueueProcessAutomationHelper::disableSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
             }
         }
 
@@ -474,7 +480,8 @@ public class OneMoreActionQueueTypeTable extends common
         
         super();
 
-        this.disableSeries();
+        //TODO delete series
+        OneMoreActionQueueProcessAutomationHelper::disableSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
 
         this.deleteBusinessEvent();
 
@@ -503,34 +510,11 @@ public class OneMoreActionQueueTypeTable extends common
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>updateProcessAutomationSeries</Name>
-				<Source><![CDATA[
-    private void updateProcessAutomationSeries()
-    {
-        ProcessScheduleSeriesPollingDetails processScheduleSeriesPollingDetails = ProcessScheduleSeries::getPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessing, this.TypeId);
-
-        if (processScheduleSeriesPollingDetails && processScheduleSeriesPollingDetails.parmInterval() != this.ProcessAutomationPollingInterval)
-        {
-            processScheduleSeriesPollingDetails.parmInterval(this.ProcessAutomationPollingInterval);
-            processScheduleSeriesPollingDetails.parmUnit(ProcessScheduleUnit::Minute);
-
-            ProcessScheduleSeries::setPollingDetailsForSeries(OneMoreActionQueueConstants::OneMoreActionQueueProcessing, this.TypeId, processScheduleSeriesPollingDetails);
-        }
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>processScheduleType</Name>
 				<Source><![CDATA[
     private ProcessScheduleType processScheduleType()
     {
-        ProcessScheduleType type;
-
-        select firstonly type
-            where type.Name == OneMoreActionQueueConstants::OneMoreActionQueueProcessing;
-
-        return type;
+        return OneMoreActionQueueProcessAutomationHelper::processScheduleType(OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName);
     }
 
 ]]></Source>
@@ -546,7 +530,7 @@ public class OneMoreActionQueueTypeTable extends common
         createdScheduleSeries.initValue();
 
         createdScheduleSeries.Name                  = this.TypeId;
-        createdScheduleSeries.Description           = this.Description;
+        createdScheduleSeries.Description           = this.Description ? this.Description : this.TypeId;
         createdScheduleSeries.OwnerId               = this.RunAsUserId;
         createdScheduleSeries.ProcessScheduleType   = this.processScheduleType().RecId;
         //createdScheduleSeries.IsEnabled             = _scheduleSeriesTmp.IsEnabled;
@@ -576,66 +560,14 @@ public class OneMoreActionQueueTypeTable extends common
 				<Source><![CDATA[
     private ProcessScheduleSeries findOrCreateProcessScheduleSeries(boolean _forUpdate = false)
     {
-        ProcessScheduleSeries series;
-
-        series.selectForUpdate(_forUpdate);
-
-        select firstonly series
-            where series.Name                   == this.TypeId
-               && series.ProcessScheduleType    == this.processScheduleType().RecId;
-
+        ProcessScheduleSeries series = OneMoreActionQueueProcessAutomationHelper::findOrCreateProcessScheduleSeries(this.TypeId, OneMoreActionQueueConstants::OneMoreActionQueueProcessingScheduleTypeName, _forUpdate);
+        
         if (series.RecId == 0)
         {
             this.createProcessAutomationSeries();
         }
 
         return series;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>enableSeries</Name>
-				<Source><![CDATA[
-    private void enableSeries()
-    {
-        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
-        {
-            ttsbegin;
-        
-            ProcessScheduleSeries selectedSeries = this.findOrCreateProcessScheduleSeries(true);
-
-            if (selectedSeries.IsEnabled == NoYes::No)
-            {
-                selectedSeries.IsEnabled = NoYes::Yes;
-                selectedSeries.update();
-            }
-
-            ttscommit;
-        }
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>disableSeries</Name>
-				<Source><![CDATA[
-    private void disableSeries()
-    {
-        if (this.ProcessingType == OneMoreActionQueueProcessingType::ProcessAutomation)
-        {
-            ttsbegin;
-        
-            ProcessScheduleSeries selectedSeries = this.findOrCreateProcessScheduleSeries(true);
-
-            if (selectedSeries.IsEnabled == NoYes::Yes)
-            {
-                selectedSeries.IsEnabled = NoYes::No;
-                selectedSeries.update();
-            }
-
-            ttscommit;
-        }
     }
 
 ]]></Source>
@@ -679,6 +611,55 @@ public class OneMoreActionQueueTypeTable extends common
                && oneMoreActionQueue.Status == OneMoreActionQueueStatus::Waiting;
 
         return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>renamePrimaryKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void renamePrimaryKey()
+    {
+        OneMoreActionQueueTypeTable originalRecord = this.orig();
+
+        ttsbegin;
+
+        super();
+
+        ProcessScheduleSeries           series;
+
+        update_recordset series
+            setting Name = this.TypeId,
+                    Description = this.Description ? this.Description : this.TypeId
+            where series.Name                   == originalRecord.TypeId
+               && series.ProcessScheduleType    == this.processScheduleType().RecId;
+
+        BusinessEventsTable businessEventsTable;
+
+        select firstonly forupdate businessEventsTable
+            where businessEventsTable.BusinessEventId == OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(originalRecord.TypeId);
+
+        businessEventsTable.Name = this.Description ? this.Description : this.TypeId;
+        businessEventsTable.update();
+
+        businessEventsTable.BusinessEventId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(this.TypeId);
+        businessEventsTable.renamePrimaryKey();
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setDefaultRetentionPeriod</Name>
+				<Source><![CDATA[
+    internal void setDefaultRetentionPeriod()
+    {
+        if (!this.RetentionPeriod)
+        {
+            this.RetentionPeriod = OneMoreActionQueueConstants::CleanUpDefaulRetentionPeriod;
+        }
     }
 
 ]]></Source>
@@ -806,6 +787,9 @@ public class OneMoreActionQueueTypeTable extends common
 				<AxTableFieldGroupField>
 					<DataField>Enabled</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ProcessInSequence</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
@@ -838,6 +822,15 @@ public class OneMoreActionQueueTypeTable extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>RunAsUserId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>CleanUp</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueCleanUpGroup</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>RetentionPeriod</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -905,6 +898,17 @@ public class OneMoreActionQueueTypeTable extends common
 			i:type="AxTableFieldInt">
 			<Name>ProcessAutomationPollingInterval</Name>
 			<ExtendedDataType>OneMoreActionQueueProcessAutomationPollingInterval</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetentionPeriod</Name>
+			<ExtendedDataType>OneMoreActionQueueRetentionPeriod</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ProcessInSequence</Name>
+			<ExtendedDataType>OneMoreActionQueueProcessInSequence</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueProcessing</Name>
+	<Name>OneMoreActionQueueProcessingEngine</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
-/// Processing class for action queue record
+/// Processing engine class
 /// </summary>
-internal class OneMoreActionQueueProcessing
+internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProcessingBaseEngine
 {
-    OneMoreActionQueue                                      oneMoreActionQueueCaller;
-    OneMoreActionQueue                                      oneMoreActionQueueUpd;
-    OneMoreActionQueueTypeTable                             oneMoreActionQueueTypeTable;
+    private OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
 
-    int                                                     infologFromLine;    
-    boolean                                                 processedSuccessfully;
-    UserConnection                                          userConnection;
-    System.Exception                                        lastException;
-
+    private boolean processedSuccessfully;
+    private boolean doRetry;
 
 }
 ]]></Declaration>
@@ -27,11 +22,11 @@ internal class OneMoreActionQueueProcessing
     /// <summary>
     /// Construct
     /// </summary>    
-    /// <returns><c>OneMoreActionQueueProcessing</c></returns>
+    /// <returns><c>OneMoreActionQueueProcessingEngine</c></returns>
     [Hookable(false)]
-    public static OneMoreActionQueueProcessing construct()
+    public static OneMoreActionQueueProcessingEngine construct()
     {
-        return new OneMoreActionQueueProcessing();
+        return new OneMoreActionQueueProcessingEngine();
     }
 
 ]]></Source>
@@ -52,88 +47,18 @@ internal class OneMoreActionQueueProcessing
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmOneMoreActionQueue</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Caller <c>OneMoreActionQueue</c> record
-    /// </summary>
-    /// <param name = "_oneMoreActionQueueCaller">Caller <c>OneMoreActionQueue</c> record</param>
-    /// <returns>Caller <c>OneMoreActionQueue</c> record</returns>
-    [Hookable(false)]
-    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueueCaller = oneMoreActionQueueCaller)
-    {
-        oneMoreActionQueueCaller = _oneMoreActionQueueCaller;
-    
-        return oneMoreActionQueueCaller;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>run</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Run
-    /// </summary>
-    [Hookable(false)]
-    public void run()
-    {
-        setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPrefix", oneMoreActionQueueCaller.ActionId));
-    
-        try
-        {
-            userConnection = new UserConnection();
-
-            //Start action queue connection transaction
-            userConnection.ttsbegin();
-
-            this.runInternal();
-
-            //Commit action queue connection transaction
-            userConnection.ttscommit();
-        }
-        catch
-        {
-            //Most like issue is related to status update on action queue, do not recover
-            this.updateStatus(OneMoreActionQueueStatus::Error, false);
-        }
-        finally
-        {
-            //Finalize action queue user connection to prevent user connection leak
-            if (userConnection)
-            {
-                userConnection.finalize();
-            }
-        }
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>runInternal</Name>
 				<Source><![CDATA[
-    private void runInternal()
+    protected void runInternal()
     {
-        boolean                     doRetry;
         System.Exception            exception;
-        OneMoreActionQueueStatus    newActionQueueStatus;
         
-        this.initializeOneMoreActionQueueUpd();
-
-        //In process or already processed
-        if (!this.checkActionQueue())
-        {
-            return;
-        }
-
         this.initUpdate();
 
         OneMoreActionQueueProcessor processor;
 
         try
         {
-            infologFromLine = infologLine();
-
             //Global flag
             OneMoreActionQueueContext::doRetryFlag = false;
         
@@ -150,19 +75,6 @@ internal class OneMoreActionQueueProcessing
             lastException = exception;
             newActionQueueStatus = OneMoreActionQueueStatus::Error;
         }
-
-        //Update action queue record with additiona information from contract
-        if (processor)
-        {
-            OneMoreActionQueueContract contract = processor.getContract();
-
-            if (contract)
-            {
-                oneMoreActionQueueUpd.CompanyId = contract.parmDataAreaId();
-            }
-        }
-
-        this.updateStatus(newActionQueueStatus, doRetry);
     }
 
 ]]></Source>
@@ -195,25 +107,6 @@ internal class OneMoreActionQueueProcessing
         }
 
         return ret;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>initializeOneMoreActionQueueUpd</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Initialize <c>OneMoreActionQueue</c> for update
-    /// </summary>
-    private void initializeOneMoreActionQueueUpd()
-    {
-        //Apply pessimistic concurency model to avoid double-processing of the same action at the same time
-        oneMoreActionQueueUpd.readPast(true);
-        oneMoreActionQueueUpd.selectForUpdate(true);
-        oneMoreActionQueueUpd.setConnection(userConnection);
-
-        select firstonly oneMoreActionQueueUpd
-            where oneMoreActionQueueUpd.RecId  ==  oneMoreActionQueueCaller.RecId;
     }
 
 ]]></Source>
@@ -264,43 +157,28 @@ internal class OneMoreActionQueueProcessing
 				<Name>updateStatus</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Update status
+    /// Update status and write log 
     /// </summary>
-    /// <param name = "_status">New status</param>
-    /// <param name = "_doRetry">Do retry in case if new status is Error</param>
-    protected void updateStatus(OneMoreActionQueueStatus _status, boolean _doRetry = true)
+    protected void updateStatus()
     {
         boolean doStatusUpdate = true;
-        
-        if (_doRetry && this.useRetry() && _status == OneMoreActionQueueStatus::Error)
-        {
-            oneMoreActionQueueUpd.RetryCount += 1;
 
+        oneMoreActionQueueUpd.RetryCount += 1;
+        
+        if (doRetry && this.useRetry() && newActionQueueStatus == OneMoreActionQueueStatus::Error)
+        {
             if (oneMoreActionQueueUpd.RetryCount < this.maxRetryCount())
             {
                 doStatusUpdate = false;
 
                 this.doRetryLogic();
+
+                //Keep original status
+                newActionQueueStatus = oneMoreActionQueueUpd.Status;
             }
         }
 
-        if (doStatusUpdate)
-        {
-            oneMoreActionQueueUpd.Status    = _status;
-        }
-
-        InfologData infologData = this.getInfoLogData();
-
-        oneMoreActionQueueUpd.ProcessingNotes = '';
-
-        if (infologData != conNull())
-        {
-            oneMoreActionQueueUpd.ProcessingNotes = this.getInfoLogText(infologData);
-        }
-    
-        oneMoreActionQueueUpd.update();
-
-        OneMoreActionQueueLogTable::addInfoLogData(oneMoreActionQueueUpd, lastException != null ? lastException.GetType().FullName : '', infologData, userConnection);
+        super();
 
         //Invoke Business Event if status changes to processed
         //TODO send should be performed in user connection context
@@ -308,52 +186,6 @@ internal class OneMoreActionQueueProcessing
         {
             OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable).send();
         }
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>getInfoLogData</Name>
-				<Source><![CDATA[
-    private InfologData getInfoLogData()
-    {
-        int             currentLine = infologLine();
-        InfologData     ret;
-       
-        if (currentLine > infologFromLine)
-        {
-            ret = infolog.copy(infologFromLine + 1,  currentLine);
-        }
-
-        return ret;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>getInfoLogText</Name>
-				<Source><![CDATA[
-    private InfologText getInfoLogText(InfologData _infologData)
-    {
-        System.Text.StringBuilder   logStr = new System.Text.StringBuilder();
-
-        SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(_infologData);
-
-        while (infoEnumerator.moveNext())
-        {
-            SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
-
-            int p = infoMessageStruct.prefixDepth();
-
-            for (int i = 1; i <= p; i++)
-            {
-                logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
-            }
-
-            logStr.AppendLine(infoMessageStruct.message());
-        }
-
-        return logStr.ToString();
     }
 
 ]]></Source>
@@ -407,6 +239,48 @@ internal class OneMoreActionQueueProcessing
             case OneMoreActionQueueProcessingType::ReliableAsynchronous:
                 OneMoreActionQueueProcessingHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
                 break;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>selectOneMoreActionQueueUpdReadPast</Name>
+				<Source><![CDATA[
+    protected boolean selectOneMoreActionQueueUpdReadPast()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingStage</Name>
+				<Source><![CDATA[
+    protected OneMoreActionQueueProcessingStage processingStage()
+    {
+        return OneMoreActionQueueProcessingStage::Processing;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Post run
+    /// </summary>
+    [Hookable(false)]
+    protected void postRun()
+    {
+        if (oneMoreActionQueueTypeTable.ProcessInSequence && oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::ReliableAsynchronous)
+        {
+            OneMoreActionQueue oneMoreActionQueueNext = oneMoreActionQueueUpd.nextWaitingMessageInQueue();
+            
+            if (oneMoreActionQueueNext)
+            {
+                OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueueNext, OneMoreActionQueueProcessingType::ReliableAsynchronous);
+            }
         }
     }
 

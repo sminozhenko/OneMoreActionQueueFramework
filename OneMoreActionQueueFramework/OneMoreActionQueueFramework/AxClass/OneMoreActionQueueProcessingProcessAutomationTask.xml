@@ -52,8 +52,6 @@ internal class OneMoreActionQueueProcessingProcessAutomationTask extends Process
                 classStr(OneMoreActionQueueProcessingProcessAutomationController),
                 methodStr(OneMoreActionQueueProcessingProcessAutomationController, process),
                 SysOperationExecutionMode::ReliableAsynchronous);
-
-            this.parmProcessScheduleWorkItem().parmOccurrenceName(this.batchJobCaption());
             
             OneMoreActionQueueProcessingProcessAutomationContract processScheduleWorkItemContract = controller.getDataContractObject() as OneMoreActionQueueProcessingProcessAutomationContract;
             processScheduleWorkItemContract.initializeFromScheduleWorkItem(this.parmProcessScheduleWorkItem());
