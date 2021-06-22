@@ -14,6 +14,20 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
 ]]></Declaration>
 		<Methods>
 			<Method>
+				<Name>BusinessEventsCatalogHelper_onBusinessEventsCatalogRebuild</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Rebuilds the OneMore action queue business events catalog
+    /// </summary>>
+    [SubscribesTo(classStr(BusinessEventsCatalogHelper), staticDelegateStr(BusinessEventsCatalogHelper, onBusinessEventsCatalogRebuild))]
+    public static void BusinessEventsCatalogHelper_onBusinessEventsCatalogRebuild()
+    {
+        OneMoreActionQueueBusinessEventsCatalogHelper::addActionQueueEvents();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>addActionQueueEvents</Name>
 				<Source><![CDATA[
     /// <summary>
@@ -22,15 +36,11 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
     internal static void addActionQueueEvents()
     {
         OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
-
-        ttsbegin;
         
         while select oneMoreActionQueueTypeTable
         {
             OneMoreActionQueueBusinessEventsCatalogHelper::addActionQueueEvent(oneMoreActionQueueTypeTable);
         }
-
-        ttscommit;
         
     }
 

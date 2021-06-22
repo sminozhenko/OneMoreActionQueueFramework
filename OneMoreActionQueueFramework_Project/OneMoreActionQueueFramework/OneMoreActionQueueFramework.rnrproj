@@ -57,11 +57,6 @@
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AxClass\BusinessEventsCatalogHelperOneMoreActionQueue_Extension">
-      <SubType>Content</SubType>
-      <Name>BusinessEventsCatalogHelperOneMoreActionQueue_Extension</Name>
-      <Link>Classes\BusinessEventsCatalogHelperOneMoreActionQueue_Extension</Link>
-    </Content>
     <Content Include="AxClass\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>
       <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
