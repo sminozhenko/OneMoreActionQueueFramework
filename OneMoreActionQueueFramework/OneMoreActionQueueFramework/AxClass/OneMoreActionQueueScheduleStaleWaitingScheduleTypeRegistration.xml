@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// Implements the <c>ProcessScheduleITypeRegistration</c> to register the one more action queue schedule stale actions in Waiting task 'Type' with the Process Automation.
+/// </summary>
+[Export(identifierStr(Dynamics.AX.Application.ProcessScheduleITypeRegistration))]
+[ExportMetadata(classStr(ProcessScheduleITypeRegistration), classStr(OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration))]
+internal final class OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration implements ProcessScheduleITypeRegistration
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getScheduleTypeRegistrationItem</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public ProcessScheduleTypeRegistrationItem getScheduleTypeRegistrationItem()
+    {
+        ProcessScheduleTypeRegistrationItem processScheduleTypeRegistrationItem = ProcessScheduleTypeRegistrationItem::construct();
+        processScheduleTypeRegistrationItem.parmCompanyScope(ProcessScheduleTypeCompanyScope::Global);
+        processScheduleTypeRegistrationItem.parmLabelId(literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueScheduleStaleWaiting"));
+        processScheduleTypeRegistrationItem.parmName(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleTypeName);
+        processScheduleTypeRegistrationItem.parmProcessAutomationTaskClassName(classStr(OneMoreActionQueueScheduleStaleWaitingAutomationTask));
+        processScheduleTypeRegistrationItem.parmScheduleType(ProcessScheduleProcessType::Polled);
+        processScheduleTypeRegistrationItem.parmIsEnabled(true);
+
+        return processScheduleTypeRegistrationItem;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

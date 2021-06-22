@@ -1,36 +1,40 @@
 jobs:
-  - job: Build_10_0_14
-    displayName: 'Build for 10.0.14'
+  - job: Build_10_0_18
+    displayName: 'Build for 10.0.18'
     pool:
       vmImage: 'vs2017-win2016'
     variables:
-      Platform.BuildXpp.Version: '7.0.5778.35626'
-      Application.BuildXpp.Version: '10.0.605.10014'
-      Platform.CompilerPackage.Version: '7.0.5778.35626'
-
-    steps:
-    - template: azure-pipelines-build-steps-template.yml
-
-  - job: Build_10_0_15
-    displayName: 'Build for 10.0.15'
-    pool:
-      vmImage: 'vs2017-win2016'
-    variables:
-      Platform.BuildXpp.Version: '7.0.5816.35654'
-      Application.BuildXpp.Version: '10.0.644.10018'
-      Platform.CompilerPackage.Version: '7.0.5816.35654'
+      Platform.BuildXpp.Version: '7.0.5968.16999'      
+      Platform.CompilerPackage.Version: '7.0.5968.16999'
+      Application.BuildXpp.Version: '10.0.793.41'
+      ApplicationSuite.BuildXpp.Version: '10.0.793.41'
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
     
-  - job: Build_10_0_16
-    displayName: 'Build for 10.0.16'
+  - job: Build_10_0_19
+    displayName: 'Build for 10.0.19'
     pool:
       vmImage: 'vs2017-win2016'
     variables:
-      Platform.BuildXpp.Version: '7.0.5860.35679'
-      Application.BuildXpp.Version: '10.0.689.10004'
-      Platform.CompilerPackage.Version: '7.0.5860.35679'
+      Platform.BuildXpp.Version: '7.0.6009.43'      
+      Platform.CompilerPackage.Version: '7.0.6009.43'
+      Application.BuildXpp.Version: '10.0.837.46'
+      ApplicationSuite.BuildXpp.Version: '10.0.837.46'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+
+
+  - job: Build_10_0_20_PEAP
+    displayName: 'Build for 10.0.20 PEAP'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6060.22'      
+      Platform.CompilerPackage.Version: '7.0.6060.22'
+      Application.BuildXpp.Version: '10.0.886.25'
+      ApplicationSuite.BuildXpp.Version: '10.0.886.25'
 
     steps:
     - template: azure-pipelines-build-steps-template.yml

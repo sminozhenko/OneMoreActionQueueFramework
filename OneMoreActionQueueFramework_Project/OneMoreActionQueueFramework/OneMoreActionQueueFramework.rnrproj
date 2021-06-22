@@ -54,6 +54,7 @@
     <Folder Include="Services\" />
     <Folder Include="Simple Queries\" />
     <Folder Include="Tables\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AxClass\BusinessEventsCatalogHelperOneMoreActionQueue_Extension">
@@ -65,6 +66,16 @@
       <SubType>Content</SubType>
       <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
       <Link>Classes\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\FormRunOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>FormRunOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\FormRunOneMoreActionQueueFramework_Extension</Link>
+    </Content>
+    <Content Include="AxClass\InfoOneMoreActionQueueFramework_Extension">
+      <SubType>Content</SubType>
+      <Name>InfoOneMoreActionQueueFramework_Extension</Name>
+      <Link>Classes\InfoOneMoreActionQueueFramework_Extension</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueBusinessEvent">
       <SubType>Content</SubType>
@@ -136,6 +147,11 @@
       <Name>OneMoreActionQueueContract</Name>
       <Link>Classes\OneMoreActionQueueContract</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFDataProjectExportProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFDataProjectExportProcessor</Name>
+      <Link>Classes\OneMoreActionQueueDMFDataProjectExportProcessor</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueDMFExportBusinessEvent">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportBusinessEvent</Name>
@@ -156,15 +172,35 @@
       <Name>OneMoreActionQueueDMFExportProcessor</Name>
       <Link>Classes\OneMoreActionQueueDMFExportProcessor</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFExportProcessorBase">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportProcessorBase</Name>
+      <Link>Classes\OneMoreActionQueueDMFExportProcessorBase</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueDMFExportQueryParameters">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportQueryParameters</Name>
       <Link>Classes\OneMoreActionQueueDMFExportQueryParameters</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueDMFIntegrationActivityTableExportProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFIntegrationActivityTableExportProcessor</Name>
+      <Link>Classes\OneMoreActionQueueDMFIntegrationActivityTableExportProcessor</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueFormExtender">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueFormExtender</Name>
+      <Link>Classes\OneMoreActionQueueFormExtender</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueIMenuItemLookupCaller">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueIMenuItemLookupCaller</Name>
       <Link>Classes\OneMoreActionQueueIMenuItemLookupCaller</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueIPreProcessor">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueIPreProcessor</Name>
+      <Link>Classes\OneMoreActionQueueIPreProcessor</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueLogShow">
       <SubType>Content</SubType>
@@ -226,15 +262,60 @@
       <Name>OneMoreActionQueueParametersContract</Name>
       <Link>Classes\OneMoreActionQueueParametersContract</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueProcessing">
+    <Content Include="AxClass\OneMoreActionQueuePreProcessingEngine">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueProcessing</Name>
-      <Link>Classes\OneMoreActionQueueProcessing</Link>
+      <Name>OneMoreActionQueuePreProcessingEngine</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessingEngine</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessorCompanyResolve">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessorCompanyResolve</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessorCompanyResolve</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessorDocumentCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessorDocumentCorrelation</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessorDocumentCorrelation</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleAutomationTask">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleAutomationTask</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleAutomationTask</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleController</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleScheduleSeriesRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleScheduleSeriesRegistration</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleScheduleSeriesRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueuePreProcessStaleScheduleTypeRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Name>
+      <Link>Classes\OneMoreActionQueuePreProcessStaleScheduleTypeRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessAutomationHelper">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessAutomationHelper</Name>
+      <Link>Classes\OneMoreActionQueueProcessAutomationHelper</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingBaseEngine">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingBaseEngine</Name>
+      <Link>Classes\OneMoreActionQueueProcessingBaseEngine</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingBatchTaskBundleContract">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingBatchTaskBundleContract</Name>
       <Link>Classes\OneMoreActionQueueProcessingBatchTaskBundleContract</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingEngine">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingEngine</Name>
+      <Link>Classes\OneMoreActionQueueProcessingEngine</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingHelper">
       <SubType>Content</SubType>
@@ -251,6 +332,11 @@
       <Name>OneMoreActionQueueProcessingManualController</Name>
       <Link>Classes\OneMoreActionQueueProcessingManualController</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingOrderAttribute">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingOrderAttribute</Name>
+      <Link>Classes\OneMoreActionQueueProcessingOrderAttribute</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingProcessAutomationContract">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingProcessAutomationContract</Name>
@@ -266,6 +352,11 @@
       <Name>OneMoreActionQueueProcessingProcessAutomationTask</Name>
       <Link>Classes\OneMoreActionQueueProcessingProcessAutomationTask</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryBatchController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryBatchController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryBatchController</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingQueryContract">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingQueryContract</Name>
@@ -275,6 +366,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueProcessingQueryController</Name>
       <Link>Classes\OneMoreActionQueueProcessingQueryController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueProcessingQueryProcessAutomationController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingQueryProcessAutomationController</Name>
+      <Link>Classes\OneMoreActionQueueProcessingQueryProcessAutomationController</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueProcessingQueryUIBuilder">
       <SubType>Content</SubType>
@@ -311,6 +407,26 @@
       <Name>OneMoreActionQueueProcessScheduleTypeRegistration</Name>
       <Link>Classes\OneMoreActionQueueProcessScheduleTypeRegistration</Link>
     </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingAutomationTask">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingAutomationTask</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingAutomationTask</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingController">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingController</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingController</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration</Name>
+      <Link>Classes\OneMoreActionQueueScheduleStaleWaitingScheduleTypeRegistration</Link>
+    </Content>
     <Content Include="AxClass\OneMoreActionQueueService">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueService</Name>
@@ -321,10 +437,10 @@
       <Name>OneMoreActionQueueServiceRunActionResponse</Name>
       <Link>Classes\OneMoreActionQueueServiceRunActionResponse</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtilCopy">
+    <Content Include="AxClass\OneMoreActionQueueSysQueryRangeUtil">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueSysQueryRangeUtilCopy</Name>
-      <Link>Classes\OneMoreActionQueueSysQueryRangeUtilCopy</Link>
+      <Name>OneMoreActionQueueSysQueryRangeUtil</Name>
+      <Link>Classes\OneMoreActionQueueSysQueryRangeUtil</Link>
     </Content>
     <Content Include="AxClass\RunBaseBatchOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>
@@ -361,6 +477,21 @@
       <Name>OneMoreActionQueueDMFExportKeepDataProject</Name>
       <Link>Extended Data Types\OneMoreActionQueueDMFExportKeepDataProject</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueDocumentCorrelationDetails">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDocumentCorrelationDetails</Name>
+      <Link>Extended Data Types\OneMoreActionQueueDocumentCorrelationDetails</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueDocumentCorrelationLimit">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDocumentCorrelationLimit</Name>
+      <Link>Extended Data Types\OneMoreActionQueueDocumentCorrelationLimit</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueDocumentCorrelationTableName">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDocumentCorrelationTableName</Name>
+      <Link>Extended Data Types\OneMoreActionQueueDocumentCorrelationTableName</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueEnabled">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueEnabled</Name>
@@ -370,6 +501,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueLogExceptionTypeName</Name>
       <Link>Extended Data Types\OneMoreActionQueueLogExceptionTypeName</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueLogStackTrace">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogStackTrace</Name>
+      <Link>Extended Data Types\OneMoreActionQueueLogStackTrace</Link>
     </Content>
     <Content Include="AxEdt\OneMoreActionQueueMenuItemName">
       <SubType>Content</SubType>
@@ -401,10 +537,20 @@
       <Name>OneMoreActionQueueProcessingNotes</Name>
       <Link>Extended Data Types\OneMoreActionQueueProcessingNotes</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueProcessInSequence">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessInSequence</Name>
+      <Link>Extended Data Types\OneMoreActionQueueProcessInSequence</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueReliableAsyncBatchGroupId">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueReliableAsyncBatchGroupId</Name>
       <Link>Extended Data Types\OneMoreActionQueueReliableAsyncBatchGroupId</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueRetentionPeriod">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueRetentionPeriod</Name>
+      <Link>Extended Data Types\OneMoreActionQueueRetentionPeriod</Link>
     </Content>
     <Content Include="AxEdt\OneMoreActionQueueRetryAttemptInterval">
       <SubType>Content</SubType>
@@ -426,6 +572,16 @@
       <Name>OneMoreActionQueueRunAsUserId</Name>
       <Link>Extended Data Types\OneMoreActionQueueRunAsUserId</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueSequenceFieldName">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSequenceFieldName</Name>
+      <Link>Extended Data Types\OneMoreActionQueueSequenceFieldName</Link>
+    </Content>
+    <Content Include="AxEdt\OneMoreActionQueueSequenceGroupHash">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSequenceGroupHash</Name>
+      <Link>Extended Data Types\OneMoreActionQueueSequenceGroupHash</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueTransformationJSON">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTransformationJSON</Name>
@@ -441,6 +597,11 @@
       <Name>OneMoreActionQueueTypeId</Name>
       <Link>Extended Data Types\OneMoreActionQueueTypeId</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueULIDStamp">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueULIDStamp</Name>
+      <Link>Extended Data Types\OneMoreActionQueueULIDStamp</Link>
+    </Content>
     <Content Include="AxEnumExtension\BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension">
       <SubType>Content</SubType>
       <Name>BusinessEventsEndpointType.OneMoreActionQueueFrameworkExtension</Name>
@@ -450,6 +611,16 @@
       <SubType>Content</SubType>
       <Name>ModuleAxapta.OneMoreActionQueueFrameworkExtension</Name>
       <Link>Base Enum Extensions\ModuleAxapta.OneMoreActionQueueFrameworkExtension</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueDMFExportType">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFExportType</Name>
+      <Link>Base Enums\OneMoreActionQueueDMFExportType</Link>
+    </Content>
+    <Content Include="AxEnum\OneMoreActionQueueProcessingStage">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueProcessingStage</Name>
+      <Link>Base Enums\OneMoreActionQueueProcessingStage</Link>
     </Content>
     <Content Include="AxEnum\OneMoreActionQueueProcessingType">
       <SubType>Content</SubType>
@@ -481,6 +652,11 @@
       <Name>OneMoreActionQueue</Name>
       <Link>Forms\OneMoreActionQueue</Link>
     </Content>
+    <Content Include="AxForm\OneMoreActionQueueLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogTable</Name>
+      <Link>Forms\OneMoreActionQueueLogTable</Link>
+    </Content>
     <Content Include="AxForm\OneMoreActionQueueMenuItemLookup">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMenuItemLookup</Name>
@@ -490,6 +666,16 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueMenuItemParametersDialog</Name>
       <Link>Forms\OneMoreActionQueueMenuItemParametersDialog</Link>
+    </Content>
+    <Content Include="AxForm\OneMoreActionQueueParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameters</Name>
+      <Link>Forms\OneMoreActionQueueParameters</Link>
+    </Content>
+    <Content Include="AxForm\OneMoreActionQueueTypeDocumentCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+      <Link>Forms\OneMoreActionQueueTypeDocumentCorrelation</Link>
     </Content>
     <Content Include="AxForm\OneMoreActionQueueTypeTable">
       <SubType>Content</SubType>
@@ -546,6 +732,21 @@
       <Name>OneMoreActionQueue</Name>
       <Link>Display Menu Items\OneMoreActionQueue</Link>
     </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueueLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueLogTable</Name>
+      <Link>Display Menu Items\OneMoreActionQueueLogTable</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueueParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameters</Name>
+      <Link>Display Menu Items\OneMoreActionQueueParameters</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\OneMoreActionQueueTypeDocumentCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+      <Link>Display Menu Items\OneMoreActionQueueTypeDocumentCorrelation</Link>
+    </Content>
     <Content Include="AxMenuItemDisplay\OneMoreActionQueueTypeTable">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTypeTable</Name>
@@ -555,11 +756,6 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueue</Name>
       <Link>Menus\OneMoreActionQueue</Link>
-    </Content>
-    <Content Include="AxQuery\OneMoreActionQueueCleanUp">
-      <SubType>Content</SubType>
-      <Name>OneMoreActionQueueCleanUp</Name>
-      <Link>Simple Queries\OneMoreActionQueueCleanUp</Link>
     </Content>
     <Content Include="AxQuery\OneMoreActionQueueWaiting">
       <SubType>Content</SubType>
@@ -596,6 +792,11 @@
       <Name>OneMoreActionQueueMaintain</Name>
       <Link>Security Privileges\OneMoreActionQueueMaintain</Link>
     </Content>
+    <Content Include="AxSecurityPrivilege\OneMoreActionQueueParametersMaintain">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParametersMaintain</Name>
+      <Link>Security Privileges\OneMoreActionQueueParametersMaintain</Link>
+    </Content>
     <Content Include="AxSecurityPrivilege\OneMoreActionQueueView">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueView</Name>
@@ -626,6 +827,11 @@
       <Name>OneMoreActionQueue</Name>
       <Link>Tables\OneMoreActionQueue</Link>
     </Content>
+    <Content Include="AxTable\OneMoreActionQueueBatchJobCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBatchJobCorrelation</Name>
+      <Link>Tables\OneMoreActionQueueBatchJobCorrelation</Link>
+    </Content>
     <Content Include="AxTable\OneMoreActionQueueBusinessEventsEndpoint">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueBusinessEventsEndpoint</Name>
@@ -636,10 +842,20 @@
       <Name>OneMoreActionQueueCleanUpTmp</Name>
       <Link>Tables\OneMoreActionQueueCleanUpTmp</Link>
     </Content>
+    <Content Include="AxTable\OneMoreActionQueueDocumentCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDocumentCorrelation</Name>
+      <Link>Tables\OneMoreActionQueueDocumentCorrelation</Link>
+    </Content>
     <Content Include="AxTable\OneMoreActionQueueLogTable">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueLogTable</Name>
       <Link>Tables\OneMoreActionQueueLogTable</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueParameters">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueParameters</Name>
+      <Link>Tables\OneMoreActionQueueParameters</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueStaging">
       <SubType>Content</SubType>
@@ -650,6 +866,16 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueTypeDMFExportParameterTable</Name>
       <Link>Tables\OneMoreActionQueueTypeDMFExportParameterTable</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeDocumentCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+      <Link>Tables\OneMoreActionQueueTypeDocumentCorrelation</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueTypeDocumentCorrelationSequenceField">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueTypeDocumentCorrelationSequenceField</Name>
+      <Link>Tables\OneMoreActionQueueTypeDocumentCorrelationSequenceField</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueTypeMenuItemParameterTable">
       <SubType>Content</SubType>
@@ -666,6 +892,11 @@
       <Name>OneMoreActionQueueTypeTransformation</Name>
       <Link>Tables\OneMoreActionQueueTypeTransformation</Link>
     </Content>
+    <Content Include="AxView\OneMoreActionQueueBatchJobCorrelationView">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueBatchJobCorrelationView</Name>
+      <Link>Views\OneMoreActionQueueBatchJobCorrelationView</Link>
+    </Content>
     <Content Include="OneMoreActionQueueFramework.en-US.label.txt">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueFramework.en-US.label.txt</Name>
@@ -676,6 +907,10 @@
     <Reference Include="JUST.net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>JUST.net</Name>
       <HintPath>K:\AosService\PackagesLocalDirectory\OneMoreActionQueueFramework\bin\JUST.net.dll</HintPath>
+    </Reference>
+    <Reference Include="NUlid, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>NUlid</Name>
+      <HintPath>K:\AosService\PackagesLocalDirectory\OneMoreActionQueueFramework\bin\NUlid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />

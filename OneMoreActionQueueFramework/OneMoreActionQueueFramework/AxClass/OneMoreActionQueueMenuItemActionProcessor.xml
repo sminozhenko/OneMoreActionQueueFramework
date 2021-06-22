@@ -9,49 +9,26 @@
 [OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueMenuItemContract), true)]
 class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProcessor
 {
-    OneMoreActionQueueMenuItemContract  localContract;
-        
 }
 ]]></Declaration>
 		<Methods>
-			<Method>
-				<Name>Initialize</Name>
-				<Source><![CDATA[
-    public void Initialize()
-    {
-        super();
-
-        localContract = contract as OneMoreActionQueueMenuItemContract;
-    }
-
-]]></Source>
-			</Method>
 			<Method>
 				<Name>runActionInternal</Name>
 				<Source><![CDATA[
     public void runActionInternal()
     {
-        try
-        {
-            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = localContract;
+        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
 
-            OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
-
-            OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
+        OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
             
-            menuItemBehavior.initialize();
+        menuItemBehavior.initialize();
             
-            if (!menuItemBehavior.unpackParameters(oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters))
-            {
-                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueCantUnpackMenuItemParameters");
-            }
-
-            menuItemBehavior.executeMenuItem();
-        }
-        finally
+        if (!menuItemBehavior.unpackParameters(oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters))
         {
-            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
+            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueCantUnpackMenuItemParameters");
         }
+
+        menuItemBehavior.executeMenuItem();
     }
 
 ]]></Source>

@@ -7,7 +7,7 @@
 /// Contract class for batch task bundle case
 /// </summary>
 [DataContract]
-class OneMoreActionQueueProcessingBatchTaskBundleContract
+internal class OneMoreActionQueueProcessingBatchTaskBundleContract
 {
     private container   recIdListPacked;
 

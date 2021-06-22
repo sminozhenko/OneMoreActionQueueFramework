@@ -6,7 +6,7 @@
 /// <summary>
 /// OneMore action queue processing for batch processing UI builder
 /// </summary>
-class OneMoreActionQueueProcessingQueryUIBuilder extends SysOperationAutomaticUIBuilder
+internal class OneMoreActionQueueProcessingQueryUIBuilder extends SysOperationAutomaticUIBuilder
 {
     DialogField     enableBatchBundlingField;
     DialogField     batchBundleSizeField;

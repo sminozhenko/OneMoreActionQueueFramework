@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>FormRunOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension for <c>FormRun</c>
+/// </summary>
+[ExtensionOf(classStr(FormRun))]
+public final class FormRunOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    public void init()
+    {
+        next init();
+
+        if (this.args().record() && this.args().record().TableId == tableNum(OneMoreActionQueueDocumentCorrelation))
+        {
+            OneMoreActionQueueDocumentCorrelation oneMoreActionQueueDocumentCorrelation = this.args().record();
+
+            FormDataSource fds = this.findFirstFormDataSource(oneMoreActionQueueDocumentCorrelation.DocumentTableId, true);
+
+            if (fds)
+            {
+                Query q = fds.query();
+
+                QueryBuildDataSource qbds = q.dataSourceTable(oneMoreActionQueueDocumentCorrelation.DocumentTableId);
+
+                QueryBuildDataSource qbdsDocumentCorrelation = qbds.addDataSource(tableNum(OneMoreActionQueueDocumentCorrelation));
+                qbdsDocumentCorrelation.joinMode(JoinMode::ExistsJoin);
+                qbdsDocumentCorrelation.addLink(fieldName2Id(oneMoreActionQueueDocumentCorrelation.DocumentTableId, 'RecId'), fieldNum(OneMoreActionQueueDocumentCorrelation, DocumentRecId));
+                qbdsDocumentCorrelation.addRange(fieldNum(oneMoreActionQueueDocumentCorrelation, ActionQueueRecId)).value(queryValue(oneMoreActionQueueDocumentCorrelation.ActionQueueRecId));
+                qbdsDocumentCorrelation.addRange(fieldNum(oneMoreActionQueueDocumentCorrelation, DocumentTableId)).value(queryValue(oneMoreActionQueueDocumentCorrelation.DocumentTableId));
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

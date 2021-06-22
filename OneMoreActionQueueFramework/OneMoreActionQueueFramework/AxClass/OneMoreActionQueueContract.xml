@@ -29,6 +29,62 @@ abstract class OneMoreActionQueueContract
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>getParameterValue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    final public AnyType getParameterValue(str _parameterName)
+    {
+        boolean isFound;
+        anytype parameterValue;
+
+        [isFound, parameterValue] = this.getParameterValueInternal(_parameterName);
+
+        if (!isFound)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueParameterNotFoundInContract", _parameterName));
+        }
+
+        return parameterValue;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getParameterValueInternal</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected container getParameterValueInternal(str _parameterName)
+    {
+        boolean isFound;
+        anytype parameterValue;
+        
+        SysDictClass sysDictClass = new SysDictClass(classidget(this)); 
+        
+        Set methods = sysDictClass.methods(true, false, true);
+        SetEnumerator methodsEnumerator = methods.getEnumerator();
+
+        while(methodsEnumerator.moveNext())
+        {
+            DictMethod dictMethod = methodsEnumerator.current();
+            
+            DataMemberAttribute dataMember = dictMethod.getAttribute(classStr(DataMemberAttribute));
+            
+            if (dataMember && dataMember.Name() == _parameterName)
+            {
+                parameterValue = sysDictClass.callObject(dictMethod.Name(), this);
+                isFound = true;
+
+                break;
+            }
+        }
+
+        return [isFound, parameterValue];
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>
