@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueuePreProcessStaleAutomationTask</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// The <c>OneMoreActionQueuePreProcessStaleAutomationTask</c> fulfills the contract needed for <c>ProcessAutomationTask</c>.
+/// </summary>
+[ExportMetadata(classStr(ProcessAutomationTask), classStr(OneMoreActionQueuePreProcessStaleAutomationTask))]
+[Export(identifierStr('Microsoft.Dynamics.AX.Application.ProcessAutomationTask'))]
+internal class OneMoreActionQueuePreProcessStaleAutomationTask extends ProcessAutomationTask
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>isProcessAutomationEnabledForThisTask</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if there is work to submit to the <c>ProcessAutomation</c>.
+    /// </summary>
+    /// <returns>true if there is one or more stale action for pre-processing in the queue; otherwise, false.</returns>
+    internal boolean isProcessAutomationEnabledForThisTask()
+    {
+        return !OneMoreActionQueueParameters::find().DisablePreProcessStaleAutomationPolling && OneMoreActionQueue::hasStalePreProcessMessagesInQueue();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getListOfWorkToBePerformed</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Submits a <c>OneMoreActionQueuePreProcessStaleController</c> to the <c>ProcessAutomation</c>.
+    /// </summary>
+    /// <returns>A one element list of <c>OneMoreActionQueuePreProcessStaleController</c> object.</returns>
+    internal List getListOfWorkToBePerformed()
+    {
+        OneMoreActionQueuePreProcessStaleController preProcessStaleController = new OneMoreActionQueuePreProcessStaleController(
+            classStr(OneMoreActionQueuePreProcessStaleController),
+            methodStr(OneMoreActionQueuePreProcessStaleController, initProcessExecutionSourceLinkItem),
+            SysOperationExecutionMode::ReliableAsynchronous);
+
+        List workList = new List(Types::Class);
+        workList.addEnd(preProcessStaleController);
+
+        return workList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>batchJobCaption</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Caption of the batch job that will be prepared by the <c>ProcessAutomationTask</c>
+    /// </summary>
+    /// <returns>The caption for the batch job.</returns>
+    internal BatchCaption batchJobCaption()
+    {
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPreProcessStaleAutomationTaskCaption";
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

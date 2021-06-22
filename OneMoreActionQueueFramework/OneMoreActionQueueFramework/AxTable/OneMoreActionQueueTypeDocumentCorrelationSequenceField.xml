@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeDocumentCorrelationSequenceField</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeDocumentCorrelationSequenceField extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getSequenceFields</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static container getSequenceFields(RefRecId _documentCorrelationRecId)
+    {
+        container ret;
+
+        OneMoreActionQueueTypeDocumentCorrelationSequenceField documentCorrelationSequenceField;
+
+        while select documentCorrelationSequenceField
+            where documentCorrelationSequenceField.ActionQueueTypeDocumentCorrelationRecId  ==  _documentCorrelationRecId
+        {
+            ret += documentCorrelationSequenceField.SequenceFieldName;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>sequenceValue2Str</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static str sequenceValue2Str(anytype _sequenceValue)
+    {
+        str ret;
+
+        switch (typeOf(_sequenceValue))
+        {
+            default:
+                ret = _sequenceValue.ToString();
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelationSequenceField</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeDocumentCorrelation</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelationSequenceField</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>ActionQueueTypeDocumentCorrelationRecId</TitleField1>
+	<TitleField2>SequenceFieldName</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>ActionQueueTypeDocumentCorrelationRecIdSequenceFieldIdx</ClusteredIndex>
+	<ReplacementKey>ActionQueueTypeDocumentCorrelationRecIdSequenceFieldIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueTypeDocumentCorrelationRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Sorting</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SequenceFieldName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueTypeDocumentCorrelationRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Sorting</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>Sorting</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SequenceFieldName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>ActionQueueTypeDocumentCorrelationRecId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RefRecId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>Sorting</Name>
+			<ExtendedDataType>Sorting</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SequenceFieldName</Name>
+			<ExtendedDataType>OneMoreActionQueueSequenceFieldName</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>ActionQueueTypeDocumentCorrelationRecIdSequenceFieldIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ActionQueueTypeDocumentCorrelationRecId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Sorting</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>ActionQueueTypeDocumentCorrelationRecIdSequenceFieldNameIdx</Name>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ActionQueueTypeDocumentCorrelationRecId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>SequenceFieldName</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeDocumentCorrelation</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>ActionQueueTypeDocumentCorrelationRecId</Name>
+					<Field>ActionQueueTypeDocumentCorrelationRecId</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

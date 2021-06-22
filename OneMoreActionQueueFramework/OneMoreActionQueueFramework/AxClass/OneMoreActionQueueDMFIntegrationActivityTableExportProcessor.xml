@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFIntegrationActivityTableExportProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using Microsoft.Dynamics.Platform.Integration.Framework.Contracts;
+
+/// <summary>
+/// Action queue processor class for DMF export (recurring job) type
+/// </summary>
+[
+    OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)
+]
+class OneMoreActionQueueDMFIntegrationActivityTableExportProcessor extends OneMoreActionQueueDMFExportProcessorBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initializeDMFDefinitionGroupName</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected void initializeDMFDefinitionGroupName()
+    {
+        definitionGroupName = oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runExport</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected void runExport()
+    {
+        DMFDefinitionGroup  dmfDefinitionGroup = oneMoreActionQueueTypeDMFExportParameterTable.dmfDefinitionGroup();
+
+        if (dmfDefinitionGroup.RecId == 0)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+        }
+
+        IntegrationActivityTable    integrationActivityTable;
+            
+        select firstonly integrationActivityTable
+            where integrationActivityTable.Name == oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName;
+
+        if (integrationActivityTable.RecId == 0)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportRecurringJobDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFIntegrationActivityName, oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+        }
+
+        Activity activity = IntegrationPacker::PackActivity(integrationActivityTable);
+
+        IntegrationActivityRuntimeTable activityRuntimeTable;
+
+        select firstonly activityRuntimeTable where
+            activityRuntimeTable.ActivityTable == activity.Id;
+
+        Batch batch = this.getCurrentBatchTask();
+
+        SysIntegrationActivityBatchTask integrationActivityBatchTask = SysIntegrationActivityBatchTask::createNewTask(activity.Id, activityRuntimeTable.RecId);
+        integrationActivityBatchTask.parmCurrentBatch(batch);
+        integrationActivityBatchTask.runOperation();
+
+        batch.reread();
+
+        int batchPackVersion;
+        int executionCorrelationPosition;
+
+        [batchPackVersion, executionCorrelationPosition] = SysIntegrationActivityBatchTask::getExecutionCorrelationPositionInfo();
+
+        if (batchPackVersion == RunBase::getVersion(batch.Parameters))
+        {
+            guid executionCorrelationId = conPeek(batch.Parameters, executionCorrelationPosition);
+            
+            IntegrationActivityRuntimeExecutionTable activityRuntimeExecutionTable = IntegrationActivityRuntimeExecutionTable::find(executionCorrelationId, false);
+            
+            if (!executionCorrelationId || activityRuntimeExecutionTable.RecId == 0 || activityRuntimeExecutionTable.Status != DMFBatchJobStatus::Finished)
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+            }
+
+            executionId = activityRuntimeExecutionTable.ExecutionId;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>attachExportFileToActionQeueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean attachExportFileToActionQeueue()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateExecutionId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean generateExecutionId()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

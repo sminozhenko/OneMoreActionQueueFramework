@@ -11,7 +11,7 @@
     SysOperationGroupAttribute('BatchBundling',"@OneMoreActionQueueFramework:OneMoreActionQueueBatchBundling", '99'),
     SysOperationContractProcessingAttribute(classStr(OneMoreActionQueueProcessingQueryUIBuilder))
 ]
-class OneMoreActionQueueProcessingQueryContract
+internal class OneMoreActionQueueProcessingQueryContract
 {
     private str     packedQuery;
 

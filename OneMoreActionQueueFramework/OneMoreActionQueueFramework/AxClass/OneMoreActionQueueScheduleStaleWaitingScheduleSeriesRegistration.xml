@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// Implements the <c>ProcessScheduleISeriesRegistration</c> to register the one more action queue schedule stale actions in Waiting task 'Series' with the Process Automation.
+/// </summary>
+[Export(identifierStr(Dynamics.AX.Application.ProcessScheduleISeriesRegistration))]
+[ExportMetadata(classStr(ProcessScheduleISeriesRegistration), classStr(OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration))]
+internal final class OneMoreActionQueueScheduleStaleWaitingScheduleSeriesRegistration implements ProcessScheduleISeriesRegistration
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getProcessScheduleSeriesRegistrationItem</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public ProcessScheduleSeriesRegistrationItem getProcessScheduleSeriesRegistrationItem()
+    {
+        ProcessScheduleSeriesRegistrationItem processScheduleSeriesRegistrationItem = ProcessScheduleSeriesRegistrationItem::construct();
+
+        processScheduleSeriesRegistrationItem.parmDescription("@OneMoreActionQueueFramework:OneMoreActionQueueScheduleStaleWaiting");
+        processScheduleSeriesRegistrationItem.parmOwnerId(curUserId());
+        processScheduleSeriesRegistrationItem.parmProcessScheduleSeriesPatternList(this.getSeriesPatternList());
+        processScheduleSeriesRegistrationItem.parmSeriesName(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleSeriesName);
+        processScheduleSeriesRegistrationItem.parmTypeName(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingScheduleTypeName);
+
+        return processScheduleSeriesRegistrationItem;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getSeriesPatternList</Name>
+				<Source><![CDATA[
+    private List getSeriesPatternList()
+    {
+        ProcessScheduleSeriesPatternItem processScheduleSeriesPatternItem = ProcessScheduleSeriesPatternItem::construct();
+        processScheduleSeriesPatternItem.parmUnit(ProcessScheduleUnit::Minute);
+        processScheduleSeriesPatternItem.parmPollingInterval(OneMoreActionQueueConstants::OneMoreActionQueueScheduleStaleWaitingAutomationPollingInterval);
+
+        List list = new List(Types::Class);
+        list.addEnd(processScheduleSeriesPatternItem);
+
+        return list;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

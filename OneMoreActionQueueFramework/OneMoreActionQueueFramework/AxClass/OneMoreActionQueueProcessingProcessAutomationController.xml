@@ -6,7 +6,7 @@
 /// <summary>
 /// The <c>OneMoreActionQueueProcessingProcessAutomationController</c> class is the <c>SysOperationServiceController</c> class for action queue processing.
 /// </summary>
-public class OneMoreActionQueueProcessingProcessAutomationController extends SysOperationServiceController
+internal class OneMoreActionQueueProcessingProcessAutomationController extends SysOperationServiceController
 {
     private ProcessExecutionSourceLinkItem processExecutionSourceLinkItem;
 
@@ -40,7 +40,7 @@ public class OneMoreActionQueueProcessingProcessAutomationController extends Sys
 
         ProcessExecutionSourceLink::insertSourceLink(processExecutionSourceLinkItem);
         
-        OneMoreActionQueueProcessingQueryController oneMoreActionQueueProcessingQueryController = OneMoreActionQueueProcessingQueryController::construct();
+        OneMoreActionQueueProcessingQueryProcessAutomationController oneMoreActionQueueProcessingQueryController = OneMoreActionQueueProcessingQueryProcessAutomationController::construct();
         
         OneMoreActionQueueProcessingQueryContract oneMoreActionQueueProcessingQueryContract = oneMoreActionQueueProcessingQueryController.getDataContractInfoObject().dataContractObject();
 

@@ -17,5 +17,10 @@
 			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueStatusError</Label>
 			<Value>2</Value>
 		</AxEnumValue>
+		<AxEnumValue>
+			<Name>NotRun</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueStatusNotRun</Label>
+			<Value>3</Value>
+		</AxEnumValue>
 	</EnumValues>
 </AxEnum>

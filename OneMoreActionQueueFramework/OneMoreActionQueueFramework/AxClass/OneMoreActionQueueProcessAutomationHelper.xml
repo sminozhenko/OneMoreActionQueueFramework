@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessAutomationHelper</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Process automation helper class
+/// </summary>
+internal static class OneMoreActionQueueProcessAutomationHelper
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>enableSeries</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static void enableSeries(ProcessScheduleSeriesName _seriesName, ProcessScheduleTypeName _typeName)
+    {
+        ttsbegin;
+        
+        ProcessScheduleSeries selectedSeries = OneMoreActionQueueProcessAutomationHelper::findOrCreateProcessScheduleSeries(_seriesName, _typeName, true);
+
+        if (selectedSeries.IsEnabled == NoYes::No)
+        {
+            selectedSeries.IsEnabled = NoYes::Yes;
+            selectedSeries.update();
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>disableSeries</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static void disableSeries(ProcessScheduleSeriesName _seriesName, ProcessScheduleTypeName _typeName)
+    {
+        ttsbegin;
+        
+        ProcessScheduleSeries selectedSeries = OneMoreActionQueueProcessAutomationHelper::findOrCreateProcessScheduleSeries(_seriesName, _typeName, true);
+
+        if (selectedSeries.IsEnabled == NoYes::Yes)
+        {
+            selectedSeries.IsEnabled = NoYes::No;
+            selectedSeries.update();
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findOrCreateProcessScheduleSeries</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static ProcessScheduleSeries findOrCreateProcessScheduleSeries(ProcessScheduleSeriesName _seriesName, ProcessScheduleTypeName _typeName, boolean _forUpdate = false)
+    {
+        ProcessScheduleSeries series;
+
+        series.selectForUpdate(_forUpdate);
+
+        select firstonly series
+            where series.Name                   == _seriesName
+               && series.ProcessScheduleType    == OneMoreActionQueueProcessAutomationHelper::processScheduleType(_typeName).RecId;
+
+        return series;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processScheduleType</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static ProcessScheduleType processScheduleType(ProcessScheduleTypeName _name)
+    {
+        ProcessScheduleType type;
+
+        select firstonly type
+            where type.Name == _name;
+
+        return type;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateProcessAutomationSeries</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static void updateProcessAutomationSeries(ProcessScheduleSeriesName _seriesName, ProcessScheduleTypeName _typeName, ProcessScheduleInterval _internal)
+    {
+        ProcessScheduleSeriesPollingDetails processScheduleSeriesPollingDetails = ProcessScheduleSeries::getPollingDetailsForSeries(_typeName, _seriesName);
+
+        if (processScheduleSeriesPollingDetails && processScheduleSeriesPollingDetails.parmInterval() != _internal)
+        {
+            processScheduleSeriesPollingDetails.parmInterval(_internal);
+            processScheduleSeriesPollingDetails.parmUnit(ProcessScheduleUnit::Minute);
+
+            ProcessScheduleSeries::setPollingDetailsForSeries(_typeName, _seriesName, processScheduleSeriesPollingDetails);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

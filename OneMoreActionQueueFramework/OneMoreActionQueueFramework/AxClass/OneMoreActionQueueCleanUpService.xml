@@ -6,10 +6,9 @@
 /// <summary>
 /// Service class for action queue clean-up operation
 /// </summary>
-class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
+internal class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
 {
     private     RecordInsertList                oneMoreActionQueueCleanUpTmpRIL;
-    private     int                             totalDeletedRecords;
     protected   OneMoreActionQueueCleanUpTmp    oneMoreActionQueueCleanUpTmp;
     
 }
@@ -25,35 +24,43 @@ class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
     [Hookable(false)]
     public void cleanUp(OneMoreActionQueueCleanUpContract _contract)
     {
-        Query                           query = _contract.getQuery();
-        QueryRun                        qr;
+        OneMoreActionQueueTypeTable     oneMoreActionQueueTypeTable;
         
-        int                             numberOfRecords;
-
-        this.initializeRecordInsertList();
-
-        query.dataSourceTable(tableNum(OneMoreActionQueue)).addSelectionField(fieldNum(OneMoreActionQueue, RecId));
-        
-        qr = new QueryRun(query);
-
-        while (qr.next())
+        while select oneMoreActionQueueTypeTable
         {
-            oneMoreActionQueueCleanUpTmp.RefRecId = qr.get(tableNum(OneMoreActionQueue)).RecId;
-            oneMoreActionQueueCleanUpTmpRIL.add(oneMoreActionQueueCleanUpTmp);
+            int                numberOfRecords;
+            OneMoreActionQueue oneMoreActionQueue;
+            int                totalDeletedRecords;
+            
+            oneMoreActionQueueTypeTable.setDefaultRetentionPeriod();
 
-            numberOfRecords++;
-            totalDeletedRecords++;
+            this.initializeRecordInsertList();
 
-            if (numberOfRecords >= OneMoreActionQueueConstants::cleanUpBatchSize)
+            while select RecId
+                from oneMoreActionQueue
+                where oneMoreActionQueue.TypeId             == oneMoreActionQueueTypeTable.TypeId
+                   && oneMoreActionQueue.CreatedDateTime    < DateTimeUtil::addDays(DateTimeUtil::utcNow(), -oneMoreActionQueueTypeTable.RetentionPeriod)
             {
-                numberOfRecords = 0;
+                oneMoreActionQueueCleanUpTmp.RefRecId = oneMoreActionQueue.RecId;
+                oneMoreActionQueueCleanUpTmpRIL.add(oneMoreActionQueueCleanUpTmp);
+
+                numberOfRecords++;
+                totalDeletedRecords++;
+
+                if (numberOfRecords >= OneMoreActionQueueConstants::cleanUpBatchSize)
+                {
+                    numberOfRecords = 0;
+                    this.deleteRecordsInternal();
+                }
+            }
+
+            if (totalDeletedRecords)
+            {
                 this.deleteRecordsInternal();
+
+                info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueNumberOfDeletedRecord", totalDeletedRecords, oneMoreActionQueueTypeTable.TypeId));
             }
         }
-
-        this.deleteRecordsInternal();
-
-        info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueNumberOfDeletedRecord", numberOfRecords));
     }
 
 ]]></Source>
@@ -92,38 +99,62 @@ class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
     /// </summary>
     protected void deleteRecords()
     {
-        OneMoreActionQueueLogTable      oneMoreActionQueueLogTable;
-        OneMoreActionQueue              oneMoreActionQueue;
-        DocuRef                         DocuRef;
+        OneMoreActionQueue oneMoreActionQueue;
 
-        //Clean-up attachements 
-        while select oneMoreActionQueue
-            exists join oneMoreActionQueueCleanUpTmp
-                where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueue.RecId
-            exists join DocuRef
-                where docuRef.RefTableId    == oneMoreActionQueue.TableId
-                   && docuRef.RefRecId      == oneMoreActionQueue.RecId
-        {
-            oneMoreActionQueue.deleteAttachements();
-        }
-        
-        oneMoreActionQueueLogTable.skipDeleteActions(true);
-        oneMoreActionQueueLogTable.skipDataMethods(true);
-        oneMoreActionQueueLogTable.skipDatabaseLog(true);
-        oneMoreActionQueueLogTable.skipEvents(true);
-
-        delete_from oneMoreActionQueueLogTable
-            exists join oneMoreActionQueueCleanUpTmp
-            where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueueLogTable.RefRecId;
-
-        oneMoreActionQueue.skipDeleteActions(true);
-        oneMoreActionQueue.skipDataMethods(true);
-        oneMoreActionQueue.skipDatabaseLog(true);
-        oneMoreActionQueue.skipEvents(true);
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueue);
 
         delete_from oneMoreActionQueue
-            exists join oneMoreActionQueueCleanUpTmp
+        exists join oneMoreActionQueueCleanUpTmp
             where oneMoreActionQueueCleanUpTmp.RefRecId == oneMoreActionQueue.RecId;
+        
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable;
+        
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueLogTable);
+
+        delete_from oneMoreActionQueueLogTable
+        notexists join oneMoreActionQueue
+            where oneMoreActionQueueLogTable.RefRecId == oneMoreActionQueue.RecId;
+
+        DocuRef docuRef;
+        
+        while select forupdate docuRef
+            where docuRef.RefTableId    ==  tableNum(OneMoreActionQueue)
+        notexists join oneMoreActionQueue
+            where docuRef.RefRecId == oneMoreActionQueue.RecId
+        {
+            docuRef.delete();
+        }
+
+        OneMoreActionQueueBatchJobCorrelation oneMoreActionQueueBatchJobCorrelation;
+
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueBatchJobCorrelation);
+
+        delete_from oneMoreActionQueueBatchJobCorrelation
+        notexists join oneMoreActionQueue
+            where oneMoreActionQueueBatchJobCorrelation.ActionQueueRecId == oneMoreActionQueue.RecId;
+
+        OneMoreActionQueueDocumentCorrelation oneMoreActionQueueDocumentCorrelation;
+
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueDocumentCorrelation);
+
+        delete_from oneMoreActionQueueDocumentCorrelation
+        notexists join oneMoreActionQueue
+            where oneMoreActionQueueDocumentCorrelation.ActionQueueRecId == oneMoreActionQueue.RecId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>skipTableMethods</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal static void skipTableMethods(Common _common)
+    {
+        _common.skipDeleteActions(true);
+        _common.skipDataMethods(true);
+        _common.skipAosValidation(true);
+        _common.skipDatabaseLog(true);
+        _common.skipEvents(true);
     }
 
 ]]></Source>

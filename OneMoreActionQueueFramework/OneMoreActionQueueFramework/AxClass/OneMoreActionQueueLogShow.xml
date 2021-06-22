@@ -6,7 +6,7 @@
 /// <summary>
 /// Show processing log
 /// </summary>
-class OneMoreActionQueueLogShow
+internal class OneMoreActionQueueLogShow
 {
 }
 ]]></Declaration>
@@ -17,12 +17,24 @@ class OneMoreActionQueueLogShow
     [Hookable(false)]
     public static void main(Args _args)
     {
-        if (!_args)
+        if (!_args || !_args.record())
         {
             throw error(error::wrongUseOfFunction(funcName()));
         }
 
-        OneMoreActionQueueLogTable::showLog(_args.record());
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable;
+
+        switch (_args.record().TableId)
+        {
+            case tableNum(OneMoreActionQueue):
+                oneMoreActionQueueLogTable = oneMoreActionQueueLogTable::findLast(_args.record().RecId);
+                break;
+            case tableNum(OneMoreActionQueueLogTable):
+                oneMoreActionQueueLogTable = _args.record();
+                break;
+        }
+
+        oneMoreActionQueueLogTable.showInfoLog();
     }
 
 ]]></Source>

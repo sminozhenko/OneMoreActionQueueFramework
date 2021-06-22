@@ -4,88 +4,88 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
-/// Action queue processor class for DMF export type
+/// Action queue processor class for DMF export (entity) type
 /// </summary>
-[
-    OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true),
-    OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueDMFExportBusinessEvent))
-]
-class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueProcessor
+[OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)]
+class OneMoreActionQueueDMFExportProcessor extends OneMoreActionQueueDMFExportProcessorBase
 {
-    OneMoreActionQueueDMFExportContract  localContract;
-        
+    
 }
 ]]></Declaration>
 		<Methods>
 			<Method>
-				<Name>Initialize</Name>
+				<Name>initializeDMFDefinitionGroupName</Name>
 				<Source><![CDATA[
-    public void Initialize()
+    [Hookable(false)]
+    protected void initializeDMFDefinitionGroupName()
     {
-        super();
-
-        localContract = contract as OneMoreActionQueueDMFExportContract;
+        definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
     }
 
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>runActionInternal</Name>
+				<Name>runExport</Name>
 				<Source><![CDATA[
-    public void runActionInternal()
+    [Hookable(false)]
+    protected void runExport()
     {
-        try
+        DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
+
+        DMFEntityExporter exporter = new DMFEntityExporter();
+                    
+        fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, executionId, oneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName, #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
+
+        if (!fileId)
         {
-            #DMF
-            
-            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = localContract;
-            
-            DMFDefinitionGroupName                          definitionGroupName = strFmt('%1_%2', this.parmOneMoreActionQueueTypeTable().TypeId, newGuid());
-            OneMoreActionQueueTypeDMFExportParameterTable   oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+            fileUploaded = false;
+        }
+    }
 
-            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
-            
-            DMFEntity               dmfEntity = DMFEntity::find(oneMoreActionQueueTypeDMFExportParameterTable.DMFEntityName);
+]]></Source>
+			</Method>
+			<Method>
+				<Name>finalizeAction</Name>
+				<Source><![CDATA[
+    protected void finalizeAction()
+    {
+        super();
 
+        if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
+        {
             ttsbegin;
-
-            DMFEntityExporter exporter = new DMFEntityExporter();
-            SharedServiceUnitFileID fileId = exporter.exportToFile(dmfEntity.EntityName, definitionGroupName, '', oneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName, #FieldGroupName_AllFields, oneMoreActionQueueTypeDMFExportParameterTable.PackedQueryRun, curExt());
-
-            if (fileId != '')
-            {
-                SharedServiceUnitURL    downloadUrl = DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
-                System.Uri              uri = new System.Uri(downloadUrl);
-                str                     fileName = System.IO.Path::GetFileName(uri.LocalPath);
-                str                     filePath = WinAPIServer::getTempPath() + fileName;
                 
-                DMFPackageUtil::downloadFileFromUrlV2(downloadUrl, filePath);
+            DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
 
-                using (System.IO.Stream fileStream = System.IO.File::OpenRead(filePath))
-                {
-                    var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
-                    DocumentManagement::attachFileToCommon(this.parmOneMoreActionQueue(), DocuType::typeFile(), fileStream, fileName, mime, fileName);
-                }
-
-                DMFPackageUtil::deleteFileIgnoreError(filePath);
-
-                if (!oneMoreActionQueueTypeDMFExportParameterTable.KeepDataProject)
-                {
-                    DMFDefinitionGroup          dmfDefinitionGroup = DMFDefinitionGroup::find(definitionGroupName, true);
-                    dmfDefinitionGroup.delete();
-                }
-            }
-            else
+            if (dmfDefinitionGroup.RecId != 0)
             {
-                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", definitionGroupName));
+                dmfDefinitionGroup.delete();
             }
 
             ttscommit;
         }
-        finally
-        {
-            OneMoreActionQueueContext::oneMoreActionQueueParametersContract = null;
-        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>attachExportFileToActionQeueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean attachExportFileToActionQeueue()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateExecutionId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean generateExecutionId()
+    {
+        return true;
     }
 
 ]]></Source>
