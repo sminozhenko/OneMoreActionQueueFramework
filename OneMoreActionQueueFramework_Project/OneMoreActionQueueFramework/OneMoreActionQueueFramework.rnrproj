@@ -467,6 +467,11 @@
       <Name>OneMoreActionQueueActionId</Name>
       <Link>Extended Data Types\OneMoreActionQueueActionId</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueActionMenuItemName">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueActionMenuItemName</Name>
+      <Link>Extended Data Types\OneMoreActionQueueActionMenuItemName</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueDMFExportKeepDataProject">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportKeepDataProject</Name>
