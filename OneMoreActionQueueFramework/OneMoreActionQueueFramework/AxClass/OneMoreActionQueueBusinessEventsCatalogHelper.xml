@@ -94,6 +94,36 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>updateActionQueueEvent</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update action queue event
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueTypeTable">An action queue type buffer</param>
+    internal static void updateActionQueueEvent(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    {
+        BusinessEventsId businessEventsId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(_oneMoreActionQueueTypeTable.TypeId);
+        
+        BusinessEventsTable businessEventsTable;
+
+        ttsbegin;
+        
+        //TODO businessEventsTable.find is internal. Extensibility request is created
+        select firstonly forupdate businessEventsTable
+            where businessEventsTable.BusinessEventId == businessEventsId;
+
+        if (businessEventsTable.RecId != 0)
+        {
+            businessEventsTable.Name = _oneMoreActionQueueTypeTable.Description ? _oneMoreActionQueueTypeTable.Description : _oneMoreActionQueueTypeTable.TypeId;
+            businessEventsTable.update();
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>

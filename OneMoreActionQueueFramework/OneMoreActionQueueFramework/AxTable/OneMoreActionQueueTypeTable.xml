@@ -466,6 +466,8 @@ public class OneMoreActionQueueTypeTable extends common
             }
         }
 
+        OneMoreActionQueueBusinessEventsCatalogHelper::updateActionQueueEvent(this);
+
         ttscommit;
     }
 
