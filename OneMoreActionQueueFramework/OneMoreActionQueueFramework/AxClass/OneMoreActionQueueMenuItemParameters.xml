@@ -9,8 +9,7 @@
 internal class OneMoreActionQueueMenuItemParameters extends RunBase
 {
     private OneMoreActionQueueMenuItemName              menuItemName;
-    private OneMoreActionQueueMenuItemName              actionMenuItemName;
-    private ClassId                                     jobClassId;    
+    private ClassId                                     jobClassId;
     
     private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
     
@@ -53,18 +52,6 @@ internal class OneMoreActionQueueMenuItemParameters extends RunBase
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmActionMenuItemName</Name>
-				<Source><![CDATA[
-    [Hookable(false)]
-    public OneMoreActionQueueMenuItemName parmActionMenuItemName(OneMoreActionQueueMenuItemName _actionMenuItemName = actionMenuItemName)
-    {
-        actionMenuItemName = _actionMenuItemName;
-        return actionMenuItemName;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>parmJobClassId</Name>
 				<Source><![CDATA[
     [Hookable(false)]
@@ -96,11 +83,6 @@ internal class OneMoreActionQueueMenuItemParameters extends RunBase
         boolean ret;
 
         ret = super(calledFrom);
-
-        if (actionMenuItemName)
-        {
-            menuItemName = actionMenuItemName;
-        }
 
         if (menuItemName && jobClassId || (!menuItemName && !jobClassId))
         {
@@ -145,7 +127,6 @@ internal class OneMoreActionQueueMenuItemParameters extends RunBase
         if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0)
         {
             oneMoreActionQueueMenuItemParameters.parmMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
-            oneMoreActionQueueMenuItemParameters.parmActionMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
             oneMoreActionQueueMenuItemParameters.parmJobClassId(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
         }
 
