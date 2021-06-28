@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueMenuItemParameters</Name>
+	<Name>OneMoreActionQueueMenuItemParametersSet</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
 /// Set menu item parameter for action queue
 /// </summary>
-internal class OneMoreActionQueueMenuItemParameters extends RunBase
+internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 {
     private OneMoreActionQueueMenuItemName              menuItemName;
     private ClassId                                     jobClassId;
@@ -20,9 +20,9 @@ internal class OneMoreActionQueueMenuItemParameters extends RunBase
 				<Name>construct</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    public static OneMoreActionQueueMenuItemParameters construct()
+    public static OneMoreActionQueueMenuItemParametersSet construct()
     {
-        return new OneMoreActionQueueMenuItemParameters();
+        return new OneMoreActionQueueMenuItemParametersSet();
     }
 
 ]]></Source>
@@ -118,21 +118,21 @@ internal class OneMoreActionQueueMenuItemParameters extends RunBase
             throw error(Error::missingRecord(funcname()));
         }
 
-        OneMoreActionQueueMenuItemParameters oneMoreActionQueueMenuItemParameters = OneMoreActionQueueMenuItemParameters::construct();
+        OneMoreActionQueueMenuItemParametersSet oneMoreActionQueueMenuItemParametersSet = OneMoreActionQueueMenuItemParametersSet::construct();
 
-        oneMoreActionQueueMenuItemParameters.parmOneMoreActionQueueTypeTable(_args.record());
+        oneMoreActionQueueMenuItemParametersSet.parmOneMoreActionQueueTypeTable(_args.record());
 
-        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = oneMoreActionQueueMenuItemParameters.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
+        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = oneMoreActionQueueMenuItemParametersSet.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
 
         if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0)
         {
-            oneMoreActionQueueMenuItemParameters.parmMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
-            oneMoreActionQueueMenuItemParameters.parmJobClassId(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
+            oneMoreActionQueueMenuItemParametersSet.parmMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
+            oneMoreActionQueueMenuItemParametersSet.parmJobClassId(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
         }
 
-        if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0 || oneMoreActionQueueMenuItemParameters.prompt())
+        if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0 || oneMoreActionQueueMenuItemParametersSet.prompt())
         {
-            oneMoreActionQueueMenuItemParameters.runOperation();
+            oneMoreActionQueueMenuItemParametersSet.runOperation();
 
             if (_args.record())
             {

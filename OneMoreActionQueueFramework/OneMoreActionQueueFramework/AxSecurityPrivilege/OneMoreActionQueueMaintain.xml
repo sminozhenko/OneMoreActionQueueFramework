@@ -57,7 +57,7 @@
 			<Forms />
 		</AxSecurityEntryPointReference>
 		<AxSecurityEntryPointReference>
-			<Name>OneMoreActionQueueMenuItemParameters</Name>
+			<Name>OneMoreActionQueueMenuItemParametersSet</Name>
 			<Grant>
 				<Correct>Allow</Correct>
 				<Create>Allow</Create>
@@ -65,7 +65,7 @@
 				<Read>Allow</Read>
 				<Update>Allow</Update>
 			</Grant>
-			<ObjectName>OneMoreActionQueueMenuItemParameters</ObjectName>
+			<ObjectName>OneMoreActionQueueMenuItemParametersSet</ObjectName>
 			<ObjectType>MenuItemAction</ObjectType>
 			<Forms />
 		</AxSecurityEntryPointReference>
@@ -136,6 +136,19 @@
 					<DataSources />
 				</AxSecurityEntryPointReferenceForm>
 			</Forms>
+		</AxSecurityEntryPointReference>
+		<AxSecurityEntryPointReference>
+			<Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+			<Grant>
+				<Correct>Allow</Correct>
+				<Create>Allow</Create>
+				<Delete>Allow</Delete>
+				<Read>Allow</Read>
+				<Update>Allow</Update>
+			</Grant>
+			<ObjectName>OneMoreActionQueueMenuItemParametersRemove</ObjectName>
+			<ObjectType>MenuItemAction</ObjectType>
+			<Forms />
 		</AxSecurityEntryPointReference>
 	</EntryPoints>
 	<FormControlOverrides />

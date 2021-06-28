@@ -227,10 +227,15 @@
       <Name>OneMoreActionQueueMenuItemLookupTreeBuilder</Name>
       <Link>Classes\OneMoreActionQueueMenuItemLookupTreeBuilder</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueMenuItemParameters">
+    <Content Include="AxClass\OneMoreActionQueueMenuItemParametersRemove">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueMenuItemParameters</Name>
-      <Link>Classes\OneMoreActionQueueMenuItemParameters</Link>
+      <Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemParametersRemove</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemParametersSet">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParametersSet</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemParametersSet</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueMenuItemRunBaseBatchBehavior">
       <SubType>Content</SubType>
@@ -707,10 +712,15 @@
       <Name>OneMoreActionQueueLogShow</Name>
       <Link>Action Menu Items\OneMoreActionQueueLogShow</Link>
     </Content>
-    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParameters">
+    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParametersRemove">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueMenuItemParameters</Name>
-      <Link>Action Menu Items\OneMoreActionQueueMenuItemParameters</Link>
+      <Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+      <Link>Action Menu Items\OneMoreActionQueueMenuItemParametersRemove</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParametersSet">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParametersSet</Name>
+      <Link>Action Menu Items\OneMoreActionQueueMenuItemParametersSet</Link>
     </Content>
     <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingManualController">
       <SubType>Content</SubType>
