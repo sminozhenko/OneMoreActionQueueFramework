@@ -9,7 +9,7 @@
 [Form]
 public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implements OneMoreActionQueueIMenuItemLookupCaller
 {
-    private OneMoreActionQueueMenuItemParameters    oneMoreActionQueueMenuItemParameters;
+    private OneMoreActionQueueMenuItemParametersSet oneMoreActionQueueMenuItemParametersSet;
     private OneMoreActionQueueMenuItemName          menuItemname;
 
 }
@@ -24,7 +24,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 
         if (ret && element.closedOk())
         {
-            ret = oneMoreActionQueueMenuItemParameters.validate();
+            ret = oneMoreActionQueueMenuItemParametersSet.validate();
         }
 
         return ret;
@@ -42,20 +42,20 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
             throw error(strfmt("@SYS22862", element.name()));
         }
 
-        if (classidget(element.args().caller().runBase()) != classnum(OneMoreActionQueueMenuItemParameters))
+        if (classidget(element.args().caller().runBase()) != classnum(OneMoreActionQueueMenuItemParametersSet))
         {
-            throw error(strfmt("@SYS22456", element.name(), classId2Name(classnum(OneMoreActionQueueMenuItemParameters))));
+            throw error(strfmt("@SYS22456", element.name(), classId2Name(classnum(OneMoreActionQueueMenuItemParametersSet))));
         }
 
-        oneMoreActionQueueMenuItemParameters = element.args().caller().runBase();
+        oneMoreActionQueueMenuItemParametersSet = element.args().caller().runBase();
 
         super();
 
-        MenuItemNameControl.text(oneMoreActionQueueMenuItemParameters.parmMenuItemName());
-        MenuItemNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmMenuItemName());
+        MenuItemNameControl.text(oneMoreActionQueueMenuItemParametersSet.parmMenuItemName());
+        MenuItemNameControl.enabled(!oneMoreActionQueueMenuItemParametersSet.parmMenuItemName());
 
-        ClassNameControl.text(classId2Name(oneMoreActionQueueMenuItemParameters.parmJobClassId()));
-        ClassNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmJobClassId());
+        ClassNameControl.text(classId2Name(oneMoreActionQueueMenuItemParametersSet.parmJobClassId()));
+        ClassNameControl.enabled(!oneMoreActionQueueMenuItemParametersSet.parmJobClassId());
     }
 
 ]]></Source>
@@ -65,7 +65,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 				<Source><![CDATA[
     Object runBase()
     {
-        return oneMoreActionQueueMenuItemParameters;
+        return oneMoreActionQueueMenuItemParametersSet;
     }
 
 ]]></Source>
@@ -75,7 +75,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 				<Source><![CDATA[
     public void setSelectedMenuItem(OneMoreActionQueueMenuItemName _selectedMenuItem, MenuItemType _menuItemType)
     {
-        oneMoreActionQueueMenuItemParameters.parmMenuItemName(_selectedMenuItem);
+        oneMoreActionQueueMenuItemParametersSet.parmMenuItemName(_selectedMenuItem);
         MenuItemNameControl.text(_selectedMenuItem);
     }
 
@@ -96,7 +96,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
             boolean ret;
     
             ret = super();
-            oneMoreActionQueueMenuItemParameters.parmMenuItemName(this.valueStr());
+            oneMoreActionQueueMenuItemParametersSet.parmMenuItemName(this.valueStr());
     
             return ret;
         }
@@ -118,7 +118,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
     
             ret = super();
 
-            oneMoreActionQueueMenuItemParameters.parmJobClassId(this.valueStr() ? className2Id(this.valueStr()) : 0); 
+            oneMoreActionQueueMenuItemParametersSet.parmJobClassId(this.valueStr() ? className2Id(this.valueStr()) : 0); 
     
             return ret;
         }
@@ -132,7 +132,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 	</SourceCode>
 	<DataSources />
 	<Design>
-		<Caption xmlns="">@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParameters</Caption>
+		<Caption xmlns="">@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParametersSet</Caption>
 		<DialogSize xmlns="">Medium</DialogSize>
 		<Frame xmlns="">Dialog</Frame>
 		<Pattern xmlns="">DialogTabs</Pattern>

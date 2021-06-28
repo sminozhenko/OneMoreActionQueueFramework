@@ -31,8 +31,8 @@ public class OneMoreActionQueueTypeTable extends FormRun
         CustomAction.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::Custom);
         MenuItem.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
         DMFExport.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport);
-        OneMoreActionQueueMenuItemParameters.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
-        OneMoreActionQueueMenuItemParameters.enabled(element.isActionQueueTypeDisabled());
+        MenuItemButtonGroup.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
+        MenuItemButtonGroup.enabled(element.isActionQueueTypeDisabled());
         OneMoreActionQueueDMFExportQueryParameters.enabled(element.isActionQueueTypeDisabled());
     }
 
@@ -446,22 +446,42 @@ public class OneMoreActionQueueTypeTable extends FormRun
 				<Controls>
 					<AxFormControl xmlns=""
 						i:type="AxFormButtonGroupControl">
-						<Name>Maintain</Name>
+						<Name>MenuItemButtonGroup</Name>
+						<AutoDeclaration>Yes</AutoDeclaration>
 						<Type>ButtonGroup</Type>
 						<FormControlExtension
 							i:nil="true" />
 						<Controls>
 							<AxFormControl xmlns=""
 								i:type="AxFormMenuFunctionButtonControl">
-								<Name>OneMoreActionQueueMenuItemParameters</Name>
-								<AutoDeclaration>Yes</AutoDeclaration>
+								<Name>OneMoreActionQueueMenuItemParametersSet</Name>
 								<Type>MenuFunctionButton</Type>
 								<FormControlExtension
 									i:nil="true" />
-								<MenuItemName>OneMoreActionQueueMenuItemParameters</MenuItemName>
+								<MenuItemName>OneMoreActionQueueMenuItemParametersSet</MenuItemName>
 								<MenuItemType>Action</MenuItemType>
 								<NeedsRecord>Yes</NeedsRecord>
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueMenuItemParametersRemove</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+							</AxFormControl>
+						</Controls>
+						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItem</Caption>
+						<DataSource>OneMoreActionQueueTypeTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>Maintain</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
 							<AxFormControl xmlns=""
 								i:type="AxFormMenuFunctionButtonControl">
 								<Name>OneMoreActionQueueDMFExportQueryParameters</Name>
