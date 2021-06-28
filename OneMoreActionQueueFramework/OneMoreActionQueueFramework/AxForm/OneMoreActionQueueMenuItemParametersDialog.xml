@@ -54,9 +54,6 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
         MenuItemNameControl.text(oneMoreActionQueueMenuItemParameters.parmMenuItemName());
         MenuItemNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmMenuItemName());
 
-        ActionMenuItemNameControl.text(oneMoreActionQueueMenuItemParameters.parmActionMenuItemName());
-        ActionMenuItemNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmActionMenuItemName());
-
         ClassNameControl.text(classId2Name(oneMoreActionQueueMenuItemParameters.parmJobClassId()));
         ClassNameControl.enabled(!oneMoreActionQueueMenuItemParameters.parmJobClassId());
     }
@@ -87,50 +84,6 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 		</Methods>
 		<DataSources xmlns="" />
 		<DataControls xmlns="">
-			<Control>
-				<Name>MenuItemNameControl</Name>
-				<Type>String</Type>
-				<Methods>
-					<Method>
-						<Name>modified</Name>
-						<Source><![CDATA[
-        public boolean modified()
-        {
-            boolean ret;
-    
-            ret = super();
-
-            oneMoreActionQueueMenuItemParameters.parmMenuItemName(this.valueStr());
-    
-            return ret;
-        }
-
-]]></Source>
-					</Method>
-				</Methods>
-			</Control>
-			<Control>
-				<Name>ActionMenuItemNameControl</Name>
-				<Type>String</Type>
-				<Methods>
-					<Method>
-						<Name>modified</Name>
-						<Source><![CDATA[
-        public boolean modified()
-        {
-            boolean ret;
-    
-            ret = super();
-
-            oneMoreActionQueueMenuItemParameters.parmActionMenuItemName(this.valueStr());
-    
-            return ret;
-        }
-
-]]></Source>
-					</Method>
-				</Methods>
-			</Control>
 			<Control>
 				<Name>ClassNameControl</Name>
 				<Type>String</Type>
@@ -199,15 +152,6 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 								<FormControlExtension
 									i:nil="true" />
 								<ExtendedDataType>OneMoreActionQueueMenuItemName</ExtendedDataType>
-							</AxFormControl>
-							<AxFormControl xmlns=""
-								i:type="AxFormStringControl">
-								<Name>ActionMenuItemNameControl</Name>
-								<AutoDeclaration>Yes</AutoDeclaration>
-								<Type>String</Type>
-								<FormControlExtension
-									i:nil="true" />
-								<ExtendedDataType>OneMoreActionQueueActionMenuItemName</ExtendedDataType>
 							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
