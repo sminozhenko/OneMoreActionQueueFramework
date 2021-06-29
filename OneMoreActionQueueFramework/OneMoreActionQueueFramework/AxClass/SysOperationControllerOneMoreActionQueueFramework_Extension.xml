@@ -74,6 +74,24 @@ public final class SysOperationControllerOneMoreActionQueueFramework_Extension
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueIsInBatchFlagSet</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is InBatch flag set?
+    /// </summary>
+    /// <param name = "_isInBatchFlagSet">Is InBatch flag set value</param>
+    /// <returns>True if InBatch flag set otherwise false</returns>
+    [Hookable(false)]
+    public boolean parmOneMoreActionQueueIsInBatchFlagSet(boolean _isInBatchFlagSet = isInBatchFlagSet)
+    {
+        isInBatchFlagSet = _isInBatchFlagSet;
+
+        return isInBatchFlagSet;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>
