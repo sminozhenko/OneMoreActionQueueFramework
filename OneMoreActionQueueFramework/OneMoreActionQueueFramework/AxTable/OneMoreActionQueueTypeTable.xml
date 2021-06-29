@@ -637,10 +637,7 @@ public class OneMoreActionQueueTypeTable extends common
             where series.Name                   == originalRecord.TypeId
                && series.ProcessScheduleType    == this.processScheduleType().RecId;
 
-        BusinessEventsTable businessEventsTable;
-
-        select firstonly forupdate businessEventsTable
-            where businessEventsTable.BusinessEventId == OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(originalRecord.TypeId);
+        BusinessEventsTable businessEventsTable = BusinessEventsTable::find(OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(originalRecord.TypeId), true);
 
         businessEventsTable.Name = this.Description ? this.Description : this.TypeId;
         businessEventsTable.update();
