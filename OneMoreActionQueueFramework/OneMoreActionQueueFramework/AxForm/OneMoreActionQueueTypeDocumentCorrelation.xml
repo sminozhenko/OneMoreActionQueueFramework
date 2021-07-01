@@ -12,6 +12,18 @@ public class OneMoreActionQueueTypeDocumentCorrelation extends FormRun
 }
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>updateDocumentCorrelationSequenceFieldDS</Name>
+				<Source><![CDATA[
+    private void updateDocumentCorrelationSequenceFieldDS()
+    {
+        OneMoreActionQueueTypeDocumentCorrelationSequenceField_ds.allowEdit(OneMoreActionQueueTypeDocumentCorrelation.RecId != 0);
+        OneMoreActionQueueTypeDocumentCorrelationSequenceField_ds.allowCreate(OneMoreActionQueueTypeDocumentCorrelation.RecId != 0);
+        OneMoreActionQueueTypeDocumentCorrelationSequenceField_ds.allowDelete(OneMoreActionQueueTypeDocumentCorrelation.RecId != 0);
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 		<DataSources xmlns="">
 			<DataSource>
@@ -34,6 +46,34 @@ public class OneMoreActionQueueTypeDocumentCorrelation extends FormRun
             {
                 return ImageReference::constructForSymbol(OneMoreActionQueueConstants::QueryFilterIcon).pack();
             }
+        }
+
+]]></Source>
+					</Method>
+					<Method>
+						<Name>active</Name>
+						<Source><![CDATA[
+        public int active()
+        {
+            int ret;
+        
+            ret = super();
+
+            element.updateDocumentCorrelationSequenceFieldDS();
+        
+            return ret;
+        }
+
+]]></Source>
+					</Method>
+					<Method>
+						<Name>delete</Name>
+						<Source><![CDATA[
+        public void delete()
+        {
+            super();
+
+            element.updateDocumentCorrelationSequenceFieldDS();
         }
 
 ]]></Source>
@@ -190,6 +230,9 @@ public class OneMoreActionQueueTypeDocumentCorrelation extends FormRun
 			</Fields>
 			<ReferencedDataSources />
 			<JoinSource>OneMoreActionQueueTypeDocumentCorrelation</JoinSource>
+			<AllowCreate>No</AllowCreate>
+			<AllowDelete>No</AllowDelete>
+			<AllowEdit>No</AllowEdit>
 			<InsertIfEmpty>No</InsertIfEmpty>
 			<DataSourceLinks />
 			<DerivedDataSources />
