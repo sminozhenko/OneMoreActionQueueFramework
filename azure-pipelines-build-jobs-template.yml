@@ -39,7 +39,7 @@ jobs:
     steps:
     - template: azure-pipelines-build-steps-template.yml
     
-   - job: Build_10_0_21
+  - job: Build_10_0_21
     displayName: 'Build for 10.0.21'
     pool:
       vmImage: 'vs2017-win2016'
