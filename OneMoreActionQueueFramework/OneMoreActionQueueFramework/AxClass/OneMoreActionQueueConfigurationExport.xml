@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationExport</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration export action
+/// </summary>
+internal class OneMoreActionQueueConfigurationExport extends RunBase
+{
+    private OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationExport construct()
+    {
+        return new OneMoreActionQueueConfigurationExport();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
+    {
+        oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
+
+        return oneMoreActionQueueTypeTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class description
+    /// </summary>
+    /// <returns>Class description</returns>
+    [Hookable(false)]
+    public static ClassDescription description()
+    {
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationExport";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static void main(Args _args)
+    {
+        if (!_args || !_args.record())
+        {
+            throw error(error::wrongUseOfFunction(funcName()));
+        }
+        
+        OneMoreActionQueueConfigurationExport oneMoreActionQueueConfigurationExport = OneMoreActionQueueConfigurationExport::construct();
+        oneMoreActionQueueConfigurationExport.parmOneMoreActionQueueTypeTable(_args.record());
+
+        if (oneMoreActionQueueConfigurationExport.prompt())
+        {
+            oneMoreActionQueueConfigurationExport.runOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void run()
+    {
+        System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+        System.Xml.XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration('1.0', 'UTF-8', null);
+        System.Xml.XmlElement root = xmlDoc.DocumentElement;
+        xmlDoc.InsertBefore(xmlDeclaration, root);
+
+        System.Xml.XmlElement rootElement = xmlDoc.CreateElement('Configurations');
+        xmlDoc.AppendChild(rootElement);
+
+        OneMoreActionQueueConfigurationTable::construct(oneMoreActionQueueTypeTable, 1).export(xmlDoc, rootElement);
+
+        System.IO.MemoryStream stream = new System.IO.MemoryStream();
+        
+        xmlDoc.Save(stream);
+        
+        stream.Seek(0, System.IO.SeekOrigin::Begin);
+
+        File::SendFileToUser(stream, strFmt('%1_%2.xml', oneMoreActionQueueTypeTable.TypeId, DateTimeUtil::toStr(DateTimeUtil::utcNow())));
+        
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

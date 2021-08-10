@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeMenuItemParameterTable</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeMenuItemParameterTable), 1)]
+internal class OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, PackedParameters),
+                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, ClassNumber),
+                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, MenuItemName)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelation</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeDocumentCorrelation</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeDocumentCorrelation), 1)]
+internal class OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelation extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(OneMoreActionQueueTypeDocumentCorrelation, QueryData),
+                fieldStr(OneMoreActionQueueTypeDocumentCorrelation, DocumentTableName)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(OneMoreActionQueueTypeDocumentCorrelation, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>tableList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Table list
+    /// </summary>
+    /// <returns>Table list</returns>
+    [Hookable(false)]
+    protected List tableList()
+    {
+        List ret = super();
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeDocumentCorrelationSequenceField))
+            .addLink(fieldNum(OneMoreActionQueueTypeDocumentCorrelationSequenceField, ActionQueueTypeDocumentCorrelationRecId), fieldNum(OneMoreActionQueueTypeDocumentCorrelation, RecId)));
+        
+        return ret;
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

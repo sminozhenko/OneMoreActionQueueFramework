@@ -72,5 +72,12 @@
       <Moniker>BPCheckSkipStatementValidation</Moniker>
       <Justification>Done in separate method</Justification>
     </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/OneMoreActionQueueConfigurationExport/Method/run</Path>
+      <Moniker>BPCheckNestedLoopinCode</Moniker>
+      <Justification>The nested data access loop is intentional.</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>
