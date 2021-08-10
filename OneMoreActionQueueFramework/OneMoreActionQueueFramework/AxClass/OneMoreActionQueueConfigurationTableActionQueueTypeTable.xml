@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeTable</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeTable), 1)]
+internal class OneMoreActionQueueConfigurationTableActionQueueTypeTable extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(OneMoreActionQueueTypeTable, TypeId),
+                fieldStr(OneMoreActionQueueTypeTable, Description),
+                fieldStr(OneMoreActionQueueTypeTable, ActionClassName),
+                fieldStr(OneMoreActionQueueTypeTable, ProcessingType),
+                fieldStr(OneMoreActionQueueTypeTable, ActionQueueType),
+                fieldStr(OneMoreActionQueueTypeTable, RetryAttemptNumber),
+                fieldStr(OneMoreActionQueueTypeTable, RetryAttemptInterval),
+                fieldStr(OneMoreActionQueueTypeTable, ReliableAsyncBatchGroupId),
+                fieldStr(OneMoreActionQueueTypeTable, RunAsUserId),
+                fieldStr(OneMoreActionQueueTypeTable, ProcessAutomationPollingInterval),
+                fieldStr(OneMoreActionQueueTypeTable, RetentionPeriod),
+                fieldStr(OneMoreActionQueueTypeTable, ProcessInSequence)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(OneMoreActionQueueTypeTable, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>tableList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Table list
+    /// </summary>
+    /// <returns>Table list</returns>
+    [Hookable(false)]
+    protected List tableList()
+    {
+        List ret = super();
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeMenuItemParameterTable))
+            .addLink(fieldNum(OneMoreActionQueueTypeMenuItemParameterTable, TypeId), fieldNum(OneMoreActionQueueTypeTable, TypeId)));
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeDMFExportParameterTable))
+            .addLink(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, TypeId), fieldNum(OneMoreActionQueueTypeTable, TypeId)));
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeTransformation))
+            .addLink(fieldNum(OneMoreActionQueueTypeTransformation, TypeId), fieldNum(OneMoreActionQueueTypeTable, TypeId)));
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeDocumentCorrelation))
+            .addLink(fieldNum(OneMoreActionQueueTypeDocumentCorrelation, TypeId), fieldNum(OneMoreActionQueueTypeTable, TypeId)));
+        
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

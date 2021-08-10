@@ -16,15 +16,24 @@ public class OneMoreActionQueueTypeTable extends common
     /// </summary>
     /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
     /// <param name="_forUpdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
+    /// <param name="_concurrencyModel"> A concurrency model; optional.</param>
     /// <returns>
     /// A record in the <c>OneMoreActionQueueTypeTable</c> table otherwise, an empty record.
     /// </returns>
     [Hookable(false)]
-    public static OneMoreActionQueueTypeTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false)
+    public static OneMoreActionQueueTypeTable find(OneMoreActionQueueTypeId _typeId, boolean _forUpdate = false, ConcurrencyModel _concurrencyModel = ConcurrencyModel::Auto)
     {
         OneMoreActionQueueTypeTable  ret;
 
-        ret.selectForUpdate(_forUpdate);
+        if (_forUpdate)
+        {
+            ret.selectForUpdate(_forUpdate);
+
+            if (_concurrencyModel != ConcurrencyModel::Auto)
+            {
+                ret.concurrencyModel(_concurrencyModel);
+            }
+        }
 
         if (_typeId)
         {
