@@ -6,7 +6,7 @@
 /// <summary>
 /// OneMore action queue configuration table attribute class
 /// </summary>
-internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribute
+internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribute implements SysExtensionIAttribute
 {
     private TableName configurationTableName;
     private int version;
@@ -32,6 +32,28 @@ internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribut
     public TableName parmConfigurationTableName()
     {
         return configurationTableName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCacheKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmCacheKey()
+    {
+        return classStr(OneMoreActionQueueConfigurationTableAttribute) + ';' + configurationTableName + ';' + int2Str(version);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useSingleton</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean useSingleton()
+    {
+        return false;
     }
 
 ]]></Source>
