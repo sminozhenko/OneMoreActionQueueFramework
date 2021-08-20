@@ -380,7 +380,7 @@ abstract internal class OneMoreActionQueueConfigurationTable
         switch (typeOf(_value))
         {
             case Types::Container:
-                ret = con2base64str(_value);
+                ret = ContainerHelper::serialize(_value);
                 break;
             case Types::Enum:
                 ret = enum2Symbol(df.enumId(), _value);
@@ -420,7 +420,7 @@ abstract internal class OneMoreActionQueueConfigurationTable
         switch (type)
         {
             case Types::Container:
-                ret = base64str2con(_value);
+                ret = ContainerHelper::deserialize(_value);
                 break;
             case Types::Enum:
                 ret = symbol2Enum(df.enumId(), _value);
