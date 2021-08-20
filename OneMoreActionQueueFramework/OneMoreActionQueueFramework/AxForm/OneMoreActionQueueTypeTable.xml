@@ -85,6 +85,21 @@ public class OneMoreActionQueueTypeTable extends FormRun
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    public void init()
+    {
+        OneMoreActionQueueTypeMenuItemParameterTable::updateClassName();
+
+        super();
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 		<DataSources xmlns="">
 			<DataSource>
@@ -753,11 +768,11 @@ public class OneMoreActionQueueTypeTable extends FormRun
 							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
-								<Name>MenuItem_menuItemClassName</Name>
+								<Name>MenuItem_ClassName</Name>
 								<Type>String</Type>
 								<FormControlExtension
 									i:nil="true" />
-								<DataMethod>menuItemClassName</DataMethod>
+								<DataField>ClassName</DataField>
 								<DataSource>OneMoreActionQueueTypeMenuItemParameterTable</DataSource>
 							</AxFormControl>
 						</Controls>

@@ -54,8 +54,8 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
         MenuItemNameControl.text(oneMoreActionQueueMenuItemParametersSet.parmMenuItemName());
         MenuItemNameControl.enabled(!oneMoreActionQueueMenuItemParametersSet.parmMenuItemName());
 
-        ClassNameControl.text(classId2Name(oneMoreActionQueueMenuItemParametersSet.parmJobClassId()));
-        ClassNameControl.enabled(!oneMoreActionQueueMenuItemParametersSet.parmJobClassId());
+        ClassNameControl.text(oneMoreActionQueueMenuItemParametersSet.parmJobClassName());
+        ClassNameControl.enabled(!oneMoreActionQueueMenuItemParametersSet.parmJobClassName());
     }
 
 ]]></Source>
@@ -118,7 +118,7 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
     
             ret = super();
 
-            oneMoreActionQueueMenuItemParametersSet.parmJobClassId(this.valueStr() ? className2Id(this.valueStr()) : 0); 
+            oneMoreActionQueueMenuItemParametersSet.parmJobClassName(this.valueStr()); 
     
             return ret;
         }

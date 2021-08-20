@@ -24,7 +24,7 @@ internal class OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParame
     {
         return [
                 fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, PackedParameters),
-                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, ClassNumber),
+                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, ClassName),
                 fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, MenuItemName)
                ];
     }
