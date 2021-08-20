@@ -6,7 +6,7 @@
 /// <summary>
 /// OneMore action queue processor business event attribute class
 /// </summary>
-public class OneMoreActionQueueProcessorBusinessEventAttribute extends SysAttribute
+public class OneMoreActionQueueProcessorBusinessEventAttribute extends SysAttribute implements SysExtensionIAttribute
 {
     private ClassName                   actionQueueBusinessEventClass;
 
@@ -30,6 +30,28 @@ public class OneMoreActionQueueProcessorBusinessEventAttribute extends SysAttrib
     public ClassName parmActionQueueBusinessEventClass()
     {
         return actionQueueBusinessEventClass;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCacheKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmCacheKey()
+    {
+        return classStr(OneMoreActionQueueProcessorBusinessEventAttribute) + ';' + actionQueueBusinessEventClass;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useSingleton</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean useSingleton()
+    {
+        return false;
     }
 
 ]]></Source>
