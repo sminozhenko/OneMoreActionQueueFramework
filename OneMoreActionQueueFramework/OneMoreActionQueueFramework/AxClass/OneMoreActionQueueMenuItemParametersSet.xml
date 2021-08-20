@@ -9,7 +9,7 @@
 internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 {
     private OneMoreActionQueueMenuItemName              menuItemName;
-    private ClassId                                     jobClassId;
+    private ClassName                                   jobClassName;
     
     private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
     
@@ -52,13 +52,13 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>parmJobClassId</Name>
+				<Name>parmJobClassName</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    public ClassId parmJobClassId(ClassId _jobClassId = jobClassId)
+    public ClassName parmJobClassName(ClassName _jobClassName = jobClassName)
     {
-        jobClassId = _jobClassId;
-        return jobClassId;
+        jobClassName = _jobClassName;
+        return jobClassName;
     }
 
 ]]></Source>
@@ -84,7 +84,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 
         ret = super(calledFrom);
 
-        if (menuItemName && jobClassId || (!menuItemName && !jobClassId))
+        if (menuItemName && jobClassName || (!menuItemName && !jobClassName))
         {
             ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueEitherMenuItemOrClassNameSelected");
         }
@@ -96,9 +96,9 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
                 ret = OneMoreActionQueueTypeMenuItemParameterTable::checkMenuItemName(menuItemName) && ret;
             }
 
-            if (jobClassId)
+            if (jobClassName)
             {
-                ret = OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(jobClassId) && ret;
+                ret = OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(jobClassName) && ret;
             }
         }
 
@@ -127,7 +127,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
         if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0)
         {
             oneMoreActionQueueMenuItemParametersSet.parmMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
-            oneMoreActionQueueMenuItemParametersSet.parmJobClassId(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
+            oneMoreActionQueueMenuItemParametersSet.parmJobClassName(oneMoreActionQueueTypeMenuItemParameterTable.className());
         }
 
         if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0 || oneMoreActionQueueMenuItemParametersSet.prompt())
@@ -160,7 +160,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
             {
                 oneMoreActionQueueTypeMenuItemParameterTable.TypeId         = oneMoreActionQueueTypeTable.TypeId;
                 oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName   = menuItemName;
-                oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber    = jobClassId;
+                oneMoreActionQueueTypeMenuItemParameterTable.ClassName      = jobClassName;
             }
 
             if (oneMoreActionQueueTypeMenuItemParameterTable.RecId == 0 && menuItemName)
@@ -171,7 +171,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
             }
             else
             {
-                OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(jobClassId);
+                OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(jobClassName);
 
                 menuItemBehavior.initialize();
 
@@ -187,7 +187,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 
                 if (menuItemBehavior.promptDialog() && menuItemBehavior.promptDialogPost())
                 {
-                    OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(oneMoreActionQueueTypeMenuItemParameterTable, jobClassId, menuItemBehavior.packParameters());
+                    OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(oneMoreActionQueueTypeMenuItemParameterTable, jobClassName, menuItemBehavior.packParameters());
                 }
             }
         }
