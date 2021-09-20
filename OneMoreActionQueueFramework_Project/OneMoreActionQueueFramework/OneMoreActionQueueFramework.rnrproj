@@ -692,6 +692,11 @@
       <Name>OneMoreActionQueueResponseType</Name>
       <Link>Base Enums\OneMoreActionQueueResponseType</Link>
     </Content>
+    <Content Include="AxEnum\OneMoreActionQueueSource">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSource</Name>
+      <Link>Base Enums\OneMoreActionQueueSource</Link>
+    </Content>
     <Content Include="AxEnum\OneMoreActionQueueStatus">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueStatus</Name>

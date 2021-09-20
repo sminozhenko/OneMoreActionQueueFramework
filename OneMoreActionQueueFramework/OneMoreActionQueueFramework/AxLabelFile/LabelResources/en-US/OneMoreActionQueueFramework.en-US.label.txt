@@ -160,3 +160,6 @@ OneMoreActionQueueConfigurationTypeIdIsNotSpecified=Existing or new action queue
 OneMoreActionQueueConfigurationDoYouWantToOverwriteData=Do you want to overwrite data in action queue type '%1'?
 OneMoreActionQueueConfigurationSuccessfullyImported=The configuration was successfully imported
 OneMoreActionQueueConfigurationElementWasNotFound=Element '%1' was not found in the file
+OneMoreActionQueueSource=Source
+OneMoreActionQueueSourceIntegration=Integration
+OneMoreActionQueueSourceBusinessEvent=Business event

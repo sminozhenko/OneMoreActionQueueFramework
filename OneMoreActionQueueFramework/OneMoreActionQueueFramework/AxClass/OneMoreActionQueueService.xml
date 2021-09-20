@@ -52,7 +52,7 @@ final class OneMoreActionQueueService
             
             try
             {
-                oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(_typeId, _actionMessage, _actionId);
+                oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(_typeId, _actionMessage, OneMoreActionQueueSource::Integration, _actionId);
 
                 response = OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue);
             }

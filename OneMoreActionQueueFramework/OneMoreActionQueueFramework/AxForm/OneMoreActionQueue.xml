@@ -423,6 +423,16 @@ public class OneMoreActionQueue extends FormRun
 								<DataSource>OneMoreActionQueue</DataSource>
 								<Items />
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormComboBoxControl">
+								<Name>General_Source</Name>
+								<Type>ComboBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>Source</DataField>
+								<DataSource>OneMoreActionQueue</DataSource>
+								<Items />
+							</AxFormControl>
 						</Controls>
 						<DataGroup>General</DataGroup>
 						<DataSource>OneMoreActionQueue</DataSource>
