@@ -217,12 +217,22 @@ public class OneMoreActionQueueTypeTable extends common
             while(methodsEnumerator.moveNext())
             {
                 DictMethod dictMethod = methodsEnumerator.current();
+                
             
                 DataMemberAttribute dataMember = dictMethod.getAttribute(classStr(DataMemberAttribute));
             
                 if (dataMember)
                 {
-                    switch (dictMethod.returnType())
+                    Types types = dictMethod.returnType();
+                    
+                    if (types == Types::UserType)
+                    {
+                        DictType dt = new DictType(dictMethod.returnId());
+
+                        types = dt.baseType();
+                    }
+                    
+                    switch (types)
                     {
                         case Types::Class:
                             DataCollectionAttribute dataCollectionAttribute = dictMethod.getAttribute(classStr(DataCollectionAttribute));
@@ -248,6 +258,9 @@ public class OneMoreActionQueueTypeTable extends common
                                 actionQueueDictClass.callObject(dictMethod.Name(), contract, list);
                             }
 
+                            break;
+                        case Types::Date:
+                            actionQueueDictClass.callObject(dictMethod.Name(), contract, DateTimeUtil::getSystemDate(DateTimeUtil::getUserPreferredTimeZone()));
                             break;
                         default:
                             actionQueueDictClass.callObject(dictMethod.Name(), contract, 'string_value');
