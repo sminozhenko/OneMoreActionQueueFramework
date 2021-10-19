@@ -79,5 +79,12 @@
       <Moniker>BPCheckNestedLoopinCode</Moniker>
       <Justification>The nested data access loop is intentional.</Justification>
     </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>CodeAnalysis</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>dynamics://Table/OneMoreActionQueueTypeTable/Method/deleteBusinessEvent</Path>
+      <Moniker>BPCheckSkipStatementValidation</Moniker>
+      <Justification>By design</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>

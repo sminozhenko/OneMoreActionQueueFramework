@@ -10,7 +10,6 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
 {
     private OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
 
-    private boolean processedSuccessfully;
     private boolean doRetry;
 
 }
@@ -27,21 +26,6 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
     public static OneMoreActionQueueProcessingEngine construct()
     {
         return new OneMoreActionQueueProcessingEngine();
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>getProcessedSuccessfully</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Is processed successfully?
-    /// </summary>
-    /// <returns>True if the record was processed successfully otherwise false</returns>
-    [Hookable(false)]
-    public boolean getProcessedSuccessfully()
-    {
-        return processedSuccessfully;
     }
 
 ]]></Source>
@@ -237,7 +221,7 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
         switch (oneMoreActionQueueTypeTable.ProcessingType)
         {
             case OneMoreActionQueueProcessingType::ReliableAsynchronous:
-                OneMoreActionQueueProcessingHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
+                OneMoreActionQueueProcessingHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
                 break;
         }
     }

@@ -54,7 +54,7 @@ final class OneMoreActionQueueService
             {
                 oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(_typeId, _actionMessage, OneMoreActionQueueSource::Integration, _actionId);
 
-                response = OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue);
+                response = OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, oneMoreActionQueueTypeTable.ProcessingType, appl.ttsLevel() != 0 ? true : false );
             }
             catch
             {
