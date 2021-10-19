@@ -50,7 +50,7 @@ internal class OneMoreActionQueuePreProcessStaleController extends SysOperationS
         {
             try
             {
-                OneMoreActionQueuePreProcessingEngine::runPreProcessorForAction(oneMoreActionQueue);
+                OneMoreActionQueueProcessingBaseEngine::processSingleRecord(oneMoreActionQueue, OneMoreActionQueueProcessingStage::PreProcessing);
             }
             catch
             {

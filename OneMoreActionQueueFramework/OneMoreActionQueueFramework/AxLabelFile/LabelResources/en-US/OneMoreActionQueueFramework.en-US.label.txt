@@ -163,3 +163,6 @@ OneMoreActionQueueConfigurationElementWasNotFound=Element '%1' was not found in 
 OneMoreActionQueueSource=Source
 OneMoreActionQueueSourceIntegration=Integration
 OneMoreActionQueueSourceBusinessEvent=Business event
+OneMoreActionQueueProcessingFailed=Processing failed
+OneMoreActionQueuePreProcessingFailed=Pre-processing failed
+OneMoreActionQueuePreProcessAction=Pre-process action '%1'
