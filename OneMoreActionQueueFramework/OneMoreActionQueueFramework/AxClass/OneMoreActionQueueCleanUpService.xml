@@ -115,6 +115,14 @@ internal class OneMoreActionQueueCleanUpService extends SysOperationServiceBase
         notexists join oneMoreActionQueue
             where oneMoreActionQueueLogTable.RefRecId == oneMoreActionQueue.RecId;
 
+        OneMoreActionQueueDMFLogTable oneMoreActionQueueDMFLogTable;
+        
+        OneMoreActionQueueCleanUpService::skipTableMethods(oneMoreActionQueueDMFLogTable);
+
+        delete_from oneMoreActionQueueDMFLogTable
+        notexists join oneMoreActionQueue
+            where oneMoreActionQueueDMFLogTable.RefRecId == oneMoreActionQueue.RecId;
+
         DocuRef docuRef;
         
         while select forupdate docuRef

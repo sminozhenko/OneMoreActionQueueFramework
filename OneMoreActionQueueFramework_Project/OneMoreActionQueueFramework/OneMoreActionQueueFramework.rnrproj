@@ -41,6 +41,7 @@
     <Folder Include="Classes\" />
     <Folder Include="Data Entities\" />
     <Folder Include="Display Menu Items\" />
+    <Folder Include="EDT Strings\" />
     <Folder Include="Extended Data Types\" />
     <Folder Include="Form Extensions\" />
     <Folder Include="Forms\" />
@@ -557,6 +558,11 @@
       <Name>OneMoreActionQueueEnabled</Name>
       <Link>Extended Data Types\OneMoreActionQueueEnabled</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueFileExtension">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueFileExtension</Name>
+      <Link>EDT Strings\OneMoreActionQueueFileExtension</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueLogExceptionTypeName">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueLogExceptionTypeName</Name>
@@ -921,6 +927,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueCleanUpTmp</Name>
       <Link>Tables\OneMoreActionQueueCleanUpTmp</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueDMFLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFLogTable</Name>
+      <Link>Tables\OneMoreActionQueueDMFLogTable</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueDocumentCorrelation">
       <SubType>Content</SubType>
