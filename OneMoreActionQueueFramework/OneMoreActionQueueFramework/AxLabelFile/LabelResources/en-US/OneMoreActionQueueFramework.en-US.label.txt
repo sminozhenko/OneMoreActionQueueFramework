@@ -166,3 +166,4 @@ OneMoreActionQueueSourceBusinessEvent=Business event
 OneMoreActionQueueProcessingFailed=Processing failed
 OneMoreActionQueuePreProcessingFailed=Pre-processing failed
 OneMoreActionQueuePreProcessAction=Pre-process action '%1'
+OneMoreActionQueueDMFLogTable=Action queue DMF log

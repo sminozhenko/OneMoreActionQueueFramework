@@ -23,13 +23,13 @@ class OneMoreActionQueueDMFExportBusinessEvent extends OneMoreActionQueueBusines
     {
         OneMoreActionQueueDMFExportBusinessEventContract contract = super();
 
-        DocuRef docuRef = this.parmOneMoreActionQueue().docuRef();
+        OneMoreActionQueueDMFLogTable oneMoreActionQueueDMFLogTable = OneMoreActionQueueDMFLogTable::findLast(this.parmOneMoreActionQueue().RecId);
         
-        if (docuRef)
+        if (oneMoreActionQueueDMFLogTable)
         {
-            contract.parmFileUrl(DocumentManagement::getAttachmentPublicUrl(docuRef));
-            contract.parmFileName(docuRef.Name);
-            contract.parmFileType(docuRef.fileExtension());
+            contract.parmFileUrl(oneMoreActionQueueDMFLogTable.FileURL);
+            contract.parmFileId(oneMoreActionQueueDMFLogTable.FileID);
+            contract.parmFileType(oneMoreActionQueueDMFLogTable.FileExtension);
         }
 
         return contract;

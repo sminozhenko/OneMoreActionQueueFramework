@@ -86,11 +86,13 @@ abstract class OneMoreActionQueueDMFExportProcessorBase extends OneMoreActionQue
                     SharedServiceUnitURL    downloadUrl = generatePackage ? DMFStagingWriter::getDownloadURLFromFileId(fileId) : DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
                     System.Uri              uri = new System.Uri(downloadUrl);
                     str                     fileName = System.IO.Path::GetFileName(uri.LocalPath);
+                    str                     fileExt = strReplace(System.IO.Path::GetExtension(uri.LocalPath), '.', '');
                 
                     System.IO.Stream stream = File::UseFileFromURL(downloadUrl);
 
                     var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
                     DocumentManagement::attachFileToCommon(this.parmOneMoreActionQueue(), DocuType::typeFile(), stream, fileName, mime, fileName);
+                    OneMoreActionQueueDMFLogTable::addActionQueueDMFLogTable(this.parmOneMoreActionQueue(), fileId, downloadUrl, fileExt, definitionGroupName, executionId);
                 }
             }
             else
