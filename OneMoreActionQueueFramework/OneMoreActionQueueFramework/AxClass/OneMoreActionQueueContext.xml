@@ -12,6 +12,7 @@ public static class OneMoreActionQueueContext
     public static OneMoreActionQueueContract                        oneMoreActionQueueContract = null;
     public static container                                         oneMoreActionQueueClearedLog = conNull();
     public static boolean                                           doRetryFlag;
+    public static boolean                                           canBeRetried;
 }
 ]]></Declaration>
 		<Methods />
