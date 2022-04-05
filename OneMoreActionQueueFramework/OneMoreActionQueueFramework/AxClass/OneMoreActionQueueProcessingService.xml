@@ -79,26 +79,6 @@ internal class OneMoreActionQueueProcessingService extends SysOperationServiceBa
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>processSingleRecord</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Process single record
-    /// </summary>
-    /// <param name = "_oneMoreActionQueue">Action queue record to be processed</param>
-    /// <returns>True if record was processed without errors otherwise False</returns>
-    [Hookable(false)]
-    public static boolean processSingleRecord(OneMoreActionQueue _oneMoreActionQueue)
-    {
-        var oneMoreActionQueueProcessingEngine = OneMoreActionQueueProcessingEngine::construct();
-        oneMoreActionQueueProcessingEngine.parmOneMoreActionQueue(_oneMoreActionQueue);
-        oneMoreActionQueueProcessingEngine.run();
-
-        return oneMoreActionQueueProcessingEngine.getProcessedSuccessfully();
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>createTask</Name>
 				<Source><![CDATA[
     [Hookable(false)]
@@ -141,9 +121,27 @@ internal class OneMoreActionQueueProcessingService extends SysOperationServiceBa
     [Hookable(false)]
     public void processActionQueueRecord(OneMoreActionQueueProcessingSingleContract _contract)
     {
-        if (!OneMoreActionQueueProcessingService::processSingleRecord(OneMoreActionQueue::findRecId(_contract.parmActionQueueRecId())))
+        if (!OneMoreActionQueueProcessingBaseEngine::processSingleRecord(OneMoreActionQueue::findRecId(_contract.parmActionQueueRecId()), OneMoreActionQueueProcessingStage::Processing))
         {
-            throw Exception::Error;
+            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingFailed");
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>preProcessActionQueueRecord</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Pre-process single record from action queue
+    /// </summary>
+    /// <param name = "_contract"><c>OneMoreActionQueueProcessingSingleContract</c></param>
+    [Hookable(false)]
+    public void preProcessActionQueueRecord(OneMoreActionQueueProcessingSingleContract _contract)
+    {
+        if (!OneMoreActionQueueProcessingBaseEngine::processSingleRecord(OneMoreActionQueue::findRecId(_contract.parmActionQueueRecId()), OneMoreActionQueueProcessingStage::PreProcessing))
+        {
+            throw error("@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessingFailed");
         }
     }
 
@@ -165,7 +163,7 @@ internal class OneMoreActionQueueProcessingService extends SysOperationServiceBa
 
         while (le.moveNext())
         {
-            if (!OneMoreActionQueueProcessingService::processSingleRecord(OneMoreActionQueue::findRecId(le.current())))
+            if (!OneMoreActionQueueProcessingBaseEngine::processSingleRecord(OneMoreActionQueue::findRecId(le.current()), OneMoreActionQueueProcessingStage::Processing))
             {
                 throwError = true;
             }
@@ -219,7 +217,7 @@ internal class OneMoreActionQueueProcessingService extends SysOperationServiceBa
         }
         else
         {
-            ret = OneMoreActionQueueProcessingService::processSingleRecord(_oneMoreActionQueue);
+            ret = OneMoreActionQueueProcessingBaseEngine::processSingleRecord(_oneMoreActionQueue, OneMoreActionQueueProcessingStage::Processing);
         }
 
         return ret;

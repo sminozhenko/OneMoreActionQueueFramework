@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableAttribute</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// OneMore action queue configuration table attribute class
+/// </summary>
+internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribute implements SysExtensionIAttribute
+{
+    private TableName configurationTableName;
+    private int version;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new(TableName _configurationTableName, int _version)
+    {
+        configurationTableName = _configurationTableName;
+        version = _version;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmConfigurationTableName</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public TableName parmConfigurationTableName()
+    {
+        return configurationTableName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCacheKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmCacheKey()
+    {
+        return classStr(OneMoreActionQueueConfigurationTableAttribute) + ';' + configurationTableName + ';' + int2Str(version);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useSingleton</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean useSingleton()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmVersion</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public int parmVersion()
+    {
+        return version;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

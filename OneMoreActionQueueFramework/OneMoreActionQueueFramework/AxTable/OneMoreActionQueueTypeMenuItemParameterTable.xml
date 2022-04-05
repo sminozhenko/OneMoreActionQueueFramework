@@ -44,10 +44,10 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// Update parameters
     /// </summary>
     /// <param name = "_oneMoreActionQueueTypeMenuItemParameterTable">Original <c>oneMoreActionQueueTypeMenuItemParameterTable</c></param>
-    /// <param name = "_classId">Packed class id</param>
+    /// <param name = "_className">Packed class name</param>
     /// <param name = "_packedParameters">Packed parameters for class object</param>
     [Hookable(false)]
-    public static void updateParameters(oneMoreActionQueueTypeMenuItemParameterTable _oneMoreActionQueueTypeMenuItemParameterTable, ClassId _classId, container _packedParameters)
+    public static void updateParameters(oneMoreActionQueueTypeMenuItemParameterTable _oneMoreActionQueueTypeMenuItemParameterTable, ClassName _className, container _packedParameters)
     {
         ttsbegin;
 
@@ -56,7 +56,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
         oneMoreActionQueueTypeMenuItemParameterTable.TypeId             = _oneMoreActionQueueTypeMenuItemParameterTable.TypeId;
         oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName       = _oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName;
         oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters   = _packedParameters;
-        oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber        = _classId;        
+        oneMoreActionQueueTypeMenuItemParameterTable.ClassName          = _className;        
         oneMoreActionQueueTypeMenuItemParameterTable.write();
 
         ttscommit;
@@ -91,7 +91,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
                 ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionMenuWasNotFound", _menuItemName));
             }
 
-            ret = ret && OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(className2Id(menuFunction.object()));
+            ret = ret && OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(menuFunction.object());
         }
 
         return ret;
@@ -105,12 +105,12 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
     /// <summary>
     /// Is class supported for menu item action queue processing?
     /// </summary>
-    /// <param name = "_classId">Class id</param>
+    /// <param name = "_className">Class name</param>
     /// <returns>True if class is supported for menu item action queue processing otherwise False</returns>
     [Hookable(false)]
-    public static boolean isClassSupported(ClassId _classId)
+    public static boolean isClassSupported(ClassName _className)
     {
-        return OneMoreActionQueueMenuItemBehavior::isClassSupported(_classId);
+        return OneMoreActionQueueMenuItemBehavior::isClassSupported(_className);
     }
 
 ]]></Source>
@@ -148,22 +148,32 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>menuItemClassName</Name>
+				<Name>className</Name>
 				<Source><![CDATA[
-    [
-        SysClientCacheDataMethod(true),
-        Hookable(false)
-    ]
-    public display ClassName menuItemClassName()
+    internal ClassName className()
     {
-        ClassName   ret;
+        return this.ClassName ? this.ClassName : classId2Name(this.ClassNumber);
+    }
 
-        if (this.ClassNumber)
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateClassName</Name>
+				<Source><![CDATA[
+    internal static void updateClassName()
+    {
+        OneMoreActionQueueTypeMenuItemParameterTable menuItemParameterTable;
+        
+        ttsbegin;
+        
+        while select forupdate menuItemParameterTable
+            where !menuItemParameterTable.ClassName
         {
-            ret = classId2Name(this.ClassNumber);
+            menuItemParameterTable.ClassName = classId2Name(menuItemParameterTable.ClassNumber);
+            menuItemParameterTable.doUpdate();
         }
 
-        return ret;
+        ttscommit;
     }
 
 ]]></Source>
@@ -228,7 +238,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 					<DataField>MenuItemName</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
-					<DataField>menuItemClassName</DataField>
+					<DataField>ClassName</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -253,7 +263,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<AssetClassification>System Metadata</AssetClassification>
 			<ExtendedDataType>ClassId</ExtendedDataType>
-			<Mandatory>Yes</Mandatory>
+			<IsObsolete>Yes</IsObsolete>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
@@ -261,6 +271,14 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 			<AllowEdit>No</AllowEdit>
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>OneMoreActionQueueMenuItemName</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ClassName</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>ClassName</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

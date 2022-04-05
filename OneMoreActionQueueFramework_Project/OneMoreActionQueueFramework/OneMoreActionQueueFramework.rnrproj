@@ -41,6 +41,7 @@
     <Folder Include="Classes\" />
     <Folder Include="Data Entities\" />
     <Folder Include="Display Menu Items\" />
+    <Folder Include="EDT Strings\" />
     <Folder Include="Extended Data Types\" />
     <Folder Include="Form Extensions\" />
     <Folder Include="Forms\" />
@@ -57,11 +58,6 @@
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AxClass\BusinessEventsCatalogHelperOneMoreActionQueue_Extension">
-      <SubType>Content</SubType>
-      <Name>BusinessEventsCatalogHelperOneMoreActionQueue_Extension</Name>
-      <Link>Classes\BusinessEventsCatalogHelperOneMoreActionQueue_Extension</Link>
-    </Content>
     <Content Include="AxClass\BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension">
       <SubType>Content</SubType>
       <Name>BusinessEventsEndpointConfigurationFormOneMoreActionQueueFramework_Extension</Name>
@@ -131,6 +127,66 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueCleanUpService</Name>
       <Link>Classes\OneMoreActionQueueCleanUpService</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationExport">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationExport</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationExport</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationImport">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationImport</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationImport</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTable</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTable</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableActionQueueTypeDMFExportParameterTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableActionQueueTypeDMFExportParameterTable</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableActionQueueTypeDMFExportParameterTable</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelation</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelation</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelationSeqField">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelationSeqField</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableActionQueueTypeDocumentCorrelationSeqField</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableActionQueueTypeTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableActionQueueTypeTable</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableActionQueueTypeTable</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableActionQueueTypeTransformation">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableActionQueueTypeTransformation</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableActionQueueTypeTransformation</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableAttribute">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableAttribute</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableAttribute</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableLink">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableLink</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableLink</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueConfigurationTableLinkFieldPair">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationTableLinkFieldPair</Name>
+      <Link>Classes\OneMoreActionQueueConfigurationTableLinkFieldPair</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueConstants">
       <SubType>Content</SubType>
@@ -232,10 +288,15 @@
       <Name>OneMoreActionQueueMenuItemLookupTreeBuilder</Name>
       <Link>Classes\OneMoreActionQueueMenuItemLookupTreeBuilder</Link>
     </Content>
-    <Content Include="AxClass\OneMoreActionQueueMenuItemParameters">
+    <Content Include="AxClass\OneMoreActionQueueMenuItemParametersRemove">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueMenuItemParameters</Name>
-      <Link>Classes\OneMoreActionQueueMenuItemParameters</Link>
+      <Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemParametersRemove</Link>
+    </Content>
+    <Content Include="AxClass\OneMoreActionQueueMenuItemParametersSet">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParametersSet</Name>
+      <Link>Classes\OneMoreActionQueueMenuItemParametersSet</Link>
     </Content>
     <Content Include="AxClass\OneMoreActionQueueMenuItemRunBaseBatchBehavior">
       <SubType>Content</SubType>
@@ -497,6 +558,11 @@
       <Name>OneMoreActionQueueEnabled</Name>
       <Link>Extended Data Types\OneMoreActionQueueEnabled</Link>
     </Content>
+    <Content Include="AxEdt\OneMoreActionQueueFileExtension">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueFileExtension</Name>
+      <Link>EDT Strings\OneMoreActionQueueFileExtension</Link>
+    </Content>
     <Content Include="AxEdt\OneMoreActionQueueLogExceptionTypeName">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueLogExceptionTypeName</Name>
@@ -632,6 +698,11 @@
       <Name>OneMoreActionQueueResponseType</Name>
       <Link>Base Enums\OneMoreActionQueueResponseType</Link>
     </Content>
+    <Content Include="AxEnum\OneMoreActionQueueSource">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueSource</Name>
+      <Link>Base Enums\OneMoreActionQueueSource</Link>
+    </Content>
     <Content Include="AxEnum\OneMoreActionQueueStatus">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueStatus</Name>
@@ -702,6 +773,16 @@
       <Name>OneMoreActionQueueCleanUp</Name>
       <Link>Action Menu Items\OneMoreActionQueueCleanUp</Link>
     </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueConfigurationExport">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationExport</Name>
+      <Link>Action Menu Items\OneMoreActionQueueConfigurationExport</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueConfigurationImport">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueConfigurationImport</Name>
+      <Link>Action Menu Items\OneMoreActionQueueConfigurationImport</Link>
+    </Content>
     <Content Include="AxMenuItemAction\OneMoreActionQueueDMFExportQueryParameters">
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueDMFExportQueryParameters</Name>
@@ -712,10 +793,15 @@
       <Name>OneMoreActionQueueLogShow</Name>
       <Link>Action Menu Items\OneMoreActionQueueLogShow</Link>
     </Content>
-    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParameters">
+    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParametersRemove">
       <SubType>Content</SubType>
-      <Name>OneMoreActionQueueMenuItemParameters</Name>
-      <Link>Action Menu Items\OneMoreActionQueueMenuItemParameters</Link>
+      <Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+      <Link>Action Menu Items\OneMoreActionQueueMenuItemParametersRemove</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\OneMoreActionQueueMenuItemParametersSet">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueMenuItemParametersSet</Name>
+      <Link>Action Menu Items\OneMoreActionQueueMenuItemParametersSet</Link>
     </Content>
     <Content Include="AxMenuItemAction\OneMoreActionQueueProcessingManualController">
       <SubType>Content</SubType>
@@ -841,6 +927,11 @@
       <SubType>Content</SubType>
       <Name>OneMoreActionQueueCleanUpTmp</Name>
       <Link>Tables\OneMoreActionQueueCleanUpTmp</Link>
+    </Content>
+    <Content Include="AxTable\OneMoreActionQueueDMFLogTable">
+      <SubType>Content</SubType>
+      <Name>OneMoreActionQueueDMFLogTable</Name>
+      <Link>Tables\OneMoreActionQueueDMFLogTable</Link>
     </Content>
     <Content Include="AxTable\OneMoreActionQueueDocumentCorrelation">
       <SubType>Content</SubType>

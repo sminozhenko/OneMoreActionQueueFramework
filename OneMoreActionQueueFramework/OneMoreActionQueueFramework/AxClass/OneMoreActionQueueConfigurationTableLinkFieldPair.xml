@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableLinkFieldPair</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table link field pair
+/// </summary>
+internal class OneMoreActionQueueConfigurationTableLinkFieldPair
+{
+    private FieldId     thisField;
+    private FieldId     parentField;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>newFromPair</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from field pair
+    /// </summary>
+    /// <param name = "_thisField">This field</param>
+    /// <param name = "_parentField">Parent field</param>
+    /// <returns>A created object of <c>OneMoreActionQueueConfigurationTableLinkFieldPair</c></returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationTableLinkFieldPair newFromPair(FieldId _thisField, FieldId _parentField)
+    {
+        OneMoreActionQueueConfigurationTableLinkFieldPair ret = new OneMoreActionQueueConfigurationTableLinkFieldPair();
+
+        ret.parmThisField(_thisField);
+        ret.parmParentField(_parentField);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmThisField</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public FieldId parmThisField(FieldId _thisField = thisField)
+    {
+        thisField = _thisField;
+
+        return thisField;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmParentField</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public FieldId parmParentField(FieldId _parentField = parentField)
+    {
+        parentField = _parentField;
+
+        return parentField;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

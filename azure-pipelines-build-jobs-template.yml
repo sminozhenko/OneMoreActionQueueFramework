@@ -26,8 +26,8 @@ jobs:
     - template: azure-pipelines-build-steps-template.yml
 
 
-  - job: Build_10_0_20_PEAP
-    displayName: 'Build for 10.0.20 PEAP'
+  - job: Build_10_0_20
+    displayName: 'Build for 10.0.20'
     pool:
       vmImage: 'vs2017-win2016'
     variables:
@@ -35,6 +35,84 @@ jobs:
       Platform.CompilerPackage.Version: '7.0.6060.22'
       Application.BuildXpp.Version: '10.0.886.25'
       ApplicationSuite.BuildXpp.Version: '10.0.886.25'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+    
+  - job: Build_10_0_21
+    displayName: 'Build for 10.0.21'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6129.15'      
+      Platform.CompilerPackage.Version: '7.0.6129.15'
+      Application.BuildXpp.Version: '10.0.960.20'
+      ApplicationSuite.BuildXpp.Version: '10.0.960.20'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+    
+  - job: Build_10_0_22
+    displayName: 'Build for 10.0.22'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6164.77'      
+      Platform.CompilerPackage.Version: '7.0.6164.77'
+      Application.BuildXpp.Version: '10.0.995.78'
+      ApplicationSuite.BuildXpp.Version: '10.0.995.78'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_23
+    displayName: 'Build for 10.0.23'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6206.85'      
+      Platform.CompilerPackage.Version: '7.0.6206.85'
+      Application.BuildXpp.Version: '10.0.1037.88'
+      ApplicationSuite.BuildXpp.Version: '10.0.1037.88'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_24
+    displayName: 'Build for 10.0.24'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6253.76'      
+      Platform.CompilerPackage.Version: '7.0.6253.76'
+      Application.BuildXpp.Version: '10.0.1084.80'
+      ApplicationSuite.BuildXpp.Version: '10.0.1084.80'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_25
+    displayName: 'Build for 10.0.25'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6316.36'      
+      Platform.CompilerPackage.Version: '7.0.6316.36'
+      Application.BuildXpp.Version: '10.0.1149.40'
+      ApplicationSuite.BuildXpp.Version: '10.0.1149.40'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_26
+    displayName: 'Build for 10.0.26'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6354.52'      
+      Platform.CompilerPackage.Version: '7.0.6354.52'
+      Application.BuildXpp.Version: '10.0.1192.52'
+      ApplicationSuite.BuildXpp.Version: '10.0.1192.52'
 
     steps:
     - template: azure-pipelines-build-steps-template.yml

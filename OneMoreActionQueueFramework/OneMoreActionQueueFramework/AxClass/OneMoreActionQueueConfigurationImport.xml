@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationImport</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration import action
+/// </summary>
+internal class OneMoreActionQueueConfigurationImport extends RunBase
+{
+    FileUploadBuild             dialogFileUpload;
+    DialogField                 dfTypeId;
+
+    FileUpload                  fileUpload;
+    OneMoreActionQueueTypeId    typeId;
+
+    DialogRunbase               dialog;
+
+    System.Xml.XmlDocument      xmlDoc;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationImport construct()
+    {
+        return new OneMoreActionQueueConfigurationImport();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static void main(Args _args)
+    {
+        OneMoreActionQueueConfigurationImport oneMoreActionQueueConfigurationImport = OneMoreActionQueueConfigurationImport::construct();
+
+        if (oneMoreActionQueueConfigurationImport.prompt())
+        {
+            oneMoreActionQueueConfigurationImport.runOperation();
+
+            if (FormDataUtil::isFormDataSource(_args.record()))
+            {
+                FormDataUtil::getFormDataSource(_args.record()).research();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class description
+    /// </summary>
+    /// <returns>Class description</returns>
+    [Hookable(false)]
+    public static ClassDescription description()
+    {
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImport";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        FormBuildControl formBuildControl;
+        DialogGroup dialogGroup;
+
+        dialog = new DialogRunbase('', this);
+
+        dialogGroup = dialog.addGroup('');
+
+        dfTypeId = dialog.addField(extendedTypeStr(OneMoreActionQueueTypeId), '', '', true);
+        dfTypeId.enabled(false);
+
+        formBuildControl = dialogGroup.control();
+
+        dialogFileUpload = formBuildControl.addControlEx(classstr(FileUpload), 'FileUpload');
+        dialogFileUpload.style(FileUploadStyle::MinimalWithFilename);
+        dialogFileUpload.fileTypesAccepted('text/xml');
+        dialogFileUpload.baseFileUploadStrategyClassName(classstr(FileUploadTemporaryStorageStrategy));
+        dialogFileUpload.fileNameLabel("@SYS308842");
+
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialogPostRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Disables the dialog Ok button until the file upload is complete.
+    /// </summary>
+    /// <param name="_dialog">The <c>Runbase</c> dialog object.</param>
+    public void dialogPostRun(DialogRunbase _dialog)
+    {
+        fileUpload = _dialog.formRun().control(_dialog.formRun().controlId('FileUpload'));
+
+        fileUpload.notifyUploadCompleted += eventhandler(this.uploadCompleted);
+
+        this.setDialogOkButtonEnabled(_dialog, false);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>uploadCompleted</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// After the file has been uploaded, the Ok button is enabled.
+    /// </summary>
+    public void uploadCompleted()
+    {
+        System.IO.Stream stream = fileUpload.getUploadedFile(true);
+
+        xmlDoc = new System.Xml.XmlDocument();
+        xmlDoc.Load(stream);
+
+        System.Xml.XmlNode node = xmlDoc.SelectSingleNode('/Configurations/OneMoreActionQueueTypeTable/TypeId');
+
+        if (node)
+        {
+            this.setDialogOkButtonEnabled(dialog, true);
+            dfTypeId.enabled(true);
+            dfTypeId.value(node.InnerText);
+
+            fileUpload.notifyUploadCompleted -= eventhandler(this.UploadCompleted);
+        }
+        else
+        {
+            error("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationCantReadActionQueueTypeId");
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setDialogOkButtonEnabled</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Enables or disables the dialog Ok button.
+    /// </summary>
+    /// <param name = "_dialog">The <c>Runbase</c> dialog object.</param>
+    /// <param name = "_isEnabled">Indicates to enable or disable the Ok button.</param>
+    protected void setDialogOkButtonEnabled(DialogRunbase _dialog, boolean _isEnabled)
+    {
+        FormControl okButtonControl = _dialog.formRun().control(_dialog.formRun().controlId('OkButton'));
+
+        if (okButtonControl)
+        {
+            okButtonControl.enabled(_isEnabled);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    public boolean validate(Object calledFrom = null)
+    {
+        boolean ret;
+
+        ret = super(calledFrom);
+
+        if (!typeId)
+        {
+            ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationTypeIdIsNotSpecified");
+        }
+        else
+        {
+            if (OneMoreActionQueueTypeTable::exist(typeId))
+            {
+                if (Box::okCancel(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationDoYouWantToOverwriteData", typeId), DialogButton::Ok) == DialogButton::Cancel)
+                {
+                    ret = false;
+                }
+            }
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+        boolean ret;
+
+        ret = super();
+
+        typeId = dfTypeId.value();
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void run()
+    {
+        #OCCRetryCount
+   
+        try
+        {
+            ttsbegin;
+
+            OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = OneMoreActionQueueTypeTable::find(typeId, true, ConcurrencyModel::Pessimistic);
+
+            if (oneMoreActionQueueTypeTable.RecId != 0 && oneMoreActionQueueTypeTable.Enabled)
+            {
+                oneMoreActionQueueTypeTable.Enabled = NoYes::No;
+                oneMoreActionQueueTypeTable.update();
+            }
+
+            System.Xml.XmlNode actionQueueTypeTableElement = xmlDoc.SelectSingleNode('/Configurations/OneMoreActionQueueTypeTable');
+
+            OneMoreActionQueueConfigurationTable oneMoreActionQueueConfigurationTable = OneMoreActionQueueConfigurationTable::constructFromXMLElement(actionQueueTypeTableElement, oneMoreActionQueueTypeTable);
+            oneMoreActionQueueConfigurationTable.parmKeyFieldValues([typeId]);
+            oneMoreActionQueueConfigurationTable.import(actionQueueTypeTableElement);
+   
+            ttscommit;
+
+            info("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationSuccessfullyImported");
+        }
+        catch (Exception::Deadlock)
+        {
+            retry;
+        }
+        catch (Exception::UpdateConflict)
+        {
+            if (appl.ttsLevel() == 0)
+            {
+                if (xSession::currentRetryCount() >= #RetryNum)
+                {
+                    throw Exception::UpdateConflictNotRecovered;
+                }
+                else
+                {
+                    retry;
+                }
+            }
+            else
+            {
+                throw Exception::UpdateConflict;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

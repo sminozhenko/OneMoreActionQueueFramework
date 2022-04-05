@@ -62,7 +62,7 @@ internal class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusine
                 throw error(Error::missingParameter(null));
             }
                     
-            oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(actionQueueTypeId, _payload);
+            oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(actionQueueTypeId, _payload, OneMoreActionQueueSource::BusinessEvent);
         }
         catch (exception)
         {

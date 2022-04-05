@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableLink</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table link
+/// </summary>
+internal class OneMoreActionQueueConfigurationTableLink
+{
+    private TableId tableId;
+    private List linkList = new List(Types::Class);
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmTableId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public TableId parmTableId(TableId _tableId = tableId)
+    {
+        tableId = _tableId;
+
+        return tableId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmLinkList</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public List parmLinkList()
+    {
+        return linkList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addLink</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add link
+    /// </summary>
+    /// <param name = "_thisField">This field</param>
+    /// <param name = "_parentField">Parent field</param>
+    /// <returns>This object</returns>
+    [Hookable(false)]
+    public OneMoreActionQueueConfigurationTableLink addLink(FieldId _thisField, FieldId _parentField)
+    {
+        linkList.addEnd(OneMoreActionQueueConfigurationTableLinkFieldPair::newFromPair(_thisField, _parentField));
+
+        return this;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromTableId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from table id
+    /// </summary>
+    /// <param name = "_tableId">Table id</param>
+    /// <returns>A created object of <c>OneMoreActionQueueConfigurationTableLink</c></returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationTableLink newFromTableId(TableId _tableId)
+    {
+        OneMoreActionQueueConfigurationTableLink ret = new OneMoreActionQueueConfigurationTableLink();
+
+        ret.parmTableId(_tableId);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
