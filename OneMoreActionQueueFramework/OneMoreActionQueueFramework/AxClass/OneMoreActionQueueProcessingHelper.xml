@@ -6,7 +6,7 @@
 /// <summary>
 /// OneMore action queue helper class
 /// </summary>
-internal static class OneMoreActionQueueProcessingHelper
+public static class OneMoreActionQueueProcessingHelper
 {
 }
 ]]></Declaration>
@@ -23,7 +23,7 @@ internal static class OneMoreActionQueueProcessingHelper
     /// <param name = "_sysOperationExecutionMode">An <c>SysOperationExecutionMode</c> value</param>
     /// <param name = "_retryAttemptInterval">An <c>OneMoreActionQueueRetryAttemptInterval</c> value</param>
     [Hookable(false)]
-    public static void processActionQueueInController(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage _processingStage, SysOperationExecutionMode _sysOperationExecutionMode, OneMoreActionQueueRetryAttemptInterval _retryAttemptInterval = 0)
+    internal static void processActionQueueInController(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage _processingStage, SysOperationExecutionMode _sysOperationExecutionMode, OneMoreActionQueueRetryAttemptInterval _retryAttemptInterval = 0)
     {
         if (_processingStage == OneMoreActionQueueProcessingStage::Processing && _oneMoreActionQueueTypeTable.ProcessInSequence && _oneMoreActionQueue.hasPrevWaitingMessagesInQueue())
         {
@@ -109,7 +109,7 @@ internal static class OneMoreActionQueueProcessingHelper
     /// <param name = "_isInTransaction">Is in tranasction</param>
     /// <returns><c>OneMoreActionQueueServiceRunActionResponse</c></returns>
     [Hookable(false)]
-    public static OneMoreActionQueueServiceRunActionResponse processOneMoreActionQueue(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingType _processingType = _oneMoreActionQueueTypeTable.ProcessingType, boolean _isInTransaction = false)
+    internal static OneMoreActionQueueServiceRunActionResponse processOneMoreActionQueue(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingType _processingType = _oneMoreActionQueueTypeTable.ProcessingType, boolean _isInTransaction = false)
     {
         OneMoreActionQueueResponseType                          responseType = OneMoreActionQueueResponseType::OK;
         str                                                     notes;
@@ -173,6 +173,39 @@ internal static class OneMoreActionQueueProcessingHelper
         response.parmNotes(notes);
 
         return response;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isExceptionRecoverable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Indicates if exception is recoverable and retry is needed
+    /// </summary>
+    /// <param name = "_exception">An <c>System.Exception</c> object</param>
+    /// <returns>True if exception si recoverable otherwise False</returns>
+    [Hookable(false)]
+    public static boolean isExceptionRecoverable(System.Exception _exception)
+    {
+        boolean     ret;
+
+        if (   _exception is Microsoft.Dynamics.Ax.Xpp.DeadlockException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictNotRecoveredException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyNotRecoveredException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.MaximumRetryCountExceededException
+           )
+        {
+            ret = true;
+        }
+        else
+        {
+            ret = OneMoreActionQueueContext::doRetryFlag;
+        }
+
+        return ret;
     }
 
 ]]></Source>
