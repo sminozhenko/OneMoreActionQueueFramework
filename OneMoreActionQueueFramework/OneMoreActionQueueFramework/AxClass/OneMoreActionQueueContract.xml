@@ -10,7 +10,8 @@
 abstract class OneMoreActionQueueContract
 {
     private DataAreaId dataAreaId;
-
+    private List parameters = new List(Types::Class);
+    
 }
 ]]></Declaration>
 		<Methods>
@@ -25,6 +26,26 @@ abstract class OneMoreActionQueueContract
     {
         dataAreaId = _dataAreaId;
         return dataAreaId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmParameters</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute("Parameters"),
+        DataCollectionAttribute(Types::Class, classStr(OneMoreActionQueueParameterContract)),
+        Hookable(false)
+    ]
+    public List parmParameters(List _parameters = parameters)
+    {
+        if (!prmIsDefault(_parameters))
+        {
+            parameters = _parameters;
+        }
+
+        return parameters;
     }
 
 ]]></Source>
@@ -80,7 +101,46 @@ abstract class OneMoreActionQueueContract
             }
         }
 
+        if (!isFound)
+        {
+            ListEnumerator                              li = parameters.getEnumerator();
+            OneMoreActionQueueParameterContract         parameter;
+
+            while (li.moveNext())
+            {
+                parameter = li.current();
+
+                if (parameter.parmParameterName() == _parameterName)
+                {
+                    parameterValue = parameter.parmParameterValue();
+                    isFound = true;
+                    break;
+                }
+            }
+        }
+
         return [isFound, parameterValue];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addParameter</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add parameter
+    /// </summary>
+    /// <param name = "parameterName">Parameter name</param>
+    /// <param name = "parameterValue">Parameter value</param>
+    [Hookable(false)]
+    public void addParameter(str parameterName, str parameterValue)
+    {
+        OneMoreActionQueueParameterContract contract = new OneMoreActionQueueParameterContract();
+
+        contract.parmParameterName(parameterName);
+        contract.parmParameterValue(parameterValue);
+
+        parameters.addEnd(contract);
     }
 
 ]]></Source>

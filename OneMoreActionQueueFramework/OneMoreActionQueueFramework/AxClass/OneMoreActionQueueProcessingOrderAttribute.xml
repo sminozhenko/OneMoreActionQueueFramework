@@ -6,7 +6,7 @@
 /// <summary>
 /// The <c>OneMoreActionQueueProcessingOrderAttribute</c> class defines the attributes for action queue processing order
 /// </summary>
-public final class OneMoreActionQueueProcessingOrderAttribute extends SysAttribute
+public final class OneMoreActionQueueProcessingOrderAttribute extends SysAttribute implements SysExtensionIAttribute
 {
     private int processingOrder;
 
@@ -19,6 +19,28 @@ public final class OneMoreActionQueueProcessingOrderAttribute extends SysAttribu
     public void new(int _processingOrder)
     {
         processingOrder = _processingOrder;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCacheKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmCacheKey()
+    {
+        return classStr(OneMoreActionQueueProcessingOrderAttribute) + ';' + int2Str(processingOrder);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useSingleton</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean useSingleton()
+    {
+        return false;
     }
 
 ]]></Source>

@@ -110,10 +110,11 @@ public class OneMoreActionQueue extends common
     /// </summary>
     /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
     /// <param name = "_actionMessage">Action queue message</param>
+    /// <param name = "_source">Action queue message source</param>
     /// <param name = "_actionId">Action Id. Optional</param>
     /// <returns>Added <c>OneMoreActionQueue</c> record</returns>
     [Hookable(false)]
-    public static OneMoreActionQueue addToActionQueue(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage, OneMoreActionQueueActionId _actionId = emptyGuid())
+    public static OneMoreActionQueue addToActionQueue(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage, OneMoreActionQueueSource _source, OneMoreActionQueueActionId _actionId = emptyGuid())
     {
         OneMoreActionQueue ret;
         
@@ -124,8 +125,10 @@ public class OneMoreActionQueue extends common
         {
             ret.ActionId        = _actionId;
         }
+
         ret.TypeId          = _typeId;
         ret.ActionMessage   = _actionMessage;
+        ret.Source          = _source;
 
         if (!ret.validateWrite())
         {
@@ -394,6 +397,9 @@ public class OneMoreActionQueue extends common
 				<AxTableFieldGroupField>
 					<DataField>ActionMessage</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Source</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
@@ -493,6 +499,9 @@ public class OneMoreActionQueue extends common
 				<AxTableFieldGroupField>
 					<DataField>Status</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Source</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 	</FieldGroups>
@@ -555,6 +564,12 @@ public class OneMoreActionQueue extends common
 			i:type="AxTableFieldString">
 			<Name>SequenceGroupHash</Name>
 			<ExtendedDataType>OneMoreActionQueueSequenceGroupHash</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Source</Name>
+			<AllowEdit>No</AllowEdit>
+			<EnumType>OneMoreActionQueueSource</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />

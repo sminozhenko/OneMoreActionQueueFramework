@@ -24,6 +24,9 @@ class OneMoreActionQueueMenuItemSysOperationControllerBehavior extends OneMoreAc
 
         this.sysOperationControllerObject().skipRunOperation(true);
         this.sysOperationControllerObject().showBatchTab(false);
+        //In some cases (like SalesFormLetter), inBatch flag should be set outside to false 
+        this.sysOperationControllerObject().parmInBatch(false);
+        this.sysOperationControllerObject().parmOneMoreActionQueueIsInBatchFlagSet(true);
     }
 
 ]]></Source>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeTransformation</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeTransformation</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeTransformation), 1)]
+internal class OneMoreActionQueueConfigurationTableActionQueueTypeTransformation extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(OneMoreActionQueueTypeTransformation, TransformationJSON)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(OneMoreActionQueueTypeTransformation, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

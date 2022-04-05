@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters base class
+/// </summary>
+abstract internal class OneMoreActionQueueConfigurationTable
+{
+    private int version;
+    private Common callerRecord;
+    private TableName tableName;
+    private container keyFieldValues;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationTable construct(Common _callerRecord, int _version)
+    {
+        OneMoreActionQueueConfigurationTable ret;
+
+        TableName tableName = tableId2Name(_callerRecord.TableId);
+    
+        ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueConfigurationTable), new OneMoreActionQueueConfigurationTableAttribute(tableName, _version));
+       
+        ret.parmTableName(tableName);
+        ret.parmCallerRecord(_callerRecord);
+        ret.parmVersion(_version);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>constructFromXMLElement</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Constuct from XML element
+    /// </summary>
+    /// <param name = "_element">XML element</param>
+    /// <param name = "_callerRecord">Caller record</param>
+    /// <returns>A created object of <c>OneMoreActionQueueConfigurationTable</c> </returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationTable constructFromXMLElement(System.Xml.XmlElement _element, Common _callerRecord = null)
+    {
+        OneMoreActionQueueConfigurationTable ret;
+
+        TableName tableName = _element.Name;
+        int version = str2Int(_element.Attributes.GetNamedItem('Version').Value);
+    
+        ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueConfigurationTable), new OneMoreActionQueueConfigurationTableAttribute(tableName, version));
+       
+        ret.parmTableName(tableName);
+        ret.parmVersion(version);
+        ret.parmCallerRecord(_callerRecord);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmVersion</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public int parmVersion(int _version = version)
+    {
+        version = _version;
+        return version;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCallerRecord</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public Common parmCallerRecord(Common _callerRecord = callerRecord)
+    {
+        callerRecord = _callerRecord;
+        return callerRecord;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmTableName</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public TableName parmTableName(TableName _tableName = tableName)
+    {
+        tableName = _tableName;
+        return tableName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmKeyFieldValues</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public container parmKeyFieldValues(container _keyFieldValues = keyFieldValues)
+    {
+        keyFieldValues = _keyFieldValues;
+        return keyFieldValues;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>export</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Export table record to xml element
+    /// </summary>
+    /// <param name = "_xmlDoc">XML document object</param>
+    /// <param name = "_rootElement">Root element for data</param>
+    [Hookable(false)]
+    public void export(System.Xml.XmlDocument _xmlDoc, System.Xml.XmlElement _rootElement)
+    {
+        System.Xml.XmlElement elementXml = _xmlDoc.CreateElement(tableName);
+
+        System.Xml.XmlAttribute attr = _xmlDoc.CreateAttribute('Version');
+        attr.Value = int2Str(version);
+
+        elementXml.SetAttributeNode(attr);
+
+        this.exportFields(_xmlDoc, elementXml);
+        
+        this.exportRelatedTables(_xmlDoc, elementXml);
+
+        _rootElement.AppendChild(elementXml);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>import</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Import
+    /// </summary>
+    /// <param name = "_rootElement">Root element</param>
+    [Hookable(false)]
+    public void import(System.Xml.XmlElement _rootElement)
+    {
+        Common newRecord;
+
+        if (callerRecord)
+        {
+            newRecord = callerRecord;
+        }
+        else
+        {
+            newRecord = DictTable::createRecord(tableName);
+        }
+
+        this.readFields(newRecord, _rootElement);
+
+        for (int i = 1; i <= conLen(this.keyFieldList()); i++)
+        {
+            FieldName fieldName = conPeek(this.keyFieldList(), i);
+
+            FieldId fieldId = fieldName2Id(newRecord.TableId, fieldName);
+
+            newRecord.(fieldId) = conPeek(this.parmKeyFieldValues(), i);
+        }
+
+        if (!newRecord.validateWrite())
+        {
+            throw Exception::Error;
+        }
+        
+        newRecord.write();
+
+        this.readRelatedTables(newRecord, _rootElement);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exportFields</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Export field data
+    /// </summary>
+    /// <param name = "_xmlDoc">XML document object</param>
+    /// <param name = "_rootElement">Root element for new xml elements</param>
+    [Hookable(false)]
+    protected void exportFields(System.Xml.XmlDocument _xmlDoc, System.Xml.XmlElement _rootElement)
+    {
+        for (int i = 1; i <= conLen(this.fieldList()); i++)
+        {
+            FieldName fieldName = conPeek(this.fieldList(), i);
+
+            System.Xml.XmlElement elementXml = _xmlDoc.CreateElement(fieldName);
+
+            FieldId fieldId = fieldName2Id(callerRecord.TableId, fieldName);
+            
+            elementXml.InnerText = this.getValue(callerRecord.(fieldId), fieldId);
+
+            _rootElement.AppendChild(elementXml);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exportRelatedTables</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// export related tables data
+    /// </summary>
+    /// <param name = "_xmlDoc">XML document</param>
+    /// <param name = "_rootElement">XML element</param>
+    [Hookable(false)]
+    protected void exportRelatedTables(System.Xml.XmlDocument _xmlDoc, System.Xml.XmlElement _rootElement)
+    {
+        ListEnumerator le = this.tableList().getEnumerator();
+        
+        while (le.moveNext())
+        {
+            OneMoreActionQueueConfigurationTableLink tableLink = le.current();
+            
+            QueryRun qr = new QueryRun(this.relatedRecordsQuery(callerRecord, tableLink));
+
+            while (qr.next())
+            {
+                Common record = qr.get(tableLink.parmTableId());
+
+                OneMoreActionQueueConfigurationTable::construct(record, 1).export(_xmlDoc, _rootElement);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>readFields</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Read field from XML element
+    /// </summary>
+    /// <param name = "_record">Record</param>
+    /// <param name = "_rootElement">XML element</param>
+    [Hookable(false)]
+    protected void readFields(Common _record, System.Xml.XmlElement _rootElement)
+    {
+        for (int i = 1; i <= conLen(this.fieldList()); i++)
+        {
+            FieldName fieldName = conPeek(this.fieldList(), i);
+
+            FieldId fieldId = fieldName2Id(_record.TableId, fieldName);
+
+            System.Xml.XmlNode xmlNode = _rootElement.SelectSingleNode(fieldName);
+
+            if (xmlNode)
+            {
+                _record.(fieldId) = this.getValueFromXML(xmlNode.InnerText, _record.TableId, fieldId);
+            }
+            else
+            {
+                warning(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationElementWasNotFound", strFmt('%1/%2', tableName, fieldName)));
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>readRelatedTables</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Read related tables data
+    /// </summary>
+    /// <param name = "_rootRecord">Root record</param>
+    /// <param name = "_rootElement">XML element</param>
+    [Hookable(false)]
+    protected void readRelatedTables(Common _rootRecord, System.Xml.XmlElement _rootElement)
+    {
+        ListEnumerator le = this.tableList().getEnumerator();
+        
+        while (le.moveNext())
+        {
+            container keyFieldValuesContainer;
+            
+            OneMoreActionQueueConfigurationTableLink tableLink = le.current();
+            
+            this.deleteRelatedRecords(_rootRecord, tableLink);
+            
+            TableName relatedTableName = tableId2Name(tableLink.parmTableId());
+
+            System.Xml.XmlNodeList xmlNodeList = _rootElement.SelectNodes(relatedTableName);
+
+            for (int nodeIdx = 0; nodeIdx < xmlNodeList.Count; nodeIdx++)
+            {
+                System.Xml.XmlNode xmlNode = xmlNodeList.Item(nodeIdx);
+                
+                OneMoreActionQueueConfigurationTable oneMoreActionQueueConfigurationTable = OneMoreActionQueueConfigurationTable::constructFromXMLElement(xmlNode);
+                
+                if (keyFieldValuesContainer == conNull())
+                {
+                    ListEnumerator leFieldPair = tableLink.parmLinkList().getEnumerator();
+
+                    while (leFieldPair.moveNext())
+                    {
+                        OneMoreActionQueueConfigurationTableLinkFieldPair fieldPair = leFieldPair.current();
+
+                        keyFieldValuesContainer += [_rootRecord.(fieldPair.parmParentField())];
+                    }
+                }
+                
+                oneMoreActionQueueConfigurationTable.parmKeyFieldValues(keyFieldValuesContainer);
+                oneMoreActionQueueConfigurationTable.import(xmlNode);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    abstract protected container fieldList()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>tableList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Table list
+    /// </summary>
+    /// <returns>Table list</returns>
+    [Hookable(false)]
+    protected List tableList()
+    {
+        List ret = new List(Types::Class);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    abstract protected container keyFieldList()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getValue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected str getValue(anytype _value, FieldId _fieldId)
+    {
+        DictField df = new DictField(callerRecord.TableId, _fieldId);
+        
+        str ret;
+        
+        switch (typeOf(_value))
+        {
+            case Types::Container:
+                ret = ContainerHelper::serialize(_value);
+                break;
+            case Types::Enum:
+                ret = enum2Symbol(df.enumId(), _value);
+                break;
+            default:
+                ret = _value;
+        }
+
+        return ret;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getValueFromXML</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected anytype getValueFromXML(str _value, TableId _tableId, FieldId _fieldId)
+    {
+        DictField df = new DictField(_tableId, _fieldId);
+        
+        anytype ret;
+
+        Types type = df.type();
+
+        if (type == Types::UserType)
+        {
+            SysDictType dictType = new SysDictType(df.typeId());
+            if (dictType != null)
+            {
+                // Redirect to the fundamental type.
+                type = dictType.baseType();
+            }
+        }
+
+        switch (type)
+        {
+            case Types::Container:
+                ret = ContainerHelper::deserialize(_value);
+                break;
+            case Types::Enum:
+                ret = symbol2Enum(df.enumId(), _value);
+                break;
+            default:
+                ret = _value;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>relatedRecordsQuery</Name>
+				<Source><![CDATA[
+    private Query relatedRecordsQuery(Common _rootRecord, OneMoreActionQueueConfigurationTableLink _tableLink)
+    {
+        Query q = new Query();
+        QueryBuildDataSource qbds = q.addDataSource(_tableLink.parmTableId());
+        qbds.update(true);
+        
+        ListEnumerator le = _tableLink.parmLinkList().getEnumerator();
+
+        while (le.moveNext())
+        {
+            OneMoreActionQueueConfigurationTableLinkFieldPair fieldPair = le.current();
+
+            qbds.addRange(fieldPair.parmThisField()).value(queryValue(_rootRecord.(fieldPair.parmParentField())));
+        }
+
+        return q;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteRelatedRecords</Name>
+				<Source><![CDATA[
+    private void deleteRelatedRecords(Common _rootRecord, OneMoreActionQueueConfigurationTableLink _tableLink)
+    {
+        QueryRun qr = new QueryRun(this.relatedRecordsQuery(_rootRecord, _tableLink));
+
+        while (qr.next())
+        {
+            Common record = qr.get(_tableLink.parmTableId());
+
+            record.delete();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

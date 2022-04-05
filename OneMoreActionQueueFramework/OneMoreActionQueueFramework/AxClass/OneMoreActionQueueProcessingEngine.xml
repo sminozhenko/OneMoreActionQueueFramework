@@ -10,7 +10,6 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
 {
     private OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
 
-    private boolean processedSuccessfully;
     private boolean doRetry;
 
 }
@@ -32,21 +31,6 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>getProcessedSuccessfully</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Is processed successfully?
-    /// </summary>
-    /// <returns>True if the record was processed successfully otherwise false</returns>
-    [Hookable(false)]
-    public boolean getProcessedSuccessfully()
-    {
-        return processedSuccessfully;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>runInternal</Name>
 				<Source><![CDATA[
     protected void runInternal()
@@ -61,6 +45,7 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
         {
             //Global flag
             OneMoreActionQueueContext::doRetryFlag = false;
+            OneMoreActionQueueContext::canBeRetried = this.canBeRetried();
         
             processor = OneMoreActionQueueProcessor::newFromOneMoreActionQueue(oneMoreActionQueueUpd);
             processor.runAction();
@@ -71,42 +56,15 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
         }
         catch (exception)
         {
-            doRetry = this.isExceptionRecoverable(exception);
+            doRetry = OneMoreActionQueueProcessingHelper::isExceptionRecoverable(exception);
             lastException = exception;
             newActionQueueStatus = OneMoreActionQueueStatus::Error;
         }
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>isExceptionRecoverable</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Indicates if exception is recoverable and retry is needed
-    /// </summary>
-    /// <param name = "_exception">An <c>System.Exception</c> object</param>
-    /// <returns>True if exception si recoverable otherwise False</returns>
-    protected boolean isExceptionRecoverable(System.Exception _exception)
-    {
-        boolean     ret;
-
-        if (   _exception is Microsoft.Dynamics.Ax.Xpp.DeadlockException
-            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictException
-            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictNotRecoveredException
-            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyException
-            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyNotRecoveredException
-            || _exception is Microsoft.Dynamics.Ax.Xpp.MaximumRetryCountExceededException
-           )
+        finally
         {
-            ret = true;
+            OneMoreActionQueueContext::doRetryFlag = false;
+            OneMoreActionQueueContext::canBeRetried = false;
         }
-        else
-        {
-            ret = OneMoreActionQueueContext::doRetryFlag;
-        }
-
-        return ret;
     }
 
 ]]></Source>
@@ -154,6 +112,20 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>canBeRetried</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Can processing be retried
+    /// </summary>
+    /// <returns>True if processing can be retried otherwise false</returns>
+    protected boolean canBeRetried()
+    {
+        return this.useRetry() && oneMoreActionQueueUpd.RetryCount + 1 < this.maxRetryCount();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>updateStatus</Name>
 				<Source><![CDATA[
     /// <summary>
@@ -162,21 +134,18 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
     protected void updateStatus()
     {
         boolean doStatusUpdate = true;
+        
+        if (doRetry && this.canBeRetried() && newActionQueueStatus == OneMoreActionQueueStatus::Error)
+        {
+            doStatusUpdate = false;
+
+            this.doRetryLogic();
+
+            //Keep original status
+            newActionQueueStatus = oneMoreActionQueueUpd.Status;
+        }
 
         oneMoreActionQueueUpd.RetryCount += 1;
-        
-        if (doRetry && this.useRetry() && newActionQueueStatus == OneMoreActionQueueStatus::Error)
-        {
-            if (oneMoreActionQueueUpd.RetryCount < this.maxRetryCount())
-            {
-                doStatusUpdate = false;
-
-                this.doRetryLogic();
-
-                //Keep original status
-                newActionQueueStatus = oneMoreActionQueueUpd.Status;
-            }
-        }
 
         super();
 
@@ -237,7 +206,7 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
         switch (oneMoreActionQueueTypeTable.ProcessingType)
         {
             case OneMoreActionQueueProcessingType::ReliableAsynchronous:
-                OneMoreActionQueueProcessingHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
+                OneMoreActionQueueProcessingHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
                 break;
         }
     }

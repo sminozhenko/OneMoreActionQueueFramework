@@ -85,6 +85,21 @@ public class OneMoreActionQueueTypeTable extends FormRun
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    public void init()
+    {
+        OneMoreActionQueueTypeMenuItemParameterTable::updateClassName();
+
+        super();
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 		<DataSources xmlns="">
 			<DataSource>
@@ -523,6 +538,37 @@ public class OneMoreActionQueueTypeTable extends FormRun
 						</Controls>
 						<Caption>@SYS3850</Caption>
 					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>ExportImport</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueConfigurationExport</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueConfigurationExport</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+								<NeedsRecord>Yes</NeedsRecord>
+								<SaveRecord>No</SaveRecord>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueConfigurationImport</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueConfigurationImport</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+								<SaveRecord>No</SaveRecord>
+							</AxFormControl>
+						</Controls>
+						<DataSource>OneMoreActionQueueTypeTable</DataSource>
+					</AxFormControl>
 				</Controls>
 			</AxFormControl>
 			<AxFormControl xmlns=""
@@ -722,11 +768,11 @@ public class OneMoreActionQueueTypeTable extends FormRun
 							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
-								<Name>MenuItem_menuItemClassName</Name>
+								<Name>MenuItem_ClassName</Name>
 								<Type>String</Type>
 								<FormControlExtension
 									i:nil="true" />
-								<DataMethod>menuItemClassName</DataMethod>
+								<DataField>ClassName</DataField>
 								<DataSource>OneMoreActionQueueTypeMenuItemParameterTable</DataSource>
 							</AxFormControl>
 						</Controls>

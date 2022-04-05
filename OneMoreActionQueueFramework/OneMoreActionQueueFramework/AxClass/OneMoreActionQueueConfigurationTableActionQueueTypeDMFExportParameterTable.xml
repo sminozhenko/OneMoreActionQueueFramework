@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeDMFExportParameterTable</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeDMFExportParameterTable</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeDMFExportParameterTable), 1)]
+internal class OneMoreActionQueueConfigurationTableActionQueueTypeDMFExportParameterTable extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, DMFEntityName),
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, PackedQueryRun),
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, KeepDataProject),
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, DMFSourceName),
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, DMFDefinitionGroupName),
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, DMFExportType),
+                fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, DMFIntegrationActivityName)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(OneMoreActionQueueTypeDMFExportParameterTable, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
