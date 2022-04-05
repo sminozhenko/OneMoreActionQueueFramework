@@ -39,8 +39,16 @@ public class OneMoreActionQueueLogTable extends common
         
         if (_exception != null)
         {
+            str stackTrace;
+            
+            if (_exception.InnerException != null)
+            {
+                stackTrace = _exception.InnerException.StackTrace;
+                stackTrace += '\n';
+            }
+
             oneMoreActionQueueLogTable.ExceptionTypeName    =   _exception.GetType().FullName;
-            oneMoreActionQueueLogTable.StackTrace           =   _exception.StackTrace;
+            oneMoreActionQueueLogTable.StackTrace           =   stackTrace + _exception.StackTrace;
         }
 
         oneMoreActionQueueLogTable.insert();
