@@ -16,9 +16,45 @@ internal abstract class OneMoreActionQueueProcessingBaseEngine
     UserConnection                                          userConnection;
     System.Exception                                        lastException;
 
+    protected boolean                                       processedSuccessfully;
+
 }
 ]]></Declaration>
 		<Methods>
+			<Method>
+				<Name>processSingleRecord</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process single record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue">Action queue record to be processed</param>
+    /// <param name = "_processingStage">Processing stage</param>
+    /// <returns>True if record was processed without errors otherwise False</returns>
+    [Hookable(false)]
+    internal static boolean processSingleRecord(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingStage _processingStage)
+    {
+        OneMoreActionQueueProcessingBaseEngine oneMoreActionQueueProcessingEngine;
+        
+        switch (_processingStage)
+        {
+            case OneMoreActionQueueProcessingStage::PreProcessing:
+                oneMoreActionQueueProcessingEngine = OneMoreActionQueuePreProcessingEngine::construct();
+                break;
+            case OneMoreActionQueueProcessingStage::Processing:
+                oneMoreActionQueueProcessingEngine = OneMoreActionQueueProcessingEngine::construct();
+                break;
+            default:
+                throw error(error::wrongUseOfFunction(funcName()));
+        }
+
+        oneMoreActionQueueProcessingEngine.parmOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueueProcessingEngine.run();
+
+        return oneMoreActionQueueProcessingEngine.getProcessedSuccessfully();
+    }
+
+]]></Source>
+			</Method>
 			<Method>
 				<Name>parmOneMoreActionQueue</Name>
 				<Source><![CDATA[
@@ -213,6 +249,21 @@ internal abstract class OneMoreActionQueueProcessingBaseEngine
     [Hookable(false)]
     protected void postRun()
     {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getProcessedSuccessfully</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is processed successfully?
+    /// </summary>
+    /// <returns>True if the record was processed successfully otherwise false</returns>
+    [Hookable(false)]
+    public boolean getProcessedSuccessfully()
+    {
+        return processedSuccessfully;
     }
 
 ]]></Source>

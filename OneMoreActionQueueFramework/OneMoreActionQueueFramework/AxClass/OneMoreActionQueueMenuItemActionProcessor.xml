@@ -19,7 +19,7 @@ class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProces
     {
         OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeMenuItemParameterTable();
 
-        OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(oneMoreActionQueueTypeMenuItemParameterTable.ClassNumber);
+        OneMoreActionQueueMenuItemBehavior menuItemBehavior = OneMoreActionQueueMenuItemBehavior::construct(oneMoreActionQueueTypeMenuItemParameterTable.className());
             
         menuItemBehavior.initialize();
             

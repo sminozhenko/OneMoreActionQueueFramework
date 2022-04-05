@@ -13,6 +13,7 @@ class OneMoreActionQueueBusinessEventContract extends BusinessEventsContract
     private OneMoreActionQueueActionId          actionId;
     private OneMoreActionQueueStatus            status;
     private OneMoreActionQueueProcessingNotes   processingNotes;
+    private OneMoreActionQueueContract          message;
 
 }
 ]]></Declaration>
@@ -81,6 +82,23 @@ class OneMoreActionQueueBusinessEventContract extends BusinessEventsContract
         processingNotes = _processingNotes;
 
         return processingNotes;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMessage</Name>
+				<Source><![CDATA[
+    [
+        DataMember('Message'),
+        BusinessEventsDataMember("@OneMoreActionQueueFramework:OneMoreActionQueueMessage"),
+        Hookable(false)
+    ]
+    public OneMoreActionQueueContract parmMessage(OneMoreActionQueueContract _message = message)
+    {
+        message = _message;
+
+        return message;
     }
 
 ]]></Source>

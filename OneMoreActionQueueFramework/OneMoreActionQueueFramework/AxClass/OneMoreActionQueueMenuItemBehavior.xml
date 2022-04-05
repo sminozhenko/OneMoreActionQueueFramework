@@ -9,19 +9,19 @@
 abstract class OneMoreActionQueueMenuItemBehavior
 {
     protected Object runClass;
-    protected ClassId classId;
+    protected ClassName className;
     
 }
 ]]></Declaration>
 		<Methods>
 			<Method>
-				<Name>parmClassId</Name>
+				<Name>parmClassName</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    public ClassId parmClassId(ClassId _classId = classId)
+    public ClassName parmClassName(ClassName _className = className)
     {
-        classId = _classId;
-        return classId;
+        className = _className;
+        return className;
     }
 
 ]]></Source>
@@ -30,11 +30,11 @@ abstract class OneMoreActionQueueMenuItemBehavior
 				<Name>construct</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    public static OneMoreActionQueueMenuItemBehavior construct(ClassId _classId)
+    public static OneMoreActionQueueMenuItemBehavior construct(ClassName _className)
     {
-        OneMoreActionQueueMenuItemBehavior ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueMenuItemBehavior), new OneMoreActionQueueMenuItemBehaviorAttribute(OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(classId2Name(_classId))));
+        OneMoreActionQueueMenuItemBehavior ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueMenuItemBehavior), new OneMoreActionQueueMenuItemBehaviorAttribute(OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(_className)));
 
-        ret.parmClassId(_classId);
+        ret.parmClassName(_className);
 
         return ret;
     }
@@ -85,17 +85,17 @@ abstract class OneMoreActionQueueMenuItemBehavior
     /// <summary>
     /// Is class supported?
     /// </summary>
-    /// <param name = "_classId">Class id to be check</param>
+    /// <param name = "_className">Class name to be check</param>
     /// <returns>True if class is supported for menu item action queue otherwise False</returns>
     [Hookable(false)]
-    public static boolean isClassSupported(ClassId _classId)
+    public static boolean isClassSupported(ClassName _className)
     {
         boolean     ret = true;
-        ClassName   className = OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(classId2Name(_classId));
+        ClassName   className = OneMoreActionQueueMenuItemBehavior::getFirstClassIdSupported(_className);
             
         if (!className)
         {
-            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueClassIsNotSupported", classId2Name(_classId)));
+            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueClassIsNotSupported", _className));
         }
 
         return ret;
@@ -111,7 +111,7 @@ abstract class OneMoreActionQueueMenuItemBehavior
     /// </summary>
     public void initialize()
     {
-        runClass = classfactory.createClass(classId);
+        runClass = classfactory.createClass(className2Id(className));
     }
 
 ]]></Source>

@@ -77,6 +77,7 @@ public class OneMoreActionQueueBusinessEvent extends BusinessEventsBase
         contract.parmActionId(oneMoreActionQueue.ActionId);
         contract.parmStatus(oneMoreActionQueue.Status);
         contract.parmProcessingNotes(oneMoreActionQueue.ProcessingNotes);
+        contract.parmMessage(oneMoreActionQueue.deserializedContract());
 
         return contract;
     }

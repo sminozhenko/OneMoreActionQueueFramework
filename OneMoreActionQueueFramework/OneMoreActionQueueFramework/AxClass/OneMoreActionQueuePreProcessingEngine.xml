@@ -22,18 +22,6 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>runPreProcessorForAction</Name>
-				<Source><![CDATA[
-    internal static void runPreProcessorForAction(OneMoreActionQueue _oneMoreActionQueue)
-    {
-        var oneMoreActionQueuePreProcessingEngine = OneMoreActionQueuePreProcessingEngine::construct();
-        oneMoreActionQueuePreProcessingEngine.parmOneMoreActionQueue(_oneMoreActionQueue);
-        oneMoreActionQueuePreProcessingEngine.run();
-    }
-
-]]></Source>
-			</Method>
-			<Method>
 				<Name>selectOneMoreActionQueueUpdReadPast</Name>
 				<Source><![CDATA[
     protected boolean selectOneMoreActionQueueUpdReadPast()
@@ -117,6 +105,11 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
                 }
             }
         }
+
+        if (newActionQueueStatus == OneMoreActionQueueStatus::Waiting)
+        {
+            processedSuccessfully = true;
+        }
     }
 
 ]]></Source>
@@ -157,6 +150,33 @@ internal class OneMoreActionQueuePreProcessingEngine extends OneMoreActionQueueP
         }
 
         return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected void postRun()
+    {
+        if (BatchHeader::isExecutingInBatch())
+        {
+            OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = oneMoreActionQueueCaller.oneMoreActionQueueTypeTable();
+
+            OneMoreActionQueueProcessingType processingType = oneMoreActionQueueTypeTable.ProcessingType;
+
+            if (processingType == OneMoreActionQueueProcessingType::Synchronous)
+            {
+                processingType = OneMoreActionQueueProcessingType::ReliableAsynchronous;
+            }
+
+            if (processingType == OneMoreActionQueueProcessingType::ReliableAsynchronous || processingType == OneMoreActionQueueProcessingType::Synchronous)
+            {
+                oneMoreActionQueueCaller.reread();
+                OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueueCaller, processingType);
+            }
+        }
     }
 
 ]]></Source>
