@@ -103,3 +103,16 @@ jobs:
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_26
+    displayName: 'Build for 10.0.26'
+    pool:
+      vmImage: 'vs2017-win2016'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6354.52'      
+      Platform.CompilerPackage.Version: '7.0.6354.52'
+      Application.BuildXpp.Version: '10.0.1192.52'
+      ApplicationSuite.BuildXpp.Version: '10.0.1192.52'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
