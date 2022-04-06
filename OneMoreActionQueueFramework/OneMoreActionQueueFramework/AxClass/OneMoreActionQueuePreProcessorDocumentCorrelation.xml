@@ -64,7 +64,7 @@ internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneM
                         {
                             for (int i = 1; i <= conLen(sequenceFields); i++)
                             {
-                                qbds.addSelectionField(fieldName2Id(currentTableId, conPeek(sequenceFields, i)));
+                                qbds.addSelectionField(currentTableId, fieldName2Id(currentTableId, conPeek(sequenceFields, i)));
                             }
                         }
 
