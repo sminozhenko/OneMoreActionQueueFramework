@@ -103,15 +103,9 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
     /// <param name = "_oneMoreActionQueueTypeTable">An action queue type buffer</param>
     internal static void updateActionQueueEvent(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
-        BusinessEventsId businessEventsId = OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(_oneMoreActionQueueTypeTable.TypeId);
-        
-        BusinessEventsTable businessEventsTable;
-
         ttsbegin;
-        
-        //TODO businessEventsTable.find is internal. Extensibility request is created
-        select firstonly forupdate businessEventsTable
-            where businessEventsTable.BusinessEventId == businessEventsId;
+
+        BusinessEventsTable businessEventsTable = BusinessEventsTable::find(OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(_oneMoreActionQueueTypeTable.TypeId), true);
 
         if (businessEventsTable.RecId != 0)
         {
