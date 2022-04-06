@@ -14,6 +14,20 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
 ]]></Declaration>
 		<Methods>
 			<Method>
+				<Name>BusinessEventsCatalogHelper_onBusinessEventsCatalogRebuild</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Rebuilds the OneMore action queue business events catalog
+    /// </summary>>
+    [SubscribesTo(classStr(BusinessEventsCatalogHelper), staticDelegateStr(BusinessEventsCatalogHelper, onBusinessEventsCatalogRebuild))]
+    public static void BusinessEventsCatalogHelper_onBusinessEventsCatalogRebuild()
+    {
+        OneMoreActionQueueBusinessEventsCatalogHelper::addActionQueueEvents();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>addActionQueueEvents</Name>
 				<Source><![CDATA[
     /// <summary>
@@ -22,15 +36,11 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
     internal static void addActionQueueEvents()
     {
         OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
-
-        ttsbegin;
         
         while select oneMoreActionQueueTypeTable
         {
             OneMoreActionQueueBusinessEventsCatalogHelper::addActionQueueEvent(oneMoreActionQueueTypeTable);
         }
-
-        ttscommit;
         
     }
 
@@ -54,7 +64,7 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
 
             OneMoreActionQueueBusinessEventAttribute businessEventAttribute = dc.getAttribute(classStr(OneMoreActionQueueBusinessEventAttribute));
 
-            OneMoreActionQueueBusinessEventsCatalogHelper::validateRecordAndInsert(
+            BusinessEventsCatalogHelper::validateRecordAndInsert(
                 businessEventsId,
                 businessEventAttribute.parmActionQueueBusinessEventClass(),
                 _oneMoreActionQueueTypeTable.Description ? _oneMoreActionQueueTypeTable.Description : _oneMoreActionQueueTypeTable.TypeId,
@@ -85,54 +95,25 @@ internal class OneMoreActionQueueBusinessEventsCatalogHelper
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>validateRecordAndInsert</Name>
+				<Name>updateActionQueueEvent</Name>
 				<Source><![CDATA[
-    //TODO copy of standard method as it's marked as internal
     /// <summary>
-    /// This validates a new workflow catalog record and inserts
+    /// Update action queue event
     /// </summary>
-    /// <param name = "_businessEventId">The businessEventId</param>
-    /// <param name = "_contractName">The data contract class name as astring</param>
-    /// <param name = "_nameLabel">The label id for the name</param>
-    /// <param name = "_descriptionLabel">The label id for the description</param>
-    /// <param name = "_module">The business events category.</param>
-    /// <param name = "_nameParm1">Optional label id for a future additional parameter to the field name.</param>
-    /// <param name = "_nameParm2">Optional label id for a future additional parameter to the field name.</param>
-    /// <param name = "_descParm1">Optional label id for a future additional parameter to the field Description.</param>
-    /// <param name = "_descParm2">Optional label id for a future additional parameter to the field Description.</param>
-    /// <returns>Returns true if record haas been inserted. False if not. This is in case some loops need to use continue in the future.</returns>
-    internal static boolean validateRecordAndInsert(BusinessEventsId _businessEventId,
-        BusinessEventsContractEDT _contractName,
-        BusinessEventsName _nameLabel,
-        BusinessEventsDescription _descriptionLabel,
-        BusinessEventsCategory _module,
-        BusinessEventsDescriptionParm1 _nameParm1 = '',
-        BusinessEventsDescriptionParm2 _nameParm2 = '',
-        BusinessEventsNameParm1 _descParm1 = '',
-        BusinessEventsNameParm2 _descParm2 = '')
+    /// <param name = "_oneMoreActionQueueTypeTable">An action queue type buffer</param>
+    internal static void updateActionQueueEvent(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
     {
-        BusinessEventsTable businessEventsTable;
-        // Catching duplicate key exception instead of checking every record one by one. Logging telemetry and continuing. This should be good enough ad duplication is a very virtual problem here...
-        try
-        {
+        ttsbegin;
 
-            businessEventsTable.BusinessEventId = _businessEventId;
-            businessEventsTable.Name = _nameLabel;
-            businessEventsTable.Description = _descriptionLabel;
-            businessEventsTable.Module = _module;
-            businessEventsTable.Contract = _contractName;
-            businessEventsTable.NameParam1 = _nameParm1;
-            businessEventsTable.NameParam2 = _nameParm2;
-            businessEventsTable.DescParam1 = _descParm1;
-            businessEventsTable.DescParam2 = _descParm2;
-            businessEventsTable.insert();
-        }
-        catch(Exception::DuplicateKeyException)
+        BusinessEventsTable businessEventsTable = BusinessEventsTable::find(OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(_oneMoreActionQueueTypeTable.TypeId), true);
+
+        if (businessEventsTable.RecId != 0)
         {
-            return false;
+            businessEventsTable.Name = _oneMoreActionQueueTypeTable.Description ? _oneMoreActionQueueTypeTable.Description : _oneMoreActionQueueTypeTable.TypeId;
+            businessEventsTable.update();
         }
 
-        return true;
+        ttscommit;
     }
 
 ]]></Source>

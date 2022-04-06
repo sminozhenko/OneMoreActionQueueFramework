@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFDataProjectExportProcessor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue processor class for DMF export (data project) type
+/// </summary>
+[OneMoreActionQueueProcessorAttribute(classStr(OneMoreActionQueueDMFExportContract), true)]
+class OneMoreActionQueueDMFDataProjectExportProcessor extends OneMoreActionQueueDMFExportProcessorBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initializeDMFDefinitionGroupName</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected void initializeDMFDefinitionGroupName()
+    {
+        definitionGroupName = oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runExport</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected void runExport()
+    {
+        DMFPackageExporter  packageExporter = new DMFPackageExporter();
+        DMFDefinitionGroup  dmfDefinitionGroup = oneMoreActionQueueTypeDMFExportParameterTable.dmfDefinitionGroup();
+
+        if (dmfDefinitionGroup.RecId == 0)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectDoesNotExist", oneMoreActionQueueTypeDMFExportParameterTable.DMFDefinitionGroupName));
+        }
+
+        generatePackage = dmfDefinitionGroup.GenerateDataPackage;
+
+        //Force package creation if there are several entities in the data project
+        if (!generatePackage && dmfDefinitionGroup.getNumberOfEntitiesInDataProject() > 1)
+        {
+            generatePackage = true;
+        }
+
+        packageExporter.exportToPackageV2(definitionGroupName, '', definitionGroupName, executionId, NoYes::No, curext(), generatePackage);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>attachExportFileToActionQeueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean attachExportFileToActionQeueue()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateExecutionId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected boolean generateExecutionId()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

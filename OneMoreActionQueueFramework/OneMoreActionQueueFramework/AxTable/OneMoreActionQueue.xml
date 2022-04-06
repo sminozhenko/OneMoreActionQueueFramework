@@ -91,11 +91,13 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>initValue</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public void initValue()
     {
         super();
 
         this.ActionId = newGuid();
+        this.Status = OneMoreActionQueueStatus::NotRun;
     }
 
 ]]></Source>
@@ -108,10 +110,11 @@ public class OneMoreActionQueue extends common
     /// </summary>
     /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
     /// <param name = "_actionMessage">Action queue message</param>
+    /// <param name = "_source">Action queue message source</param>
     /// <param name = "_actionId">Action Id. Optional</param>
     /// <returns>Added <c>OneMoreActionQueue</c> record</returns>
     [Hookable(false)]
-    public static OneMoreActionQueue addToActionQueue(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage, OneMoreActionQueueActionId _actionId = emptyGuid())
+    public static OneMoreActionQueue addToActionQueue(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueMessage _actionMessage, OneMoreActionQueueSource _source, OneMoreActionQueueActionId _actionId = emptyGuid())
     {
         OneMoreActionQueue ret;
         
@@ -122,8 +125,10 @@ public class OneMoreActionQueue extends common
         {
             ret.ActionId        = _actionId;
         }
+
         ret.TypeId          = _typeId;
         ret.ActionMessage   = _actionMessage;
+        ret.Source          = _source;
 
         if (!ret.validateWrite())
         {
@@ -171,6 +176,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>docuRef</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public DocuRef docuRef()
     {
         DocuRef docuRef;
@@ -190,6 +196,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>delete</Name>
 				<Source><![CDATA[
+    [Hookable(false)]
     public void delete()
     {
         ttsbegin;
@@ -206,7 +213,7 @@ public class OneMoreActionQueue extends common
 			<Method>
 				<Name>deleteAttachements</Name>
 				<Source><![CDATA[
-    //Delete all attachements associated with action queue record
+    [Hookable(false)]
     public void deleteAttachements()
     {
         DocuRef docuRef;
@@ -220,6 +227,128 @@ public class OneMoreActionQueue extends common
                 docuRef.delete();
             }
         }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deserializedContract</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public OneMoreActionQueueContract deserializedContract()
+    {
+        return FormJsonSerializer::deserializeObject(className2Id(this.oneMoreActionQueueTypeTable().contractClassName()), this.transformedMessage());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void insert()
+    {
+        this.ULIDStamp = NUlid.Ulid::NewUlid().ToString();
+        
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>hasStalePreProcessMessagesInQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if action type has unprocessed messages in the queue
+    /// </summary>
+    /// <returns>True if action type has unprocessed messages in the queue otherwise False</returns>
+    [Hookable(false)]
+    internal static boolean hasStalePreProcessMessagesInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+        
+        select firstonly RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.Status             == OneMoreActionQueueStatus::NotRun
+               && oneMoreActionQueue.CreatedDateTime    <  DateTimeUtil::addSeconds(DateTimeUtil::getSystemDateTime(), -OneMoreActionQueueParameters::preProcessSecondBeforeBecomeStale())
+        exists join oneMoreActionQueueTypeTable
+            where oneMoreActionQueueTypeTable.TypeId    == oneMoreActionQueue.TypeId
+               && oneMoreActionQueueTypeTable.Enabled   == NoYes::Yes;
+
+        return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>hasStaleWaitingMessagesInQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if action type has stale waiting messages in the queue
+    /// </summary>
+    /// <returns>True if action type has stale waiting messages in the queue otherwise False</returns>
+    [Hookable(false)]
+    internal static boolean hasStaleWaitingMessagesInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+        OneMoreActionQueueBatchJobCorrelationView oneMoreActionQueueBatchJobCorrelationView;
+        
+        select firstonly RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.Status                     == OneMoreActionQueueStatus::Waiting
+        exists join oneMoreActionQueueTypeTable
+            where oneMoreActionQueueTypeTable.TypeId            == oneMoreActionQueue.TypeId
+               && oneMoreActionQueueTypeTable.Enabled           == NoYes::Yes   
+               && oneMoreActionQueueTypeTable.ProcessingType    == OneMoreActionQueueProcessingType::ReliableAsynchronous
+        notexists join oneMoreActionQueueBatchJobCorrelationView
+            where oneMoreActionQueueBatchJobCorrelationView.ActionQueueRecId == oneMoreActionQueue.RecId;
+
+        return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>hasPrevWaitingMessagesInQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Checks if action type has earlier waiting messages in the queue
+    /// </summary>
+    /// <returns>True if action type has earlier waiting messages in the queue otherwise False</returns>
+    [Hookable(false)]
+    internal boolean hasPrevWaitingMessagesInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;        
+        
+        select firstonly RecId
+            from oneMoreActionQueue
+            where oneMoreActionQueue.SequenceGroupHash          == this.SequenceGroupHash
+               && oneMoreActionQueue.Status                     == OneMoreActionQueueStatus::Waiting
+               && oneMoreActionQueue.ULIDStamp                  <  this.ULIDStamp
+               && oneMoreActionQueue.RecId                      != this.RecId;
+
+        return oneMoreActionQueue.RecId != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>nextWaitingMessageInQueue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal OneMoreActionQueue nextWaitingMessageInQueue()
+    {
+        OneMoreActionQueue oneMoreActionQueue;
+        
+        select firstonly oneMoreActionQueue
+            where oneMoreActionQueue.SequenceGroupHash          == this.SequenceGroupHash
+               && oneMoreActionQueue.Status                     == OneMoreActionQueueStatus::Waiting
+               && oneMoreActionQueue.ULIDStamp                  >=  this.ULIDStamp
+               && oneMoreActionQueue.RecId                      != this.RecId;
+
+        return oneMoreActionQueue;
     }
 
 ]]></Source>
@@ -251,6 +380,9 @@ public class OneMoreActionQueue extends common
 					<DataField>ActionId</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
+					<DataField>ULIDStamp</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
 					<DataField>TypeId</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
@@ -264,6 +396,9 @@ public class OneMoreActionQueue extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>ActionMessage</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Source</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -309,6 +444,9 @@ public class OneMoreActionQueue extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SequenceGroupHash</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -361,6 +499,9 @@ public class OneMoreActionQueue extends common
 				<AxTableFieldGroupField>
 					<DataField>Status</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Source</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 	</FieldGroups>
@@ -382,6 +523,7 @@ public class OneMoreActionQueue extends common
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
 			<Name>ActionMessage</Name>
+			<AllowEdit>No</AllowEdit>
 			<ExtendedDataType>OneMoreActionQueueMessage</ExtendedDataType>
 		</AxTableField>
 		<AxTableField xmlns=""
@@ -402,6 +544,7 @@ public class OneMoreActionQueue extends common
 			<AllowEdit>No</AllowEdit>
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>OneMoreActionQueueRetryCount</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRuns</Label>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
@@ -409,6 +552,24 @@ public class OneMoreActionQueue extends common
 			<AllowEdit>No</AllowEdit>
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>SelectableDataArea</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ULIDStamp</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueULIDStamp</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SequenceGroupHash</Name>
+			<ExtendedDataType>OneMoreActionQueueSequenceGroupHash</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Source</Name>
+			<AllowEdit>No</AllowEdit>
+			<EnumType>OneMoreActionQueueSource</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
@@ -449,6 +610,30 @@ public class OneMoreActionQueue extends common
 			<Fields>
 				<AxTableIndexField>
 					<DataField>CompanyId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>ULIDStampIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ULIDStamp</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+		<AxTableIndex>
+			<Name>SequenceGroupHashStatusULIDStampIdx</Name>
+			<AllowDuplicates>Yes</AllowDuplicates>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>SequenceGroupHash</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Status</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>ULIDStamp</DataField>
 				</AxTableIndexField>
 			</Fields>
 		</AxTableIndex>

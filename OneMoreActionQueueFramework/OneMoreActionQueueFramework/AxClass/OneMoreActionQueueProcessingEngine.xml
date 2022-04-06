@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingEngine</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Processing engine class
+/// </summary>
+internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProcessingBaseEngine
+{
+    private OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+
+    private boolean doRetry;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Construct
+    /// </summary>    
+    /// <returns><c>OneMoreActionQueueProcessingEngine</c></returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueProcessingEngine construct()
+    {
+        return new OneMoreActionQueueProcessingEngine();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runInternal</Name>
+				<Source><![CDATA[
+    protected void runInternal()
+    {
+        System.Exception            exception;
+        
+        this.initUpdate();
+
+        OneMoreActionQueueProcessor processor;
+
+        try
+        {
+            //Global flag
+            OneMoreActionQueueContext::doRetryFlag = false;
+            OneMoreActionQueueContext::canBeRetried = this.canBeRetried();
+        
+            processor = OneMoreActionQueueProcessor::newFromOneMoreActionQueue(oneMoreActionQueueUpd);
+            processor.runAction();
+    
+            newActionQueueStatus = OneMoreActionQueueStatus::Processed;
+
+            processedSuccessfully = true;
+        }
+        catch (exception)
+        {
+            doRetry = OneMoreActionQueueProcessingHelper::isExceptionRecoverable(exception);
+            lastException = exception;
+            newActionQueueStatus = OneMoreActionQueueStatus::Error;
+        }
+        finally
+        {
+            OneMoreActionQueueContext::doRetryFlag = false;
+            OneMoreActionQueueContext::canBeRetried = false;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check action queue readiness
+    /// </summary>
+    /// <returns>Returns true if action queue is ready for processing otherwise False</returns>
+    protected boolean checkActionQueue()
+    {
+        boolean     ret = true;
+
+        if (oneMoreActionQueueUpd.RecId == 0)
+        {
+            warning("@OneMoreActionQueueFramework:OneMoreActionQueueRecordIsInProcessOrDoesNotExist");
+            ret = false;
+        }
+    
+        if (ret && oneMoreActionQueueUpd.Status != OneMoreActionQueueStatus::Waiting)
+        {
+            warning(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueRecordShouldBeInStatus", OneMoreActionQueueStatus::Waiting));
+            ret = false;
+        }
+
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initUpdate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize variables
+    /// </summary>
+    protected void initUpdate()
+    {
+        oneMoreActionQueueTypeTable = oneMoreActionQueueUpd.oneMoreActionQueueTypeTable();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canBeRetried</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Can processing be retried
+    /// </summary>
+    /// <returns>True if processing can be retried otherwise false</returns>
+    protected boolean canBeRetried()
+    {
+        return this.useRetry() && oneMoreActionQueueUpd.RetryCount + 1 < this.maxRetryCount();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateStatus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update status and write log 
+    /// </summary>
+    protected void updateStatus()
+    {
+        boolean doStatusUpdate = true;
+        
+        if (doRetry && this.canBeRetried() && newActionQueueStatus == OneMoreActionQueueStatus::Error)
+        {
+            doStatusUpdate = false;
+
+            this.doRetryLogic();
+
+            //Keep original status
+            newActionQueueStatus = oneMoreActionQueueUpd.Status;
+        }
+
+        oneMoreActionQueueUpd.RetryCount += 1;
+
+        super();
+
+        //Invoke Business Event if status changes to processed
+        if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
+        {
+            OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
+            oneMoreActionQueueBusinessEvent.sendOnUserConnection(userConnection);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useRetry</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Use retries
+    /// </summary>
+    /// <returns>True if processing is using retries otherwise false</returns>
+    protected boolean useRetry()
+    {
+        //Do retry only if error is recoverable (static doRecover = true), processing type is not Syncronious and number of retries is set up for action queue type
+        return oneMoreActionQueueTypeTable.ProcessingType != OneMoreActionQueueProcessingType::Synchronous && oneMoreActionQueueTypeTable.RetryAttemptNumber != 0;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>maxRetryCount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Maximum retry count
+    /// </summary>
+    /// <returns>Maxumum number of retries</returns>
+    protected int maxRetryCount()
+    {
+        return oneMoreActionQueueTypeTable.RetryAttemptNumber;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>doRetryLogic</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Do retry logic
+    /// </summary>
+    protected void doRetryLogic()
+    {
+        OneMoreActionQueueRetryAttemptInterval retryAttemptInterval = oneMoreActionQueueTypeTable.RetryAttemptInterval;
+
+        if (!retryAttemptInterval)
+        {
+            retryAttemptInterval = OneMoreActionQueueConstants::defaultRetryAttemptInterval;
+        }
+
+        switch (oneMoreActionQueueTypeTable.ProcessingType)
+        {
+            case OneMoreActionQueueProcessingType::ReliableAsynchronous:
+                OneMoreActionQueueProcessingHelper::processActionQueueInController(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::ReliableAsynchronous, retryAttemptInterval);
+                break;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>selectOneMoreActionQueueUpdReadPast</Name>
+				<Source><![CDATA[
+    protected boolean selectOneMoreActionQueueUpdReadPast()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingStage</Name>
+				<Source><![CDATA[
+    protected OneMoreActionQueueProcessingStage processingStage()
+    {
+        return OneMoreActionQueueProcessingStage::Processing;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Post run
+    /// </summary>
+    [Hookable(false)]
+    protected void postRun()
+    {
+        if (oneMoreActionQueueTypeTable.ProcessInSequence && oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::ReliableAsynchronous)
+        {
+            OneMoreActionQueue oneMoreActionQueueNext = oneMoreActionQueueUpd.nextWaitingMessageInQueue();
+            
+            if (oneMoreActionQueueNext)
+            {
+                OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueueNext, OneMoreActionQueueProcessingType::ReliableAsynchronous);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

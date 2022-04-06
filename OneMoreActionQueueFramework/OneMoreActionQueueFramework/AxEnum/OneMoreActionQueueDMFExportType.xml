@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportType</Name>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExportType</Label>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>Entity</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExportEntity</Label>
+			<Value>5</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>DataProject</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExportDataProject</Label>
+			<Value>6</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>IntegrationActivity</Name>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExportIntegrationActivity</Label>
+			<Value>7</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

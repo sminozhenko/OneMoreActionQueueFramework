@@ -9,7 +9,6 @@
 [Form]
 public class OneMoreActionQueue extends FormRun
 {
-
 }
 ]]></Source>
 			</Method>
@@ -42,7 +41,39 @@ public class OneMoreActionQueue extends FormRun
         {
             super();
 
-            this.queryBuildDataSource().addSortField(fieldNum(OneMoreActionQueue, CreatedDateTime), SortOrder::Descending);
+            this.queryBuildDataSource().addSortField(fieldNum(OneMoreActionQueue, ULIDStamp), SortOrder::Descending);
+
+            if (element.args().record() && element.args().record().TableId != tableNum(OneMoreActionQueueTypeTable))
+            {
+                Common callerRecord = element.args().record();
+
+                QueryBuildDataSource qbds = this.queryBuildDataSource();
+
+                qbds = qbds.addDataSource(tableNum(OneMoreActionQueueDocumentCorrelation));
+                qbds.joinMode(JoinMode::ExistsJoin);
+                qbds.relations(true);
+
+
+                qbds.addRange(fieldNum(OneMoreActionQueueDocumentCorrelation, DocumentTableId)).value(queryValue(callerRecord.TableId));
+                qbds.addRange(fieldNum(OneMoreActionQueueDocumentCorrelation, DocumentRecId)).value(queryValue(callerRecord.RecId));
+            }
+        }
+
+]]></Source>
+					</Method>
+					<Method>
+						<Name>write</Name>
+						<Source><![CDATA[
+        public void write()
+        {
+            boolean isInsert = OneMoreActionQueue.RecId == 0;
+            
+            super();
+
+            if (isInsert)
+            {
+                info("@OneMoreActionQueueFramework:OneMoreActionQueueManualCreatedActionConfirmation");
+            }
         }
 
 ]]></Source>
@@ -51,7 +82,27 @@ public class OneMoreActionQueue extends FormRun
 				<Fields />
 			</DataSource>
 		</DataSources>
-		<DataControls xmlns="" />
+		<DataControls xmlns="">
+			<Control>
+				<Name>OneMoreActionQueueDocumentCorrelation_DocumentDetails</Name>
+				<Type>String</Type>
+				<Methods>
+					<Method>
+						<Name>jumpRef</Name>
+						<Source><![CDATA[
+        public void jumpRef()
+        {
+
+            appl.setDefaultCompany(OneMoreActionQueue.CompanyId);
+             
+            OneMoreActionQueueDocumentCorrelation::jumpRef(OneMoreActionQueueDocumentCorrelation, element);
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+		</DataControls>
 		<Members xmlns="" />
 	</SourceCode>
 	<DataSources>
@@ -100,6 +151,39 @@ public class OneMoreActionQueue extends FormRun
 				</AxFormDataSourceField>
 			</Fields>
 			<ReferencedDataSources />
+			<InsertAtEnd>No</InsertAtEnd>
+			<InsertIfEmpty>No</InsertIfEmpty>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+		<AxFormDataSource xmlns="">
+			<Name>OneMoreActionQueueDocumentCorrelation</Name>
+			<Table>OneMoreActionQueueDocumentCorrelation</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>ActionQueueRecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DocumentRecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DocumentTableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>OneMoreActionQueue</JoinSource>
+			<AllowCreate>No</AllowCreate>
+			<AllowDelete>No</AllowDelete>
+			<AllowEdit>No</AllowEdit>
 			<InsertAtEnd>No</InsertAtEnd>
 			<InsertIfEmpty>No</InsertIfEmpty>
 			<DataSourceLinks />
@@ -157,6 +241,14 @@ public class OneMoreActionQueue extends FormRun
 								<MenuItemName>OneMoreActionQueueLogShow</MenuItemName>
 								<MenuItemType>Action</MenuItemType>
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueLogTable</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueLogTable</MenuItemName>
+							</AxFormControl>
 						</Controls>
 						<Caption>@SYS122441</Caption>
 					</AxFormControl>
@@ -211,6 +303,15 @@ public class OneMoreActionQueue extends FormRun
 									i:nil="true" />
 								<Controls>
 									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>Overview_TypeId</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>TypeId</DataField>
+										<DataSource>OneMoreActionQueue</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
 										i:type="AxFormGuidControl">
 										<Name>Overview_ActionId</Name>
 										<Type>Guid</Type>
@@ -221,11 +322,11 @@ public class OneMoreActionQueue extends FormRun
 									</AxFormControl>
 									<AxFormControl xmlns=""
 										i:type="AxFormStringControl">
-										<Name>Overview_TypeId</Name>
+										<Name>Overview_CompanyId</Name>
 										<Type>String</Type>
 										<FormControlExtension
 											i:nil="true" />
-										<DataField>TypeId</DataField>
+										<DataField>CompanyId</DataField>
 										<DataSource>OneMoreActionQueue</DataSource>
 									</AxFormControl>
 									<AxFormControl xmlns=""
@@ -245,6 +346,15 @@ public class OneMoreActionQueue extends FormRun
 										<FormControlExtension
 											i:nil="true" />
 										<DataField>RetryCount</DataField>
+										<DataSource>OneMoreActionQueue</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>Overview_SequenceGroupHash</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>SequenceGroupHash</DataField>
 										<DataSource>OneMoreActionQueue</DataSource>
 									</AxFormControl>
 								</Controls>
@@ -313,6 +423,16 @@ public class OneMoreActionQueue extends FormRun
 								<DataSource>OneMoreActionQueue</DataSource>
 								<Items />
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormComboBoxControl">
+								<Name>General_Source</Name>
+								<Type>ComboBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>Source</DataField>
+								<DataSource>OneMoreActionQueue</DataSource>
+								<Items />
+							</AxFormControl>
 						</Controls>
 						<DataGroup>General</DataGroup>
 						<DataSource>OneMoreActionQueue</DataSource>
@@ -358,6 +478,7 @@ public class OneMoreActionQueue extends FormRun
 									i:nil="true" />
 								<DataField>ActionMessage</DataField>
 								<DataSource>OneMoreActionQueue</DataSource>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueMessage</Caption>
@@ -382,9 +503,51 @@ public class OneMoreActionQueue extends FormRun
 									i:nil="true" />
 								<DataMethod>transformedMessage</DataMethod>
 								<DataSource>OneMoreActionQueue</DataSource>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTransformedMessage</Caption>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormTabPageControl">
+						<Name>DocumentCorrelationTabPage</Name>
+						<Pattern>ToolbarList</Pattern>
+						<PatternVersion>1.2</PatternVersion>
+						<Type>TabPage</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormGridControl">
+								<Name>DocumentCorrelationGrid</Name>
+								<Type>Grid</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>OneMoreActionQueueDocumentCorrelation_DocumentTableName</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataMethod>documentTableName</DataMethod>
+										<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>OneMoreActionQueueDocumentCorrelation_DocumentDetails</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataMethod>documentDetails</DataMethod>
+										<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+									</AxFormControl>
+								</Controls>
+								<DataSource>OneMoreActionQueueDocumentCorrelation</DataSource>
+								<MultiSelect>No</MultiSelect>
+							</AxFormControl>
+						</Controls>
+						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDocumentCorrelation</Caption>
 					</AxFormControl>
 					<AxFormControl xmlns=""
 						i:type="AxFormTabPageControl">
@@ -407,6 +570,7 @@ public class OneMoreActionQueue extends FormRun
 								<DataField>ProcessingNotes</DataField>
 								<DataSource>OneMoreActionQueue</DataSource>
 								<MultiLine>Yes</MultiLine>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueProcessingNotes</Caption>

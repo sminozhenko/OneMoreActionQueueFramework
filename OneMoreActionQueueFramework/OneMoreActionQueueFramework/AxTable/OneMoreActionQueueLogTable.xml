@@ -9,66 +9,74 @@ public class OneMoreActionQueueLogTable extends common
 ]]></Declaration>
 		<Methods>
 			<Method>
-				<Name>addInfoLogData</Name>
+				<Name>addActionQueueLogTable</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Add infolog
+    /// Adds <c>OneMoreActionQueueLogTable</c> record
     /// </summary>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
-    /// <param name = "_exceptionTypeName">An <c>OneMoreActionQueueLogExceptionTypeName</c> value</param>    
+    /// <param name = "_stage">An <c>OneMoreActionQueueProcessingStage</c> value</param>
+    /// <param name = "_exception">An <c>System.Exception</c> object</param>
     /// <param name = "_infoLogData">Infolog data</param>
     /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
+    /// <returns>
+    /// A created record in the <c>OneMoreActionQueueLogTable</c> table.
+    /// </returns>
     [Hookable(false)]
-    public static void addInfoLogData(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueLogExceptionTypeName _exceptionTypeName, InfologData _infoLogData, UserConnection _userConnection)
+    public static OneMoreActionQueueLogTable addActionQueueLogTable(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingStage _stage, System.Exception _exception, InfologData _infoLogData, UserConnection _userConnection)
     {
-        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId, true, _userConnection);
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable;
 
-        if (_infoLogData == conNull())
-        {
-            if (oneMoreActionQueueLogTable.RecId != 0)
-            {
-                oneMoreActionQueueLogTable.delete();
-            }
+        oneMoreActionQueueLogTable.setConnection(_userConnection);
 
-            return;
-        }
+        oneMoreActionQueueLogTable.clear();
+        oneMoreActionQueueLogTable.initValue();
 
+        oneMoreActionQueueLogTable.Stage                =   _stage;
         oneMoreActionQueueLogTable.RefRecId             =   _oneMoreActionQueue.RecId;
         oneMoreActionQueueLogTable.InfologData          =   _infoLogData;
-        oneMoreActionQueueLogTable.ExceptionTypeName    =   _exceptionTypeName;
+        oneMoreActionQueueLogTable.RetryCount           =   _oneMoreActionQueue.RetryCount;
+        
+        if (_exception != null)
+        {
+            str stackTrace;
+            
+            if (_exception.InnerException != null)
+            {
+                stackTrace = _exception.InnerException.StackTrace;
+                stackTrace += '\n';
+            }
 
-        oneMoreActionQueueLogTable.write();
+            oneMoreActionQueueLogTable.ExceptionTypeName    =   _exception.GetType().FullName;
+            oneMoreActionQueueLogTable.StackTrace           =   stackTrace + _exception.StackTrace;
+        }
+
+        oneMoreActionQueueLogTable.insert();
+
+        return oneMoreActionQueueLogTable;
     }
 
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>findByRefRecId</Name>
+				<Name>findLast</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Finds <c>OneMoreActionQueueLogTable</c> record by <c>RefRecId</c> value
+    /// Finds the last <c>OneMoreActionQueueLogTable</c> record by <c>RefRecId</c> value order by created date time
     /// </summary>
-    /// <param name = "_refRecId">An <c>RefRecId</c> value</param>
-    /// <param name = "_forupdate"> A Boolean value that indicates whether to read the record for update; optional.</param>
-    /// <param name = "_userConnection">An <c>UserConnection</c> assigned to action queue run; optional.</param>
+    /// <param name = "_refRecId">An <c>RefRecId</c> value</param>    
     /// <returns>
     /// A record in the <c>OneMoreActionQueueLogTable</c> table otherwise, an empty record.
     /// </returns>
     [Hookable(false)]
-    public static OneMoreActionQueueLogTable findByRefRecId(RefRecId _refRecId, boolean _forupdate = false, UserConnection _userConnection = null)
+    public static OneMoreActionQueueLogTable findLast(RefRecId _refRecId)
     {
         OneMoreActionQueueLogTable   ret;
-
-        ret.selectForUpdate(_forupdate);
-
-        if (_userConnection)
-        {
-            ret.setConnection(_userConnection);
-        }
 
         if (_refRecId)
         {
             select firstonly ret
+                order by CreatedDateTime desc
                 where ret.RefRecId      ==  _refRecId;
         }
 
@@ -78,25 +86,57 @@ public class OneMoreActionQueueLogTable extends common
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>showLog</Name>
+				<Name>showInfoLog</Name>
 				<Source><![CDATA[
     /// <summary>
-    /// Show log for <c>OneMoreActionQueue</c>
-    /// </summary>
-    /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> caller record</param>
+    /// Show infolog for current log record
+    /// </summary>    
     [Hookable(false)]
-    public static void showLog(OneMoreActionQueue _oneMoreActionQueue)
+    public void showInfoLog()
     {
-        OneMoreActionQueueLogTable       oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::findByRefRecId(_oneMoreActionQueue.RecId);
-        
-        if (oneMoreActionQueueLogTable.RecId && oneMoreActionQueueLogTable.InfologData != conNull())
+        if (this.RecId && this.InfologData != conNull())
         {
-            infolog.import(oneMoreActionQueueLogTable.InfologData, true);
+            infolog.import(this.InfologData, true);
         }
         else
         {
             info("@OneMoreActionQueueFramework:OneMoreActionQueueNoInfologFound");
         }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getInfoLogText</Name>
+				<Source><![CDATA[
+    [
+        Hookable(false),
+        SysClientCacheDataMethod(false)
+    ]
+    public display InfologText getInfoLogText()
+    {
+        System.Text.StringBuilder   logStr = new System.Text.StringBuilder();
+
+        if (this.InfologData != conNull())
+        {
+            SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(this.InfologData);
+
+            while (infoEnumerator.moveNext())
+            {
+                SysInfologMessageStruct infoMessageStruct = SysInfologMessageStruct::construct(infoEnumerator.currentMessage());
+
+                int p = infoMessageStruct.prefixDepth();
+
+                for (int i = 1; i <= p; i++)
+                {
+                    logStr.Append(infoMessageStruct.preFixTextElement(i) + '. ');
+                }
+
+                logStr.AppendLine(infoMessageStruct.message());
+            }
+        }
+
+        return logStr.ToString();
     }
 
 ]]></Source>
@@ -111,8 +151,8 @@ public class OneMoreActionQueueLogTable extends common
 	<TitleField1>RefRecId</TitleField1>
 	<CacheLookup>NotInTTS</CacheLookup>
 	<ClusteredIndex>RefRecIdx</ClusteredIndex>
+	<CreatedBy>Yes</CreatedBy>
 	<CreatedDateTime>Yes</CreatedDateTime>
-	<ReplacementKey>RefRecIdx</ReplacementKey>
 	<SaveDataPerCompany>No</SaveDataPerCompany>
 	<DeleteActions />
 	<FieldGroups>
@@ -126,7 +166,7 @@ public class OneMoreActionQueueLogTable extends common
 					<DataField>InfologData</DataField>
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
-					<DataField>ExceptionTypeName</DataField>
+					<DataField>StackTrace</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -137,11 +177,7 @@ public class OneMoreActionQueueLogTable extends common
 		<AxTableFieldGroup>
 			<Name>AutoIdentification</Name>
 			<AutoPopulate>Yes</AutoPopulate>
-			<Fields>
-				<AxTableFieldGroupField>
-					<DataField>RefRecId</DataField>
-				</AxTableFieldGroupField>
-			</Fields>
+			<Fields />
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
 			<Name>AutoSummary</Name>
@@ -150,6 +186,27 @@ public class OneMoreActionQueueLogTable extends common
 		<AxTableFieldGroup>
 			<Name>AutoBrowse</Name>
 			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>OverviewGrid</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>Stage</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>CreatedDateTime</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RefRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>RetryCount</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ExceptionTypeName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
 		</AxTableFieldGroup>
 	</FieldGroups>
 	<Fields>
@@ -170,12 +227,30 @@ public class OneMoreActionQueueLogTable extends common
 			<Name>ExceptionTypeName</Name>
 			<ExtendedDataType>OneMoreActionQueueLogExceptionTypeName</ExtendedDataType>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>StackTrace</Name>
+			<ExtendedDataType>OneMoreActionQueueLogStackTrace</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>RetryCount</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>OneMoreActionQueueRetryCount</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueRun</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>Stage</Name>
+			<EnumType>OneMoreActionQueueProcessingStage</EnumType>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
 		<AxTableIndex>
 			<Name>RefRecIdx</Name>
-			<AlternateKey>Yes</AlternateKey>
+			<AllowDuplicates>Yes</AllowDuplicates>
 			<Fields>
 				<AxTableIndexField>
 					<DataField>RefRecId</DataField>

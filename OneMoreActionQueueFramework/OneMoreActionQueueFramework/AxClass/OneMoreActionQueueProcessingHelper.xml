@@ -19,12 +19,32 @@ public static class OneMoreActionQueueProcessingHelper
     /// </summary>
     /// <param name = "_oneMoreActionQueue">An <c>OneMoreActionQueue</c> record</param>
     /// <param name = "_oneMoreActionQueueTypeTable">An <c>OneMoreActionQueueTypeTable</c> record</param>
+    /// <param name = "_processingStage">An <c>OneMoreActionQueueProcessingStage</c> value</param>
     /// <param name = "_sysOperationExecutionMode">An <c>SysOperationExecutionMode</c> value</param>
     /// <param name = "_retryAttemptInterval">An <c>OneMoreActionQueueRetryAttemptInterval</c> value</param>
     [Hookable(false)]
-    public static void processActionQueueInController(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, SysOperationExecutionMode _sysOperationExecutionMode, OneMoreActionQueueRetryAttemptInterval _retryAttemptInterval = 0)
+    internal static void processActionQueueInController(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage _processingStage, SysOperationExecutionMode _sysOperationExecutionMode, OneMoreActionQueueRetryAttemptInterval _retryAttemptInterval = 0)
     {
-        SysOperationServiceController               controller = new SysOperationServiceController(classStr(OneMoreActionQueueProcessingService), methodStr(OneMoreActionQueueProcessingService, processActionQueueRecord));
+        if (_processingStage == OneMoreActionQueueProcessingStage::Processing && _oneMoreActionQueueTypeTable.ProcessInSequence && _oneMoreActionQueue.hasPrevWaitingMessagesInQueue())
+        {
+            return;
+        }
+
+        str processingMethod;
+
+        switch (_processingStage)
+        {
+            case OneMoreActionQueueProcessingStage::PreProcessing:
+                processingMethod = methodStr(OneMoreActionQueueProcessingService, preProcessActionQueueRecord);
+                break;
+            case OneMoreActionQueueProcessingStage::Processing:
+                processingMethod = methodStr(OneMoreActionQueueProcessingService, processActionQueueRecord);
+                break;
+            default:
+                throw error(error::wrongUseOfFunction(funcName()));
+        }
+        
+        SysOperationServiceController               controller = new SysOperationServiceController(classStr(OneMoreActionQueueProcessingService), processingMethod);
 
         OneMoreActionQueueProcessingSingleContract  contract = controller.getDataContractInfoObject().dataContractObject() as OneMoreActionQueueProcessingSingleContract;
 
@@ -33,16 +53,16 @@ public static class OneMoreActionQueueProcessingHelper
         // Do not show the dialog and process the request directly.
         controller.parmShowDialog(false);
 
-        // Set the caption as it is used as the reliable async batch job name.
         LabelType dialogCaption;
-
+        
+        // Set the caption as it is used as the reliable async batch job name.
         if (_oneMoreActionQueueTypeTable.Description)
         {
-            dialogCaption = strFmt('%1 (%2)', _oneMoreActionQueueTypeTable.Description, _oneMoreActionQueue.ActionId);
+            dialogCaption = strFmt('%1 (%2%3)', _oneMoreActionQueueTypeTable.Description, _processingStage == OneMoreActionQueueProcessingStage::PreProcessing ? strfmt('%1, ', "@OneMoreActionQueueFramework:OneMoreActionQueueProcessingStagePreProcessing") : '', _oneMoreActionQueue.ActionId);
         }
         else
         {
-            dialogCaption = strfmt("@OneMoreActionQueueFramework:OneMoreActionQueueRunAction", _oneMoreActionQueue.ActionId);
+            dialogCaption = strfmt(_processingStage == OneMoreActionQueueProcessingStage::PreProcessing ? "@OneMoreActionQueueFramework:OneMoreActionQueuePreProcessAction" : "@OneMoreActionQueueFramework:OneMoreActionQueueRunAction", _oneMoreActionQueue.ActionId);
         }
 
         controller.parmDialogCaption(dialogCaption);
@@ -52,6 +72,8 @@ public static class OneMoreActionQueueProcessingHelper
         switch (_sysOperationExecutionMode)
         {
             case SysOperationExecutionMode::ReliableAsynchronous:
+                ttsbegin;
+
                 controller.parmReliableAsyncBatchGroupId(_oneMoreActionQueueTypeTable.ReliableAsyncBatchGroupId);
                 
                 BatchInfo batchInfo = controller.batchInfo();
@@ -62,7 +84,11 @@ public static class OneMoreActionQueueProcessingHelper
                     batchInfo.parmBatchHeader().parmExecutingBy(_oneMoreActionQueueTypeTable.RunAsUserId);
                 }
                 
-                controller.doBatch();
+                Batch batch = controller.doBatch();
+
+                OneMoreActionQueueBatchJobCorrelation::addCorrelation(_oneMoreActionQueue.RecId, batch.BatchJobId);
+
+                ttscommit;
                 break;
             default:
                 controller.startOperation();
@@ -80,57 +106,106 @@ public static class OneMoreActionQueueProcessingHelper
     /// <param name = "_oneMoreActionQueueTypeTable"><c>OneMoreActionQueueTypeTable</c> record</param>
     /// <param name = "_oneMoreActionQueue"><c>OneMoreActionQueue</c> record</param>
     /// <param name = "_processingType">An <c>OneMoreActionQueueProcessingType</c> value</param>
+    /// <param name = "_isInTransaction">Is in tranasction</param>
     /// <returns><c>OneMoreActionQueueServiceRunActionResponse</c></returns>
     [Hookable(false)]
-    public static OneMoreActionQueueServiceRunActionResponse processOneMoreActionQueue(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingType _processingType = _oneMoreActionQueueTypeTable.ProcessingType)
+    internal static OneMoreActionQueueServiceRunActionResponse processOneMoreActionQueue(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable, OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingType _processingType = _oneMoreActionQueueTypeTable.ProcessingType, boolean _isInTransaction = false)
     {
         OneMoreActionQueueResponseType                          responseType = OneMoreActionQueueResponseType::OK;
         str                                                     notes;
         OneMoreActionQueueServiceRunActionResponse              response = new OneMoreActionQueueServiceRunActionResponse();
+        boolean                                                 skipProcessing;
         
-        //If message was added to the queue and processing enabled
-        if (_oneMoreActionQueue.RecId != 0)
+        if (_oneMoreActionQueueTypeTable.Enabled && _oneMoreActionQueue.RecId != 0)
         {
-            if (_oneMoreActionQueueTypeTable.Enabled)
+            if (_oneMoreActionQueue.Status == OneMoreActionQueueStatus::NotRun)
             {
-                switch (_processingType)
+                OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::PreProcessing, _isInTransaction ? SysOperationExecutionMode::ReliableAsynchronous : SysOperationExecutionMode::Synchronous);
+
+                if (_isInTransaction)
                 {
-                    case OneMoreActionQueueProcessingType::ReliableAsynchronous:
-                        OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::ReliableAsynchronous);
-                        break;
-
-                    case OneMoreActionQueueProcessingType::Synchronous:
-                        OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, SysOperationExecutionMode::Synchronous);
-
-                        _oneMoreActionQueue.reread();
-
-                        switch (_oneMoreActionQueue.Status)
-                        {
-                            case OneMoreActionQueueStatus::Processed:
-                                responseType = OneMoreActionQueueResponseType::OK;
-                                notes = _oneMoreActionQueue.ProcessingNotes;
-                                break;
-
-                            case OneMoreActionQueueStatus::Error:
-                                throw error(_oneMoreActionQueue.ProcessingNotes);
-
-                            default:
-                                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueUnknownError");
-                        }
-                        break;
+                    skipProcessing = true;
                 }
             }
-            else
+
+            if (!skipProcessing)
             {
-                notes = strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionTypeIsNotEnabled", _oneMoreActionQueueTypeTable.TypeId);
-                responseType = OneMoreActionQueueResponseType::Warning;
+                _oneMoreActionQueue.reread();
+        
+                if (_oneMoreActionQueue.Status != OneMoreActionQueueStatus::Error)
+                {
+                    switch (_processingType)
+                    {
+                        case OneMoreActionQueueProcessingType::ReliableAsynchronous:
+                            OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::ReliableAsynchronous);
+                            break;
+
+                        case OneMoreActionQueueProcessingType::Synchronous:
+                            OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::Synchronous);
+
+                            _oneMoreActionQueue.reread();
+
+                            switch (_oneMoreActionQueue.Status)
+                            {
+                                case OneMoreActionQueueStatus::Processed:
+                                    responseType = OneMoreActionQueueResponseType::OK;
+                                    notes = _oneMoreActionQueue.ProcessingNotes;
+                                    break;
+
+                                case OneMoreActionQueueStatus::Error:
+                                    throw error(_oneMoreActionQueue.ProcessingNotes);
+
+                                default:
+                                    throw error("@OneMoreActionQueueFramework:OneMoreActionQueueUnknownError");
+                            }
+                            break;
+                    }
+                }
             }
+        }
+        else
+        {
+            notes = strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueActionTypeIsNotEnabled", _oneMoreActionQueueTypeTable.TypeId);
+            responseType = OneMoreActionQueueResponseType::Warning;
         }
 
         response.parmResponseType(responseType);
         response.parmNotes(notes);
 
         return response;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isExceptionRecoverable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Indicates if exception is recoverable and retry is needed
+    /// </summary>
+    /// <param name = "_exception">An <c>System.Exception</c> object</param>
+    /// <returns>True if exception si recoverable otherwise False</returns>
+    [Hookable(false)]
+    public static boolean isExceptionRecoverable(System.Exception _exception)
+    {
+        boolean     ret;
+
+        if (   _exception is Microsoft.Dynamics.Ax.Xpp.DeadlockException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.UpdateConflictNotRecoveredException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.DuplicateKeyNotRecoveredException
+            || _exception is Microsoft.Dynamics.Ax.Xpp.MaximumRetryCountExceededException
+           )
+        {
+            ret = true;
+        }
+        else
+        {
+            ret = OneMoreActionQueueContext::doRetryFlag;
+        }
+
+        return ret;
     }
 
 ]]></Source>

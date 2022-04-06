@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Remove menu item parameters
+/// </summary>
+class OneMoreActionQueueMenuItemParametersRemove extends RunBase
+{
+    private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static OneMoreActionQueueMenuItemParametersRemove construct()
+    {
+        return new OneMoreActionQueueMenuItemParametersRemove();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueTypeTable</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public OneMoreActionQueueTypeTable parmOneMoreActionQueueTypeTable(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable = oneMoreActionQueueTypeTable)
+    {
+        oneMoreActionQueueTypeTable = _oneMoreActionQueueTypeTable;
+        return oneMoreActionQueueTypeTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public static void main(Args _args)
+    {
+        if (!_args || !_args.record() || _args.record().TableId != tableNum(OneMoreActionQueueTypeTable))
+        {
+            throw error(Error::missingRecord(funcname()));
+        }
+
+        OneMoreActionQueueMenuItemParametersRemove oneMoreActionQueueMenuItemParametersRemove = OneMoreActionQueueMenuItemParametersRemove::construct();
+
+        OneMoreActionQueueMenuItemParametersRemove.parmOneMoreActionQueueTypeTable(_args.record());
+
+        if (oneMoreActionQueueMenuItemParametersRemove.prompt())
+        {
+            oneMoreActionQueueMenuItemParametersRemove.runOperation();
+
+            if (_args.record())
+            {
+                if (FormDataUtil::isFormDataSource(_args.record()))
+                {
+                    FormDataSource fds = FormDataUtil::getFormDataSource(_args.record());
+                    fds.research(true);
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        Dialog ret;
+
+        ret = super();
+
+        ret.addText(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParametersRemoveConfirmText", oneMoreActionQueueTypeTable.TypeId));
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        ttsbegin;
+        
+        OneMoreActionQueueTypeMenuItemParameterTable oneMoreActionQueueTypeMenuItemParameterTable = oneMoreActionQueueTypeTable.oneMoreActionQueueTypeMenuItemParameterTable(true);
+
+        if (oneMoreActionQueueTypeMenuItemParameterTable)
+        {
+            oneMoreActionQueueTypeMenuItemParameterTable.delete();
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParametersRemoveSuccessful", oneMoreActionQueueTypeTable.TypeId));
+        }
+        else
+        {
+            warning("@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParametersAreNotSpecified");
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// To determine if can run the inquiry in new session or not.
+    /// </summary>
+    /// <returns>
+    /// True if can run the inquiry in new session; otherwise, false.
+    /// </returns>
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Class description
+    /// </summary>
+    /// <returns>Class description</returns>
+    public static ClassDescription description()
+    {
+        return "@OneMoreActionQueueFramework:OneMoreActionQueueMenuItemParametersRemove";
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

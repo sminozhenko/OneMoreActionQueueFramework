@@ -7,7 +7,7 @@
 /// Clean-up routine for action queue table
 /// </summary>
 [SysOperationJournaledParameters(true)]
-class OneMoreActionQueueCleanUp extends SysOperationServiceController
+internal class OneMoreActionQueueCleanUp extends SysOperationServiceController
 {
 }
 ]]></Declaration>

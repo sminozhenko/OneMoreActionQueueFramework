@@ -7,7 +7,7 @@
 /// OneMore action queue business events endpoint adapter
 /// </summary>
 [BusinessEventsEndpoint(BusinessEventsEndpointType::OneMoreActionQueue)]
-class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsEndpoint
+internal class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsEndpoint
 {
     private OneMoreActionQueueTypeId    actionQueueTypeId;
     private System.Exception            lastException;
@@ -53,6 +53,7 @@ class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsE
                         
         int retryNum = 0;
         System.Exception exception;
+        OneMoreActionQueue oneMoreActionQueue;
             
         try
         {
@@ -61,19 +62,7 @@ class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsE
                 throw error(Error::missingParameter(null));
             }
                     
-            OneMoreActionQueue oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(actionQueueTypeId, _payload);
-
-            OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = OneMoreActionQueueTypeTable::find(actionQueueTypeId);
-
-            OneMoreActionQueueProcessingType processingType = oneMoreActionQueueTypeTable.ProcessingType;
-            
-            //Synchronous approach could slow down business events processing and not supported in this case, covert to ReliableAsynchronous
-            if (oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::Synchronous)
-            {
-                processingType = OneMoreActionQueueProcessingType::ReliableAsynchronous;
-            }
-
-            OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, processingType);
+            oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(actionQueueTypeId, _payload, OneMoreActionQueueSource::BusinessEvent);
         }
         catch (exception)
         {
@@ -91,6 +80,26 @@ class OneMoreActionQueueBusinessEventEndpointAdapter implements IBusinessEventsE
 
                 return false;
             }
+        }
+
+        //Processing scheduling should not impact on business event processing
+        try
+        {
+            OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = OneMoreActionQueueTypeTable::find(actionQueueTypeId);
+
+            OneMoreActionQueueProcessingType processingType = oneMoreActionQueueTypeTable.ProcessingType;
+            
+            //Synchronous approach could slow down business events processing and not supported in this case, convert to ReliableAsynchronous
+            if (oneMoreActionQueueTypeTable.ProcessingType == OneMoreActionQueueProcessingType::Synchronous)
+            {
+                processingType = OneMoreActionQueueProcessingType::ReliableAsynchronous;
+            }
+
+            OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, processingType);
+        }
+        catch
+        {
+            exceptionTextFallThrough();
         }
 
         return true;

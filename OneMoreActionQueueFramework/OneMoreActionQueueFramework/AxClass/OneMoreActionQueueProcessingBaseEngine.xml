@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingBaseEngine</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Base processing engine
+/// </summary>
+internal abstract class OneMoreActionQueueProcessingBaseEngine
+{
+    OneMoreActionQueue                                      oneMoreActionQueueCaller;
+    OneMoreActionQueue                                      oneMoreActionQueueUpd;
+
+    OneMoreActionQueueStatus                                newActionQueueStatus;
+    int                                                     infologFromLine;
+    UserConnection                                          userConnection;
+    System.Exception                                        lastException;
+
+    protected boolean                                       processedSuccessfully;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>processSingleRecord</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Process single record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueue">Action queue record to be processed</param>
+    /// <param name = "_processingStage">Processing stage</param>
+    /// <returns>True if record was processed without errors otherwise False</returns>
+    [Hookable(false)]
+    internal static boolean processSingleRecord(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueProcessingStage _processingStage)
+    {
+        OneMoreActionQueueProcessingBaseEngine oneMoreActionQueueProcessingEngine;
+        
+        switch (_processingStage)
+        {
+            case OneMoreActionQueueProcessingStage::PreProcessing:
+                oneMoreActionQueueProcessingEngine = OneMoreActionQueuePreProcessingEngine::construct();
+                break;
+            case OneMoreActionQueueProcessingStage::Processing:
+                oneMoreActionQueueProcessingEngine = OneMoreActionQueueProcessingEngine::construct();
+                break;
+            default:
+                throw error(error::wrongUseOfFunction(funcName()));
+        }
+
+        oneMoreActionQueueProcessingEngine.parmOneMoreActionQueue(_oneMoreActionQueue);
+        oneMoreActionQueueProcessingEngine.run();
+
+        return oneMoreActionQueueProcessingEngine.getProcessedSuccessfully();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Caller <c>OneMoreActionQueue</c> record
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueCaller">Caller <c>OneMoreActionQueue</c> record</param>
+    /// <returns>Caller <c>OneMoreActionQueue</c> record</returns>
+    [Hookable(false)]
+    public OneMoreActionQueue parmOneMoreActionQueue(OneMoreActionQueue _oneMoreActionQueueCaller = oneMoreActionQueueCaller)
+    {
+        oneMoreActionQueueCaller = _oneMoreActionQueueCaller;
+    
+        return oneMoreActionQueueCaller;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run
+    /// </summary>
+    [Hookable(false)]
+    public void run()
+    {
+        setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPrefix", oneMoreActionQueueCaller.ActionId));
+    
+        try
+        {
+            userConnection = new UserConnection();
+
+            //Start action queue connection transaction
+            userConnection.ttsbegin();
+
+            this.initializeOneMoreActionQueueUpd();
+
+            if (!this.checkActionQueue())
+            {
+                return;
+            }
+
+            infologFromLine = infologLine();
+
+            this.runInternal();
+
+            this.updateStatus();
+
+            //Commit action queue connection transaction
+            userConnection.ttscommit();
+
+            this.postRun();
+        }
+        catch
+        {
+            //Most like issue is related to status update on action queue
+            newActionQueueStatus = OneMoreActionQueueStatus::Error;
+            this.updateStatus();
+        }
+        finally
+        {
+            //Finalize action queue user connection to prevent user connection leak
+            if (userConnection)
+            {
+                userConnection.finalize();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeOneMoreActionQueueUpd</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize <c>OneMoreActionQueue</c> for update
+    /// </summary>
+    private void initializeOneMoreActionQueueUpd()
+    {
+        //Apply pessimistic concurency model to avoid double-processing of the same action at the same time
+        oneMoreActionQueueUpd.readPast(this.selectOneMoreActionQueueUpdReadPast());
+        oneMoreActionQueueUpd.selectForUpdate(true);
+        oneMoreActionQueueUpd.setConnection(userConnection);
+
+        select firstonly oneMoreActionQueueUpd
+            where oneMoreActionQueueUpd.RecId  ==  oneMoreActionQueueCaller.RecId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateStatus</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Update status and write log
+    /// </summary>    
+    protected void updateStatus()
+    {
+        oneMoreActionQueueUpd.Status    = newActionQueueStatus;
+
+        container infoLogData = OneMoreActionQueueContext::oneMoreActionQueueClearedLog;
+
+        OneMoreActionQueueContext::oneMoreActionQueueClearedLog = conNull();
+
+        infoLogData += this.getInfoLogData();
+
+        OneMoreActionQueueLogTable oneMoreActionQueueLogTable = OneMoreActionQueueLogTable::addActionQueueLogTable(oneMoreActionQueueUpd, this.processingStage(), lastException, infoLogData, userConnection);
+
+        oneMoreActionQueueUpd.ProcessingNotes = oneMoreActionQueueLogTable.getInfoLogText();
+    
+        oneMoreActionQueueUpd.update();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getInfoLogData</Name>
+				<Source><![CDATA[
+    private InfologData getInfoLogData()
+    {
+        int             currentLine = infologLine();
+        InfologData     ret;
+       
+        if (currentLine > infologFromLine)
+        {
+            ret = infolog.copy(infologFromLine + 1,  currentLine);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>selectOneMoreActionQueueUpdReadPast</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Use read past hint when selecting action queue record
+    /// </summary>
+    /// <returns>Use read past hint when selecting action queue record</returns>
+    protected abstract boolean selectOneMoreActionQueueUpdReadPast()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runInternal</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run processing logic
+    /// </summary>
+    protected abstract void runInternal()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkActionQueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check action queue record before processing
+    /// </summary>
+    /// <returns>True if processing can be started, otherwise false</returns>
+    protected abstract boolean checkActionQueue()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingStage</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Processing stage
+    /// </summary>
+    /// <returns>Processing stage</returns>
+    protected abstract OneMoreActionQueueProcessingStage processingStage()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Post run
+    /// </summary>
+    [Hookable(false)]
+    protected void postRun()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getProcessedSuccessfully</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is processed successfully?
+    /// </summary>
+    /// <returns>True if the record was processed successfully otherwise false</returns>
+    [Hookable(false)]
+    public boolean getProcessedSuccessfully()
+    {
+        return processedSuccessfully;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

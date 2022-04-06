@@ -12,5 +12,8 @@
 		<AxSecurityPrivilegeReference>
 			<Name>OneMoreActionQueueEntityMaintain</Name>
 		</AxSecurityPrivilegeReference>
+		<AxSecurityPrivilegeReference>
+			<Name>OneMoreActionQueueParametersMaintain</Name>
+		</AxSecurityPrivilegeReference>
 	</Privileges>
 </AxSecurityDuty>

@@ -6,7 +6,7 @@
 /// <summary>
 /// The <c>OneMoreActionQueueService</c> class is the support class for the <c>OneMoreActionQueueService</c> server.
 /// </summary>
-class OneMoreActionQueueService
+final class OneMoreActionQueueService
 {
 }
 ]]></Declaration>
@@ -36,6 +36,7 @@ class OneMoreActionQueueService
             if (currentLine > _fromLine)
             {
                 SysInfologEnumerator infoEnumerator = SysInfologEnumerator::newData(infolog.copy(_fromLine + 1,  currentLine));
+
                 while (infoEnumerator.moveNext())
                 {
                     infologTextRet += infoEnumerator.currentMessage();
@@ -51,14 +52,14 @@ class OneMoreActionQueueService
             
             try
             {
-                oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(_typeId, _actionMessage, _actionId);
+                oneMoreActionQueue = OneMoreActionQueue::addToActionQueue(_typeId, _actionMessage, OneMoreActionQueueSource::Integration, _actionId);
+
+                response = OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue, oneMoreActionQueueTypeTable.ProcessingType, appl.ttsLevel() != 0 ? true : false );
             }
             catch
             {
                 throw error(getInfoLogText(fromLine));
             }
-
-            response = OneMoreActionQueueProcessingHelper::processOneMoreActionQueue(oneMoreActionQueueTypeTable, oneMoreActionQueue);
         }
         else
         {

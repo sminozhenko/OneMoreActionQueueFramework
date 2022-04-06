@@ -58,7 +58,13 @@ public class OneMoreActionQueueWaiting extends QueryRun
 			</Ranges>
 			<GroupBy />
 			<Having />
-			<OrderBy />
+			<OrderBy>
+				<AxQuerySimpleOrderByField>
+					<Name>QueryOrderByField1</Name>
+					<DataSource>OneMoreActionQueue</DataSource>
+					<Field>ULIDStamp</Field>
+				</AxQuerySimpleOrderByField>
+			</OrderBy>
 		</AxQuerySimpleRootDataSource>
 	</DataSources>
 </AxQuery>

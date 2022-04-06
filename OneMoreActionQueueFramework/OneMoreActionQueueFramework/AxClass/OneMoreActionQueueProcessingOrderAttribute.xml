@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueProcessingOrderAttribute</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// The <c>OneMoreActionQueueProcessingOrderAttribute</c> class defines the attributes for action queue processing order
+/// </summary>
+public final class OneMoreActionQueueProcessingOrderAttribute extends SysAttribute implements SysExtensionIAttribute
+{
+    private int processingOrder;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new(int _processingOrder)
+    {
+        processingOrder = _processingOrder;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCacheKey</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmCacheKey()
+    {
+        return classStr(OneMoreActionQueueProcessingOrderAttribute) + ';' + int2Str(processingOrder);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>useSingleton</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean useSingleton()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmProcessingOrder</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public int parmProcessingOrder()
+    {
+        return processingOrder;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

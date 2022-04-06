@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueuePreProcessorCompanyResolve</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// Pre-processor for company field extract into action queue record
+/// </summary>
+[Export(identifierStr(Dynamics.AX.Application.OneMoreActionQueueIPreProcessor))]
+[ExportMetadata(classStr(OneMoreActionQueueIPreProcessor), classStr(OneMoreActionQueuePreProcessorCompanyResolve))]
+[OneMoreActionQueueProcessingOrderAttribute(1)]
+internal class OneMoreActionQueuePreProcessorCompanyResolve implements OneMoreActionQueueIPreProcessor
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueContract _contract)
+    {
+        if (!_contract.parmDataAreaId())
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueFieldIsNotSpecified", OneMoreActionQueueConstants::DataAreaIdFieldName));
+        }
+
+        if (!xDataArea::exist(_contract.parmDataAreaId()))
+        {
+            throw error(strFmt("@SYS10666", _contract.parmDataAreaId()));
+        }
+
+        _oneMoreActionQueue.CompanyId = _contract.parmDataAreaId();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>failOnError</Name>
+				<Source><![CDATA[
+    public boolean failOnError()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

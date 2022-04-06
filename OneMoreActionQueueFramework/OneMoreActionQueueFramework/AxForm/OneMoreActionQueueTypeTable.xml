@@ -31,9 +31,8 @@ public class OneMoreActionQueueTypeTable extends FormRun
         CustomAction.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::Custom);
         MenuItem.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
         DMFExport.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport);
-        OneMoreActionQueueMenuItemParameters.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
-        OneMoreActionQueueMenuItemParameters.enabled(element.isActionQueueTypeDisabled());
-        OneMoreActionQueueDMFExportQueryParameters.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport);
+        MenuItemButtonGroup.visible(OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::MenuItem);
+        MenuItemButtonGroup.enabled(element.isActionQueueTypeDisabled());
         OneMoreActionQueueDMFExportQueryParameters.enabled(element.isActionQueueTypeDisabled());
     }
 
@@ -58,11 +57,45 @@ public class OneMoreActionQueueTypeTable extends FormRun
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>enableDMFExportControls</Name>
+				<Source><![CDATA[
+    private void enableDMFExportControls()
+    {
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFEntityName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFEntityName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, KeepDataProject)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFSourceName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFSourceName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFDefinitionGroupName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::DataProject || OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFDefinitionGroupName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::DataProject || OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFIntegrationActivityName)).visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueTypeDMFExportParameterTable_ds.object(fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFIntegrationActivityName)).mandatory(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity);
+        OneMoreActionQueueDMFExportQueryParameters.visible(OneMoreActionQueueTypeDMFExportParameterTable.DMFExportType == OneMoreActionQueueDMFExportType::Entity);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>enableTransformationJSON</Name>
 				<Source><![CDATA[
     protected void enableTransformationJSON()
     {
         TransformationJSON.enabled(element.isActionQueueTypeDisabled());
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    public void init()
+    {
+        OneMoreActionQueueTypeMenuItemParameterTable::updateClassName();
+
+        super();
     }
 
 ]]></Source>
@@ -84,6 +117,7 @@ public class OneMoreActionQueueTypeTable extends FormRun
             element.enableActionTypeControls();
             element.enableTransformationJSON();
             element.enableProcessingTypeControls();
+            element.enableDMFExportControls();
     
             return ret;
         }
@@ -172,7 +206,6 @@ public class OneMoreActionQueueTypeTable extends FormRun
             if (OneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport)
             {
                 OneMoreActionQueueTypeDMFExportParameterTable.TypeId        = OneMoreActionQueueTypeTable.TypeId;
-                OneMoreActionQueueTypeDMFExportParameterTable.DMFSourceName = 'XML-Element';
                 
                 ret = super();
             }
@@ -210,6 +243,27 @@ public class OneMoreActionQueueTypeTable extends FormRun
             public void lookup(FormControl _formControl, str _filterStr)
             {
                 DMFUtil::lookupEntity(_formControl);
+            }
+
+]]></Source>
+							</Method>
+						</Methods>
+					</Field>
+					<Field>
+						<DataField>DMFExportType</DataField>
+						<Methods>
+							<Method>
+								<Name>modified</Name>
+								<Source><![CDATA[
+            public void modified()
+            {
+                super();
+
+                oneMoreActionQueueTypeDMFExportParameterTable.setActionQueueTypeActionClassName(oneMoreActionQueueTypeTable);
+
+                element.enableDMFExportControls();
+
+
             }
 
 ]]></Source>
@@ -343,7 +397,16 @@ public class OneMoreActionQueueTypeTable extends FormRun
 			<Table>OneMoreActionQueueTypeDMFExportParameterTable</Table>
 			<Fields>
 				<AxFormDataSourceField>
+					<DataField>DMFDefinitionGroupName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
 					<DataField>DMFEntityName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DMFExportType</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DMFIntegrationActivityName</DataField>
 				</AxFormDataSourceField>
 				<AxFormDataSourceField>
 					<DataField>DMFSourceName</DataField>
@@ -398,22 +461,42 @@ public class OneMoreActionQueueTypeTable extends FormRun
 				<Controls>
 					<AxFormControl xmlns=""
 						i:type="AxFormButtonGroupControl">
-						<Name>Maintain</Name>
+						<Name>MenuItemButtonGroup</Name>
+						<AutoDeclaration>Yes</AutoDeclaration>
 						<Type>ButtonGroup</Type>
 						<FormControlExtension
 							i:nil="true" />
 						<Controls>
 							<AxFormControl xmlns=""
 								i:type="AxFormMenuFunctionButtonControl">
-								<Name>OneMoreActionQueueMenuItemParameters</Name>
-								<AutoDeclaration>Yes</AutoDeclaration>
+								<Name>OneMoreActionQueueMenuItemParametersSet</Name>
 								<Type>MenuFunctionButton</Type>
 								<FormControlExtension
 									i:nil="true" />
-								<MenuItemName>OneMoreActionQueueMenuItemParameters</MenuItemName>
+								<MenuItemName>OneMoreActionQueueMenuItemParametersSet</MenuItemName>
 								<MenuItemType>Action</MenuItemType>
 								<NeedsRecord>Yes</NeedsRecord>
 							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueMenuItemParametersRemove</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueMenuItemParametersRemove</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+							</AxFormControl>
+						</Controls>
+						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItem</Caption>
+						<DataSource>OneMoreActionQueueTypeTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>Maintain</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
 							<AxFormControl xmlns=""
 								i:type="AxFormMenuFunctionButtonControl">
 								<Name>OneMoreActionQueueDMFExportQueryParameters</Name>
@@ -424,6 +507,14 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<MenuItemName>OneMoreActionQueueDMFExportQueryParameters</MenuItemName>
 								<MenuItemType>Action</MenuItemType>
 								<NeedsRecord>Yes</NeedsRecord>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueTypeDocumentCorrelation</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueTypeDocumentCorrelation</MenuItemName>
 							</AxFormControl>
 						</Controls>
 						<Caption>@SYS116749</Caption>
@@ -446,6 +537,37 @@ public class OneMoreActionQueueTypeTable extends FormRun
 							</AxFormControl>
 						</Controls>
 						<Caption>@SYS3850</Caption>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>ExportImport</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueConfigurationExport</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueConfigurationExport</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+								<NeedsRecord>Yes</NeedsRecord>
+								<SaveRecord>No</SaveRecord>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>OneMoreActionQueueConfigurationImport</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>OneMoreActionQueueConfigurationImport</MenuItemName>
+								<MenuItemType>Action</MenuItemType>
+								<SaveRecord>No</SaveRecord>
+							</AxFormControl>
+						</Controls>
+						<DataSource>OneMoreActionQueueTypeTable</DataSource>
 					</AxFormControl>
 				</Controls>
 			</AxFormControl>
@@ -646,11 +768,11 @@ public class OneMoreActionQueueTypeTable extends FormRun
 							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
-								<Name>MenuItem_menuItemClassName</Name>
+								<Name>MenuItem_ClassName</Name>
 								<Type>String</Type>
 								<FormControlExtension
 									i:nil="true" />
-								<DataMethod>menuItemClassName</DataMethod>
+								<DataField>ClassName</DataField>
 								<DataSource>OneMoreActionQueueTypeMenuItemParameterTable</DataSource>
 							</AxFormControl>
 						</Controls>
@@ -665,6 +787,16 @@ public class OneMoreActionQueueTypeTable extends FormRun
 						<FormControlExtension
 							i:nil="true" />
 						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormComboBoxControl">
+								<Name>DMFExport_DMFExportType</Name>
+								<Type>ComboBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFExportType</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+								<Items />
+							</AxFormControl>
 							<AxFormControl xmlns=""
 								i:type="AxFormStringControl">
 								<Name>DMFExport_DMFEntityName</Name>
@@ -692,6 +824,24 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<DataField>KeepDataProject</DataField>
 								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
 								<Items />
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>DMFExport_DMFDefinitionGroupName</Name>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFDefinitionGroupName</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormStringControl">
+								<Name>DMFExport_DMFIntegrationActivityName</Name>
+								<Type>String</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>DMFIntegrationActivityName</DataField>
+								<DataSource>OneMoreActionQueueTypeDMFExportParameterTable</DataSource>
 							</AxFormControl>
 						</Controls>
 						<DataGroup>DMFExport</DataGroup>
@@ -721,6 +871,15 @@ public class OneMoreActionQueueTypeTable extends FormRun
 								<FormControlExtension
 									i:nil="true" />
 								<DataField>Enabled</DataField>
+								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormCheckBoxControl">
+								<Name>Parameters_ProcessInSequence</Name>
+								<Type>CheckBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>ProcessInSequence</DataField>
 								<DataSource>OneMoreActionQueueTypeTable</DataSource>
 							</AxFormControl>
 						</Controls>
@@ -817,6 +976,26 @@ public class OneMoreActionQueueTypeTable extends FormRun
 						<DataGroup>RetryParameters</DataGroup>
 						<DataSource>OneMoreActionQueueTypeTable</DataSource>
 					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormGroupControl">
+						<Name>CleanUp</Name>
+						<Type>Group</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormIntegerControl">
+								<Name>CleanUp_RetentionPeriod</Name>
+								<Type>Integer</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>RetentionPeriod</DataField>
+								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+							</AxFormControl>
+						</Controls>
+						<DataGroup>CleanUp</DataGroup>
+						<DataSource>OneMoreActionQueueTypeTable</DataSource>
+					</AxFormControl>
 				</Controls>
 				<ColumnsMode>Fill</ColumnsMode>
 				<FrameType>None</FrameType>
@@ -850,6 +1029,7 @@ public class OneMoreActionQueueTypeTable extends FormRun
 									i:nil="true" />
 								<DataMethod>transformationJSONEdit</DataMethod>
 								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTransformationJSON</Caption>
@@ -874,6 +1054,7 @@ public class OneMoreActionQueueTypeTable extends FormRun
 									i:nil="true" />
 								<DataMethod>messageExample</DataMethod>
 								<DataSource>OneMoreActionQueueTypeTable</DataSource>
+								<ShowLabel>No</ShowLabel>
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueMessageExample</Caption>

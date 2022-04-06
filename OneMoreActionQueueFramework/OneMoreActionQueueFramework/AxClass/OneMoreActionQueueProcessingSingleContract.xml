@@ -7,7 +7,7 @@
 /// Action queue processing contract for single record
 /// </summary>
 [DataContract]
-class OneMoreActionQueueProcessingSingleContract
+internal class OneMoreActionQueueProcessingSingleContract
 {
     private RefRecId    actionQueueRecId;
 

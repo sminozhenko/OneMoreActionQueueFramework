@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue single record processing controller
 /// </summary>
-class OneMoreActionQueueProcessingManualController extends SysOperationServiceController
+internal class OneMoreActionQueueProcessingManualController extends SysOperationServiceController
 {
 }
 ]]></Declaration>
@@ -75,6 +75,15 @@ class OneMoreActionQueueProcessingManualController extends SysOperationServiceCo
         ret.parmMethodName(methodStr(OneMoreActionQueueProcessingService, processActionQueueManual));
         ret.parmExecutionMode(SysOperationExecutionMode::Synchronous);
         ret.initContract(_args);
+
+        OneMoreActionQueue oneMoreActionQueue = _args.record();
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = oneMoreActionQueue.oneMoreActionQueueTypeTable();
+        
+        //In case if DMF export recurring job action type, should be run in batch because of standard logic
+        if (oneMoreActionQueueTypeTable.ActionQueueType == OneMoreActionQueueType::DMFExport && oneMoreActionQueueTypeTable.oneMoreActionQueueTypeDMFExportParameterTable().DMFExportType == OneMoreActionQueueDMFExportType::IntegrationActivity)
+        {
+            ret.parmExecutionMode(SysOperationExecutionMode::ReliableAsynchronous);
+        }
     
         return ret;
     }

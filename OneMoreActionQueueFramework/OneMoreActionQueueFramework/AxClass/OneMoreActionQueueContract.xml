@@ -10,7 +10,8 @@
 abstract class OneMoreActionQueueContract
 {
     private DataAreaId dataAreaId;
-
+    private List parameters = new List(Types::Class);
+    
 }
 ]]></Declaration>
 		<Methods>
@@ -25,6 +26,121 @@ abstract class OneMoreActionQueueContract
     {
         dataAreaId = _dataAreaId;
         return dataAreaId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmParameters</Name>
+				<Source><![CDATA[
+    [
+        DataMemberAttribute("Parameters"),
+        DataCollectionAttribute(Types::Class, classStr(OneMoreActionQueueParameterContract)),
+        Hookable(false)
+    ]
+    public List parmParameters(List _parameters = parameters)
+    {
+        if (!prmIsDefault(_parameters))
+        {
+            parameters = _parameters;
+        }
+
+        return parameters;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getParameterValue</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    final public AnyType getParameterValue(str _parameterName)
+    {
+        boolean isFound;
+        anytype parameterValue;
+
+        [isFound, parameterValue] = this.getParameterValueInternal(_parameterName);
+
+        if (!isFound)
+        {
+            throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueParameterNotFoundInContract", _parameterName));
+        }
+
+        return parameterValue;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getParameterValueInternal</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    protected container getParameterValueInternal(str _parameterName)
+    {
+        boolean isFound;
+        anytype parameterValue;
+        
+        SysDictClass sysDictClass = new SysDictClass(classidget(this)); 
+        
+        Set methods = sysDictClass.methods(true, false, true);
+        SetEnumerator methodsEnumerator = methods.getEnumerator();
+
+        while(methodsEnumerator.moveNext())
+        {
+            DictMethod dictMethod = methodsEnumerator.current();
+            
+            DataMemberAttribute dataMember = dictMethod.getAttribute(classStr(DataMemberAttribute));
+            
+            if (dataMember && dataMember.Name() == _parameterName)
+            {
+                parameterValue = sysDictClass.callObject(dictMethod.Name(), this);
+                isFound = true;
+
+                break;
+            }
+        }
+
+        if (!isFound)
+        {
+            ListEnumerator                              li = parameters.getEnumerator();
+            OneMoreActionQueueParameterContract         parameter;
+
+            while (li.moveNext())
+            {
+                parameter = li.current();
+
+                if (parameter.parmParameterName() == _parameterName)
+                {
+                    parameterValue = parameter.parmParameterValue();
+                    isFound = true;
+                    break;
+                }
+            }
+        }
+
+        return [isFound, parameterValue];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addParameter</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add parameter
+    /// </summary>
+    /// <param name = "parameterName">Parameter name</param>
+    /// <param name = "parameterValue">Parameter value</param>
+    [Hookable(false)]
+    public void addParameter(str parameterName, str parameterValue)
+    {
+        OneMoreActionQueueParameterContract contract = new OneMoreActionQueueParameterContract();
+
+        contract.parmParameterName(parameterName);
+        contract.parmParameterValue(parameterValue);
+
+        parameters.addEnd(contract);
     }
 
 ]]></Source>

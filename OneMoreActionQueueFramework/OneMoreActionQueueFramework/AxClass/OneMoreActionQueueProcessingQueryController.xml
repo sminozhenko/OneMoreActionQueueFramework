@@ -6,7 +6,7 @@
 /// <summary>
 /// Action queue query processing controller
 /// </summary>
-class OneMoreActionQueueProcessingQueryController extends SysOperationServiceController
+internal abstract class OneMoreActionQueueProcessingQueryController extends SysOperationServiceController
 {
 }
 ]]></Declaration>
@@ -21,56 +21,6 @@ class OneMoreActionQueueProcessingQueryController extends SysOperationServiceCon
         this.parmClassName(classStr(OneMoreActionQueueProcessingService));
         this.parmMethodName(methodStr(OneMoreActionQueueProcessingService, processQuery));
         this.parmExecutionMode(SysOperationExecutionMode::Synchronous);
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>main</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Main
-    /// </summary>
-    /// <param name = "_args">Arguments</param>
-    [Hookable(false)]
-    public static void main(Args _args)
-    {
-        OneMoreActionQueueProcessingQueryController::newFromArgs(_args).startOperation();
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>construct</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// Construct <c>OneMoreActionQueueProcessingQueryController</c>
-    /// </summary>
-    /// <returns>Created <c>OneMoreActionQueueProcessingQueryController</c> object</returns>
-    [Hookable(false)]
-    public static OneMoreActionQueueProcessingQueryController construct()
-    {
-        return new OneMoreActionQueueProcessingQueryController();
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>newFromArgs</Name>
-				<Source><![CDATA[
-    /// <summary>
-    /// New from arguments
-    /// </summary>
-    /// <param name = "_args">Arguments</param>
-    /// <returns>New class</returns>
-    [Hookable(false)]
-    public static OneMoreActionQueueProcessingQueryController newFromArgs(Args _args)
-    {
-        OneMoreActionQueueProcessingQueryController     ret = OneMoreActionQueueProcessingQueryController::construct();
-    
-        ret.initializeFromArgs(_args);
-    
-        return ret;
     }
 
 ]]></Source>
@@ -107,11 +57,24 @@ class OneMoreActionQueueProcessingQueryController extends SysOperationServiceCon
         qbdsActionQueueTypeTable.joinMode(JoinMode::ExistsJoin);
 
         qbdsActionQueueTypeTable.addRange(fieldNum(OneMoreActionQueueTypeTable, Enabled)).value(queryValue(NoYes::Yes));
-        qbdsActionQueueTypeTable.addRange(fieldNum(OneMoreActionQueueTypeTable, ProcessingType)).value(queryValue(OneMoreActionQueueProcessingType::BatchJob));
+        qbdsActionQueueTypeTable.addRange(fieldNum(OneMoreActionQueueTypeTable, ProcessingType)).value(queryValue(this.processingType()));
 
         contract.setQuery(q);
 
         super(_executionMode);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processingType</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// <c>OneMoreActionQueueProcessingType</c>
+    /// </summary>
+    /// <returns><c>OneMoreActionQueueProcessingType</c></returns>
+    abstract OneMoreActionQueueProcessingType processingType()
+    {
     }
 
 ]]></Source>

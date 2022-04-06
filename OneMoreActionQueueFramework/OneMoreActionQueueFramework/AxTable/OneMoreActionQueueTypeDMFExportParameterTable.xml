@@ -36,6 +36,110 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>validateWrite</Name>
+				<Source><![CDATA[
+    public boolean validateWrite()
+    {
+        boolean ret;
+    
+        ret = super();
+
+        switch (this.DMFExportType)
+        {
+            case OneMoreActionQueueDMFExportType::Entity:
+                if (!this.DMFEntityName)
+                {
+                    ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportEntityNameIsNotSpecified");
+                }
+
+                if (!this.DMFEntityName)
+                {
+                    ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportSourceNameIsNotSpecified");
+                }
+                break;
+
+            case OneMoreActionQueueDMFExportType::DataProject:
+                if (!this.DMFDefinitionGroupName)
+                {
+                    ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectIsNotSpecified");
+                }
+                break;
+
+            case OneMoreActionQueueDMFExportType::IntegrationActivity:
+                if (!this.DMFDefinitionGroupName)
+                {
+                    ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProjectIsNotSpecified");
+                }
+
+                if (!this.DMFIntegrationActivityName)
+                {
+                    ret = checkFailed("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportIntegrationActivityIsNotSpecified");
+                }
+                break;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>modifiedField</Name>
+				<Source><![CDATA[
+    public void modifiedField(FieldId _fieldId)
+    {
+        super(_fieldId);
+
+        switch (_fieldId)
+        {
+            case fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFEntityName):
+                this.DMFDefinitionGroupName = '';
+                this.DMFIntegrationActivityName = '';
+                break;
+            case fieldNum(OneMoreActionQueueTypeDMFExportParameterTable, DMFDefinitionGroupName):
+                this.DMFEntityName = '';
+                this.DMFIntegrationActivityName = '';
+                break;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setActionQueueTypeActionClassName</Name>
+				<Source><![CDATA[
+    public void setActionQueueTypeActionClassName(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    {
+        switch (this.DMFExportType)
+        {
+            case OneMoreActionQueueDMFExportType::Entity:
+                _oneMoreActionQueueTypeTable.ActionClassName   = classStr(OneMoreActionQueueDMFExportProcessor);
+                break;
+            case OneMoreActionQueueDMFExportType::DataProject:
+                _oneMoreActionQueueTypeTable.ActionClassName   = classStr(OneMoreActionQueueDMFDataProjectExportProcessor);
+                break;
+            case OneMoreActionQueueDMFExportType::IntegrationActivity:
+                _oneMoreActionQueueTypeTable.ActionClassName   = classStr(OneMoreActionQueueDMFIntegrationActivityTableExportProcessor);
+                break;
+            default:
+                _oneMoreActionQueueTypeTable.ActionClassName = '';
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dmfDefinitionGroup</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public DMFDefinitionGroup dmfDefinitionGroup()
+    {
+        return DMFDefinitionGroup::find(this.DMFDefinitionGroupName);
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportParameter</DeveloperDocumentation>
@@ -85,8 +189,11 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
 			<Name>DMFExport</Name>
-			<Label>@OneMoreActionQueueFramework:OneMoreActionQeueueTypeDMFExport</Label>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExport</Label>
 			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DMFExportType</DataField>
+				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>DMFEntityName</DataField>
 				</AxTableFieldGroupField>
@@ -95,6 +202,12 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>KeepDataProject</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>DMFDefinitionGroupName</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>DMFIntegrationActivityName</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -108,16 +221,10 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 			<Mandatory>Yes</Mandatory>
 		</AxTableField>
 		<AxTableField xmlns=""
-			i:type="AxTableFieldContainer">
-			<Name>PackedParameters</Name>
-			<ExtendedDataType>OneMoreActionQueuePackedParameters</ExtendedDataType>
-		</AxTableField>
-		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
 			<Name>DMFEntityName</Name>
 			<AllowEdit>No</AllowEdit>
 			<ExtendedDataType>DMFEntityName</ExtendedDataType>
-			<Mandatory>Yes</Mandatory>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldContainer">
@@ -134,8 +241,26 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 			i:type="AxTableFieldString">
 			<Name>DMFSourceName</Name>
 			<ExtendedDataType>DMFSourceName</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>DMFDefinitionGroupName</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>DMFDefinitionGroupName</ExtendedDataType>
+			<Label>@DMF:DMFDataProjectName</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DMFExportType</Name>
+			<AllowEdit>No</AllowEdit>
 			<Mandatory>Yes</Mandatory>
-			<Visible>No</Visible>
+			<EnumType>OneMoreActionQueueDMFExportType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>DMFIntegrationActivityName</Name>
+			<ExtendedDataType>IntegrationName</ExtendedDataType>
+			<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeDMFExportIntegrationActivity</Label>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
@@ -165,6 +290,69 @@ public class OneMoreActionQueueTypeDMFExportParameterTable extends common
 					<Name>TypeId</Name>
 					<Field>TypeId</Field>
 					<RelatedField>TypeId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>DMFEntity</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>DMFEntity</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>DMFEntityName</Name>
+					<Field>DMFEntityName</Field>
+					<RelatedField>EntityName</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintRelatedFixed">
+					<Name>EntityType</Name>
+					<RelatedField>EntityType</RelatedField>
+					<ValueStr>DMFEntityTypes::Entity</ValueStr>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>DMFDefinitionGroup</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>DMFDefinitionGroup</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>DMFDefinitionGroupName</Name>
+					<Field>DMFDefinitionGroupName</Field>
+					<RelatedField>DefinitionGroupName</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintRelatedFixed">
+					<Name>OperationType</Name>
+					<RelatedField>OperationType</RelatedField>
+					<ValueStr>DMFOperationType::Export</ValueStr>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>IntegrationActivityTable</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>IntegrationActivityTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>DMFDefinitionGroupName</Name>
+					<Field>DMFDefinitionGroupName</Field>
+					<RelatedField>DefinitionGroupName</RelatedField>
+				</AxTableRelationConstraint>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>DMFIntegrationActivityName</Name>
+					<Field>DMFIntegrationActivityName</Field>
+					<RelatedField>Name</RelatedField>
 				</AxTableRelationConstraint>
 			</Constraints>
 		</AxTableRelation>

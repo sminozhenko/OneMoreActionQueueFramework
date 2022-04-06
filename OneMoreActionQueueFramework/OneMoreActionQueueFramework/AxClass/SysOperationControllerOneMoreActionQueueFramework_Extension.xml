@@ -27,7 +27,7 @@ public final class SysOperationControllerOneMoreActionQueueFramework_Extension
             //If dialog canceled we don't want to save changes
             if (!dialogCanceled)
             {
-                OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable, classIdGet(this), this.pack());
+                OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable, classId2Name(classIdGet(this)), this.pack());
 
                 //Cancel dialog to prevent execution of logic
                 dialogCanceled = true;
@@ -70,6 +70,24 @@ public final class SysOperationControllerOneMoreActionQueueFramework_Extension
         }
 
         return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmOneMoreActionQueueIsInBatchFlagSet</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Is InBatch flag set?
+    /// </summary>
+    /// <param name = "_isInBatchFlagSet">Is InBatch flag set value</param>
+    /// <returns>True if InBatch flag set otherwise false</returns>
+    [Hookable(false)]
+    public boolean parmOneMoreActionQueueIsInBatchFlagSet(boolean _isInBatchFlagSet = isInBatchFlagSet)
+    {
+        isInBatchFlagSet = _isInBatchFlagSet;
+
+        return isInBatchFlagSet;
     }
 
 ]]></Source>

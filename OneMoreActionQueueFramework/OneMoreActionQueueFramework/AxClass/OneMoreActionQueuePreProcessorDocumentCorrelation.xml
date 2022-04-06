@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueuePreProcessorDocumentCorrelation</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+
+/// <summary>
+/// Pre-processor for document correlation 
+/// </summary>
+[Export(identifierStr(Dynamics.AX.Application.OneMoreActionQueueIPreProcessor))]
+[ExportMetadata(classStr(OneMoreActionQueueIPreProcessor), classStr(OneMoreActionQueuePreProcessorDocumentCorrelation))]
+[OneMoreActionQueueProcessingOrderAttribute(2)]
+internal class OneMoreActionQueuePreProcessorDocumentCorrelation implements OneMoreActionQueueIPreProcessor
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run(OneMoreActionQueue _oneMoreActionQueue, OneMoreActionQueueContract _contract)
+    {
+        OneMoreActionQueueTypeDocumentCorrelation oneMoreActionQueueTypeDocumentCorrelation;
+        RecordInsertList                          rilOneMoreActionQueueDocumentCorrelation;
+        boolean                                   hashFound;
+        str                                       sequenceString;
+        int                                       numOfDocuments;
+        int                                       maxNumOfDocuments = OneMoreActionQueueParameters::documentCorrelationLimit();
+
+        try
+        {
+            //TODO move to base engine implementation
+            OneMoreActionQueueContext::oneMoreActionQueueContract = _contract;
+            
+            changecompany (_oneMoreActionQueue.CompanyId)
+            {
+                while select oneMoreActionQueueTypeDocumentCorrelation
+                    where oneMoreActionQueueTypeDocumentCorrelation.TypeId == _oneMoreActionQueue.TypeId
+                {
+                    if (numOfDocuments >= maxNumOfDocuments)
+                    {
+                        break;
+                    }
+
+                    if (!SysQuery::isPackedOk(oneMoreActionQueueTypeDocumentCorrelation.QueryData))
+                    {
+                        error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorellationQueryUnpackError", oneMoreActionQueueTypeDocumentCorrelation.DocumentTableName));
+                        continue;                        
+                    }
+                    
+                    container sequenceFields = OneMoreActionQueueTypeDocumentCorrelationSequenceField::getSequenceFields(oneMoreActionQueueTypeDocumentCorrelation.RecId);
+                    TableId   currentTableId = tableName2Id(oneMoreActionQueueTypeDocumentCorrelation.DocumentTableName);
+                    
+                    try
+                    {
+                        QueryRun qr = new QueryRun(oneMoreActionQueueTypeDocumentCorrelation.QueryData);
+
+                        QueryBuildDataSource qbds = qr.query().dataSourceNo(1);
+
+                        qbds.addSelectionField(fieldName2Id(currentTableId, identifierStr(RecId)));
+
+                        if (!hashFound && conLen(sequenceFields) != 0)
+                        {
+                            for (int i = 1; i <= conLen(sequenceFields); i++)
+                            {
+                                qbds.addSelectionField(fieldName2Id(currentTableId, conPeek(sequenceFields, i)));
+                            }
+                        }
+
+                        while (qr.next())
+                        {
+                            if (numOfDocuments >= maxNumOfDocuments)
+                            {
+                                warning(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDocumentCorellationLimitWarning", maxNumOfDocuments));
+                                break;
+                            }
+                            
+                            OneMoreActionQueueDocumentCorrelation oneMoreActionQueueDocumentCorrelation;
+
+                            Common documentRecord = qr.getNo(1);
+
+                            oneMoreActionQueueDocumentCorrelation.clear();
+                            oneMoreActionQueueDocumentCorrelation.initValue();
+
+                            oneMoreActionQueueDocumentCorrelation.ActionQueueRecId = _oneMoreActionQueue.RecId;
+                            oneMoreActionQueueDocumentCorrelation.DocumentTableId  = documentRecord.TableId;
+                            oneMoreActionQueueDocumentCorrelation.DocumentRecId  = documentRecord.RecId;
+                    
+                            if (!rilOneMoreActionQueueDocumentCorrelation)
+                            {
+                                rilOneMoreActionQueueDocumentCorrelation = new RecordInsertList(tableNum(OneMoreActionQueueDocumentCorrelation), true, true, true, true, true);
+                            }
+
+                            rilOneMoreActionQueueDocumentCorrelation.add(oneMoreActionQueueDocumentCorrelation);
+
+                            if (!hashFound && conLen(sequenceFields) != 0)
+                            {
+                                hashFound = true;
+
+                                for (int i = 1; i <= conLen(sequenceFields); i++)
+                                {
+                                    sequenceString += sequenceString != '' ? '#' : '';
+                                    sequenceString += OneMoreActionQueueTypeDocumentCorrelationSequenceField::sequenceValue2Str(documentRecord.(fieldName2Id(currentTableId, conPeek(sequenceFields, i))));
+                                }
+                            }
+
+                            numOfDocuments++;
+                        }
+
+                        if (hashFound)
+                        {
+                            _oneMoreActionQueue.SequenceGroupHash = HashFunctions::ComputeHashAsBase64String(sequenceString, HashType::xxHash64);
+                        }
+                    }
+                    catch
+                    {
+                        exceptionTextFallThrough();
+                    }
+                }
+            }
+
+            if (rilOneMoreActionQueueDocumentCorrelation)
+            {
+                rilOneMoreActionQueueDocumentCorrelation.insertDatabase();
+            }
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueContract = null;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>failOnError</Name>
+				<Source><![CDATA[
+    public boolean failOnError()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

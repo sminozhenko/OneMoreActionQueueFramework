@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueDMFExportProcessorBase</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Action queue base processor class for DMF exports
+/// </summary>
+[
+    OneMoreActionQueueProcessorBusinessEventAttribute(classStr(OneMoreActionQueueDMFExportBusinessEvent))
+]
+abstract class OneMoreActionQueueDMFExportProcessorBase extends OneMoreActionQueueProcessor
+{
+    #DMF
+
+    protected DMFDefinitionGroupName                        definitionGroupName;
+    protected DMFExecutionId                                executionId;
+    protected OneMoreActionQueueTypeDMFExportParameterTable oneMoreActionQueueTypeDMFExportParameterTable;
+
+    protected boolean                                       generatePackage;
+    protected boolean                                       fileUploaded;
+    protected SharedServiceUnitFileID                       fileId;
+        
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>runActionInternal</Name>
+				<Source><![CDATA[
+    public void runActionInternal()
+    {
+        oneMoreActionQueueTypeDMFExportParameterTable = this.parmOneMoreActionQueueTypeTable().oneMoreActionQueueTypeDMFExportParameterTable();
+        
+        this.initializeDMFDefinitionGroupName();
+
+        if (this.generateExecutionId())
+        {
+            executionId = DMFUtil::generateExecutionId(definitionGroupName);
+        }
+
+        fileUploaded = true;
+
+        try
+        {            
+            this.showStartInfolog();
+
+            this.runExport();
+
+            if (fileUploaded)
+            {
+                DMFDefinitionGroupExecution dmfDefinitionGroupExecution;
+
+                while select TargetStatus
+                    from dmfDefinitionGroupExecution
+                    where dmfDefinitionGroupExecution.ExecutionId       ==  executionId
+                       && dmfDefinitionGroupExecution.DefinitionGroup   ==  definitionGroupName
+                {
+                    if (dmfDefinitionGroupExecution.TargetStatus != DMFBatchJobStatus::Finished)
+                    {
+                        fileUploaded = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!fileId && fileUploaded)
+            {
+                DMFEntityExportDetails entityExportDetails;
+
+                select firstonly entityExportDetails
+                    where entityExportDetails.ExecutionId       ==  executionId
+                       && entityExportDetails.DefinitionGroup   ==  definitionGroupName;
+                    
+                fileId = generatePackage ? entityExportDetails.PackageFilePath : entityExportDetails.SampleFilePath;
+
+                if (!fileId)
+                {
+                    fileUploaded = false;
+                }
+            }
+
+            if (fileUploaded)
+            {
+                if (this.attachExportFileToActionQeueue())
+                {
+                    SharedServiceUnitURL    downloadUrl = generatePackage ? DMFStagingWriter::getDownloadURLFromFileId(fileId) : DMFDataPopulation::getAzureBlobReadUrl(str2Guid(fileId));
+                    System.Uri              uri = new System.Uri(downloadUrl);
+                    str                     fileName = System.IO.Path::GetFileName(uri.LocalPath);
+                    str                     fileExt = strReplace(System.IO.Path::GetExtension(uri.LocalPath), '.', '');
+                
+                    System.IO.Stream stream = File::UseFileFromURL(downloadUrl);
+
+                    var mime = System.Web.MimeMapping::GetMimeMapping(fileName);
+                    DocumentManagement::attachFileToCommon(this.parmOneMoreActionQueue(), DocuType::typeFile(), stream, fileName, mime, fileName);
+                    OneMoreActionQueueDMFLogTable::addActionQueueDMFLogTable(this.parmOneMoreActionQueue(), fileId, downloadUrl, fileExt, definitionGroupName, executionId);
+                }
+            }
+            else
+            {
+                throw error(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportFailed", definitionGroupName));
+            }
+        }
+        finally
+        {
+            this.finalizeAction();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showStartInfolog</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Show start infolog
+    /// </summary>
+    protected void showStartInfolog()
+    {
+        info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportDataProject", definitionGroupName));
+        
+        if (this.generateExecutionId())
+        {
+            info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueDMFExportExecution", executionId));
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initializeDMFDefinitionGroupName</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initialize data project name
+    /// </summary>
+    abstract protected void initializeDMFDefinitionGroupName()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runExport</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Run DMF export
+    /// </summary>
+    abstract protected void runExport()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>finalizeAction</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finalize execution of the action
+    /// </summary>
+    protected void finalizeAction()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>attachExportFileToActionQeueue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Attach exported file to action queue?
+    /// </summary>
+    /// <returns>True if the file should be attached to the action queue record otherwise False</returns>
+    abstract protected boolean attachExportFileToActionQeueue()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateExecutionId</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Generate execution id at the beggining of action processing
+    /// </summary>
+    /// <returns>True if execution id should be generated otherwise False</returns>
+    abstract protected boolean generateExecutionId()
+    {
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

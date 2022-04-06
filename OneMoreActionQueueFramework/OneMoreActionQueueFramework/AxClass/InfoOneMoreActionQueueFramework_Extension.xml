@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>InfoOneMoreActionQueueFramework_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Extension class for class <c>Info</c>
+/// </summary>
+[ExtensionOf(classStr(Info))]
+public final class InfoOneMoreActionQueueFramework_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>clear</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Clears infolog
+    /// </summary>
+    /// <param name = "_linesLeft">number of lines to be left</param>
+    public void clear(int _linesLeft)
+    {
+        if (OneMoreActionQueueContext::oneMoreActionQueueContract != null)
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueClearedLog += this.copy(1, infologLine());
+        }
+        
+        next clear();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

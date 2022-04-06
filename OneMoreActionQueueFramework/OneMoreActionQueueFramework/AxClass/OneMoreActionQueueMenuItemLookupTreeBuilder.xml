@@ -6,7 +6,7 @@
 /// <summary>
 /// The <c>OneMoreActionQueueMenuItemLookupTreeBuilder</c> class manages a tree control as part of lookup to display menu items available for menu item action queue processing 
 /// </summary>
-class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuilder
+internal class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuilder
 {
 }
 ]]></Declaration>
@@ -25,112 +25,43 @@ class OneMoreActionQueueMenuItemLookupTreeBuilder extends MenuItemLookupTreeBuil
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>isVisible</Name>
+				<Name>canAddMenuToMenuTree</Name>
 				<Source><![CDATA[
-    protected boolean isVisible(TreeNode _node)
+    /// <summary>
+    /// Can menu be add to menu tree
+    /// </summary>
+    /// <param name = "_menu">The <c>SysDictMenu</c> being selected by the user.</param>
+    /// <returns>True if menu can be added to menu item tree otherwise false</returns>
+    protected boolean canAddMenuToMenuTree(SysDictMenu _menu)
     {
-        var ret = super(_node);
+        boolean ret;
+
+        ret = super(_menu);
 
         if (ret)
         {
-            switch(_node.handle())
+            if (_menu.isMenuItem())
             {
-                case classNum(Menu):
-                    Menu menuNode = _node;
-                    if (menuNode.visible())
-                    {
-                        ret = this.isConfigKeyEnabled(menuNode.configurationKey());
-                    }
-                    break;
+                // check menufunction
+                MenuItemType menuItemType = _menu.menuItem().type();
 
-                case classNum(MenuItem):
-                    MenuItem menuItemNode = _node;
-                    if (menuItemNode.visible())
-                    {
-                        // check menufunction
-                        MenuItemType menuItemType = menuItemNode.menuItemType();
-                    
-                        switch (menuItemType)
-                        {
-                            case MenuItemType::Action:
-                                //TODO check if class supported
-                                ret = true;
-                                break;
-                            default:
-                                ret = false;
-
-                        }
-                    }
-                    break;
-
-                case classNum(MenuReference):
-                    MenuReference menuReferenceNode = _node;
-                    var menu = SysDictMenu::newMenuName(menuReferenceNode.menuName());
-                    ret = this.isVisible(menu.parmTreeNode());
-                    break;
-
-                default:
-                    ret = false;
-
+                switch (menuItemType)
+                {
+                    case MenuItemType::Action:
+                        //TODO check if class supported
+                        ret = true;
+                        break;
+                    default:
+                        ret = false;
+                }
+            }
+            else if (_menu.isTileReference())
+            {
+                ret = false;
             }
         }
 
         return ret;
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>buildMenuTree</Name>
-				<Source><![CDATA[
-    //TODO workaround is isVisible doesn't work for lower items
-    /// <summary>
-    /// Returns true if the tree could be recursively built based on the menu provided.
-    /// </summary>
-    /// <param name = "_menu">The <c>SysDictMenu</c> being selected by the user.</param>
-    /// <param name = "_parentPath">The <c>TreeNodePath</c> of the parent.</param>
-    /// <returns>True if the tree could be recursively built based on the menu provided; otherwise, false.</returns>
-    public boolean buildMenuTree(SysDictMenu _menu, TreeNodePath _parentPath)
-    {
-        var childAdded = false;
-
-        if (_menu.isSeparator() || !_menu.isVisible() || !this.hasCountryAccess(_menu))
-        {
-            return false;
-        }
-
-        if (_menu.isMenuItem())
-        {
-            // check menufunction
-            MenuItemType menuItemType = _menu.menuItem().type();
-            
-            boolean addMenuItem;
-
-            switch (menuItemType)
-            {
-                case MenuItemType::Action:
-                    //TODO check if class supported
-                    addMenuItem = true;
-                    break;
-                default:
-                    addMenuItem = false;
-            }
-            
-            if (addMenuItem)
-            {
-                childAdded = super(_menu, _parentPath);
-            }
-        }
-        else if (_menu.isTileReference())
-        {
-            childAdded = false;
-        }
-        else
-        {
-            childAdded = super(_menu, _parentPath);
-        }
-
-        return childAdded;
     }
 
 ]]></Source>

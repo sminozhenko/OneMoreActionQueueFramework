@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueSysQueryRangeUtil</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Query range utils for action queues
+/// </summary>
+internal class OneMoreActionQueueSysQueryRangeUtil
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>actionQueueParameterValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Action queue parameter value
+    /// </summary>
+    /// <param name = "_parameterName">Action queue parameter value</param>
+    /// <returns>Range for query</returns>
+    [Hookable(false)]
+    public static str actionQueueParameterValue(str _parameterName)
+    {
+        anytype parameterValue;
+        
+        if (OneMoreActionQueueContext::oneMoreActionQueueContract != null)
+        {
+            parameterValue = OneMoreActionQueueContext::oneMoreActionQueueContract.getParameterValue(_parameterName);
+        }
+
+        return parameterValue;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
