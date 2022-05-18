@@ -170,26 +170,23 @@ abstract class OneMoreActionQueueProcessor extends SysOperationServiceBase
     public void runAction()
     {
         this.initializeContract();
+        
+        this.initialize();
 
-        changecompany(oneMoreActionQueue.CompanyId)
+        if (!this.canProcessAction())
         {
-            this.initialize();
+            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
+        }
 
-            if (!this.canProcessAction())
-            {
-                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueProcessorValidationError");
-            }
+        try
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueContract = contract;
 
-            try
-            {
-                OneMoreActionQueueContext::oneMoreActionQueueContract = contract;
-
-                this.runActionInternal();
-            }
-            finally
-            {
-                OneMoreActionQueueContext::oneMoreActionQueueContract = null;
-            }
+            this.runActionInternal();
+        }
+        finally
+        {
+            OneMoreActionQueueContext::oneMoreActionQueueContract = null;
         }
     }
 

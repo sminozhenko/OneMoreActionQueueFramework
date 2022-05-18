@@ -83,7 +83,27 @@ internal abstract class OneMoreActionQueueProcessingBaseEngine
     public void run()
     {
         setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueProcessingPrefix", oneMoreActionQueueCaller.ActionId));
-    
+        
+        if (oneMoreActionQueueCaller.CompanyId)
+        {
+            changecompany(oneMoreActionQueueCaller.CompanyId)
+            {    
+                this.runInCompany();
+            }
+        }        
+        else
+        {
+            this.runInCompany();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runInCompany</Name>
+				<Source><![CDATA[
+    private void runInCompany()
+    {
         try
         {
             userConnection = new UserConnection();
