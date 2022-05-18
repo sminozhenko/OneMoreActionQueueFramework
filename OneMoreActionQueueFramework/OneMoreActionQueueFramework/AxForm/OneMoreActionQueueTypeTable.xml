@@ -85,21 +85,6 @@ public class OneMoreActionQueueTypeTable extends FormRun
 
 ]]></Source>
 			</Method>
-			<Method>
-				<Name>init</Name>
-				<Source><![CDATA[
-    /// <summary>
-    ///
-    /// </summary>
-    public void init()
-    {
-        OneMoreActionQueueTypeMenuItemParameterTable::updateClassName();
-
-        super();
-    }
-
-]]></Source>
-			</Method>
 		</Methods>
 		<DataSources xmlns="">
 			<DataSource>

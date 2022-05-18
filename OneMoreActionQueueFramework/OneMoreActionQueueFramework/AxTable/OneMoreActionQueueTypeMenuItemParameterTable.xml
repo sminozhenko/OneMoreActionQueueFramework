@@ -152,28 +152,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 				<Source><![CDATA[
     internal ClassName className()
     {
-        return this.ClassName ? this.ClassName : classId2Name(this.ClassNumber);
-    }
-
-]]></Source>
-			</Method>
-			<Method>
-				<Name>updateClassName</Name>
-				<Source><![CDATA[
-    internal static void updateClassName()
-    {
-        OneMoreActionQueueTypeMenuItemParameterTable menuItemParameterTable;
-        
-        ttsbegin;
-        
-        while select forupdate menuItemParameterTable
-            where !menuItemParameterTable.ClassName
-        {
-            menuItemParameterTable.ClassName = classId2Name(menuItemParameterTable.ClassNumber);
-            menuItemParameterTable.doUpdate();
-        }
-
-        ttscommit;
+        return this.ClassName;
     }
 
 ]]></Source>
@@ -203,9 +182,6 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 				</AxTableFieldGroupField>
 				<AxTableFieldGroupField>
 					<DataField>MenuItemName</DataField>
-				</AxTableFieldGroupField>
-				<AxTableFieldGroupField>
-					<DataField>ClassNumber</DataField>
 				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
@@ -255,15 +231,6 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 			i:type="AxTableFieldContainer">
 			<Name>PackedParameters</Name>
 			<ExtendedDataType>OneMoreActionQueuePackedParameters</ExtendedDataType>
-		</AxTableField>
-		<AxTableField xmlns=""
-			i:type="AxTableFieldInt">
-			<Name>ClassNumber</Name>
-			<AllowEdit>No</AllowEdit>
-			<AllowEditOnCreate>No</AllowEditOnCreate>
-			<AssetClassification>System Metadata</AssetClassification>
-			<ExtendedDataType>ClassId</ExtendedDataType>
-			<IsObsolete>Yes</IsObsolete>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
