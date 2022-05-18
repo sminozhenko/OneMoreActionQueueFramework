@@ -83,8 +83,20 @@ public static class OneMoreActionQueueProcessingHelper
                 {
                     batchInfo.parmBatchHeader().parmExecutingBy(_oneMoreActionQueueTypeTable.RunAsUserId);
                 }
-                
-                Batch batch = controller.doBatch();
+
+                Batch batch;
+
+                if (_oneMoreActionQueue.CompanyId)
+                {
+                    changecompany (_oneMoreActionQueue.CompanyId)
+                    {
+                        batch = controller.doBatch();
+                    }
+                }
+                else
+                {
+                    batch = controller.doBatch();
+                }
 
                 OneMoreActionQueueBatchJobCorrelation::addCorrelation(_oneMoreActionQueue.RecId, batch.BatchJobId);
 
