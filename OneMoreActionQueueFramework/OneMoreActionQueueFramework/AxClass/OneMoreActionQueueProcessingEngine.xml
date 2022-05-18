@@ -150,10 +150,10 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
         super();
 
         //Invoke Business Event if status changes to processed
-        //TODO send should be performed in user connection context
         if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
         {
-            OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable).send();
+            OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
+            oneMoreActionQueueBusinessEvent.sendOnUserConnection(userConnection);
         }
     }
 
