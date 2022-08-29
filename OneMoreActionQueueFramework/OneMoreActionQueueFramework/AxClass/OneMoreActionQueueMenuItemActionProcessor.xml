@@ -23,10 +23,22 @@ class OneMoreActionQueueMenuItemActionProcessor extends OneMoreActionQueueProces
             
         menuItemBehavior.initialize();
             
-        if (!menuItemBehavior.unpackParameters(oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters))
+        if (!oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack)
         {
-            throw error("@OneMoreActionQueueFramework:OneMoreActionQueueCantUnpackMenuItemParameters");
+            if (!menuItemBehavior.unpackParameters(oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters))
+            {
+                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueCantUnpackMenuItemParameters");
+            }
         }
+
+        OneMoreActionQueueTypeMenuItemParameterMethodCallSequence oneMoreActionQueueTypeMenuItemParameterMethodCallSequence;
+
+        while select oneMoreActionQueueTypeMenuItemParameterMethodCallSequence
+            order by Sorting
+            where oneMoreActionQueueTypeMenuItemParameterMethodCallSequence.ActionQueueTypeMenuItemParameterTableRecId == oneMoreActionQueueTypeMenuItemParameterTable.RecId
+        {
+            menuItemBehavior.callObject(oneMoreActionQueueTypeMenuItemParameterMethodCallSequence.MethodName, contract.getParameterValue(oneMoreActionQueueTypeMenuItemParameterMethodCallSequence.ParameterName));
+        }       
 
         menuItemBehavior.executeMenuItem();
     }

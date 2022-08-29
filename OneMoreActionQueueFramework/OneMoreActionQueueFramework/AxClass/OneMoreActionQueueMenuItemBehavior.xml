@@ -10,7 +10,7 @@ abstract class OneMoreActionQueueMenuItemBehavior
 {
     protected Object runClass;
     protected ClassName className;
-    
+
 }
 ]]></Declaration>
 		<Methods>
@@ -203,6 +203,23 @@ abstract class OneMoreActionQueueMenuItemBehavior
     /// </summary>
     abstract void executeMenuItem()
     {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>callObject</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Call object method by name
+    /// </summary>
+    /// <param name = "_methodName">A method name</param>
+    /// <param name = "_value">Value to pass</param>
+    [Hookable(false)]
+    public void callObject(str _methodName, anytype _value)
+    {
+        DictClass dictClass = new DictClass(className2Id(className));
+        dictClass.callObject(_methodName, runClass, _value);
     }
 
 ]]></Source>

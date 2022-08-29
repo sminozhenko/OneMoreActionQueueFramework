@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeMenuItemParameterMethodCallSequence</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeMenuItemParameterMethodCallSequence extends common
+{
+}
+
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItemParameterMethodCallSequence</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeTable</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItemParameterMethodCallSequence</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>ActionQueueTypeMenuItemParameterTableRecId</TitleField1>
+	<TitleField2>Sorting</TitleField2>
+	<CacheLookup>FoundAndEmpty</CacheLookup>
+	<ClusteredIndex>ActionQueueTypeMenuItemParameterTableRecIdSortingIdx</ClusteredIndex>
+	<PrimaryIndex>ActionQueueTypeMenuItemParameterTableRecIdSortingIdx</PrimaryIndex>
+	<ReplacementKey>ActionQueueTypeMenuItemParameterTableRecIdSortingIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueTypeMenuItemParameterTableRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Sorting</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>MethodName</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ParameterName</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueTypeMenuItemParameterTableRecId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>Sorting</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>ActionQueueTypeMenuItemParameterTableRecId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>RefRecId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>Sorting</Name>
+			<ExtendedDataType>Sorting</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>MethodName</Name>
+			<ExtendedDataType>OneMoreActionQueueMenuItemCallObjectMethodName</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ParameterName</Name>
+			<ExtendedDataType>OneMoreActionQueueMenuItemCallObjectParameterName</ExtendedDataType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>ActionQueueTypeMenuItemParameterTableRecIdSortingIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>ActionQueueTypeMenuItemParameterTableRecId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>Sorting</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeMenuItemParameterTable</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeMenuItemParameterTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>ActionQueueTypeMenuItemParameterTableRecId</Name>
+					<Field>ActionQueueTypeMenuItemParameterTableRecId</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

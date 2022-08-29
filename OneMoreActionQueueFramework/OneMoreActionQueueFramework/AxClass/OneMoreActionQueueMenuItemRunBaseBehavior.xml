@@ -82,7 +82,7 @@ class OneMoreActionQueueMenuItemRunBaseBehavior extends OneMoreActionQueueMenuIt
 				<Source><![CDATA[
     public void executeMenuItem()
     {
-        this.runBaseObject().runOperation();
+        this.runBaseObject().run();
     }
 
 ]]></Source>

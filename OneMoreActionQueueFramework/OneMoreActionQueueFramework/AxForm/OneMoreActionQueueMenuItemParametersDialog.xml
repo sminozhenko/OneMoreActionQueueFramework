@@ -56,6 +56,8 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 
         ClassNameControl.text(oneMoreActionQueueMenuItemParametersSet.parmJobClassName());
         ClassNameControl.enabled(!oneMoreActionQueueMenuItemParametersSet.parmJobClassName());
+
+        SkipPackUnpack.checked(oneMoreActionQueueMenuItemParametersSet.parmSkipPackUnpack());
     }
 
 ]]></Source>
@@ -127,6 +129,28 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 					</Method>
 				</Methods>
 			</Control>
+			<Control>
+				<Name>SkipPackUnpack</Name>
+				<Type>CheckBox</Type>
+				<Methods>
+					<Method>
+						<Name>modified</Name>
+						<Source><![CDATA[
+        public boolean modified()
+        {
+            boolean ret;
+    
+            ret = super();
+
+            oneMoreActionQueueMenuItemParametersSet.parmSkipPackUnpack(this.checked());
+    
+            return ret;
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
 		</DataControls>
 		<Members xmlns="" />
 	</SourceCode>
@@ -182,6 +206,15 @@ public class OneMoreActionQueueMenuItemParametersDialog extends FormRun implemen
 								<FormControlExtension
 									i:nil="true" />
 								<ExtendedDataType>ClassName</ExtendedDataType>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormCheckBoxControl">
+								<Name>SkipPackUnpack</Name>
+								<AutoDeclaration>Yes</AutoDeclaration>
+								<Type>CheckBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Label>@OneMoreActionQueueFramework:OneMoreActionQueueSkipPackUnpack</Label>
 							</AxFormControl>
 						</Controls>
 						<ColumnsMode>Fill</ColumnsMode>
