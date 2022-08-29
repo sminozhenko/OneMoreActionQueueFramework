@@ -9,6 +9,7 @@
 abstract internal class OneMoreActionQueueConfigurationTable
 {
     private int version;
+    private str context;
     private Common callerRecord;
     private TableName tableName;
     private container keyFieldValues;
@@ -20,17 +21,18 @@ abstract internal class OneMoreActionQueueConfigurationTable
 				<Name>construct</Name>
 				<Source><![CDATA[
     [Hookable(false)]
-    public static OneMoreActionQueueConfigurationTable construct(Common _callerRecord, int _version)
+    public static OneMoreActionQueueConfigurationTable construct(Common _callerRecord, int _version, str _context = '')
     {
         OneMoreActionQueueConfigurationTable ret;
 
         TableName tableName = tableId2Name(_callerRecord.TableId);
     
-        ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueConfigurationTable), new OneMoreActionQueueConfigurationTableAttribute(tableName, _version));
+        ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueConfigurationTable), new OneMoreActionQueueConfigurationTableAttribute(tableName, _version, _context));
        
         ret.parmTableName(tableName);
         ret.parmCallerRecord(_callerRecord);
         ret.parmVersion(_version);
+        ret.parmContext(_context);
 
         return ret;
     }
@@ -53,12 +55,20 @@ abstract internal class OneMoreActionQueueConfigurationTable
 
         TableName tableName = _element.Name;
         int version = str2Int(_element.Attributes.GetNamedItem('Version').Value);
+        str context;
+        System.Xml.XmlNode contextNode = _element.Attributes.GetNamedItem('Context');
+
+        if (contextNode != null)
+        {
+            context = contextNode.Value;
+        }
     
-        ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueConfigurationTable), new OneMoreActionQueueConfigurationTableAttribute(tableName, version));
+        ret = SysExtensionAppClassFactory::getClassFromSysAttribute(classStr(OneMoreActionQueueConfigurationTable), new OneMoreActionQueueConfigurationTableAttribute(tableName, version, context));
        
         ret.parmTableName(tableName);
         ret.parmVersion(version);
         ret.parmCallerRecord(_callerRecord);
+        ret.parmContext(context);
 
         return ret;
     }
@@ -114,6 +124,18 @@ abstract internal class OneMoreActionQueueConfigurationTable
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>parmContext</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmContext(str _context = context)
+    {
+        context = _context;
+        return context;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>export</Name>
 				<Source><![CDATA[
     /// <summary>
@@ -130,6 +152,14 @@ abstract internal class OneMoreActionQueueConfigurationTable
         attr.Value = int2Str(version);
 
         elementXml.SetAttributeNode(attr);
+
+        if (context)
+        {
+            attr = _xmlDoc.CreateAttribute('Context');
+            attr.Value = context;
+
+            elementXml.SetAttributeNode(attr);
+        }        
 
         this.exportFields(_xmlDoc, elementXml);
         
@@ -150,6 +180,8 @@ abstract internal class OneMoreActionQueueConfigurationTable
     [Hookable(false)]
     public void import(System.Xml.XmlElement _rootElement)
     {
+        setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImportRecordPrefix", tableName)); 
+        
         Common newRecord;
 
         if (callerRecord)
@@ -170,7 +202,9 @@ abstract internal class OneMoreActionQueueConfigurationTable
             FieldId fieldId = fieldName2Id(newRecord.TableId, fieldName);
 
             newRecord.(fieldId) = conPeek(this.parmKeyFieldValues(), i);
-        }
+        }        
+
+        this.preWrite(newRecord);
 
         if (!newRecord.validateWrite())
         {
@@ -178,6 +212,8 @@ abstract internal class OneMoreActionQueueConfigurationTable
         }
         
         newRecord.write();
+        
+        info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImportRecordCreatedPrefix", this.recordCaption(newRecord)));
 
         this.readRelatedTables(newRecord, _rootElement);
     }
@@ -234,7 +270,7 @@ abstract internal class OneMoreActionQueueConfigurationTable
             {
                 Common record = qr.get(tableLink.parmTableId());
 
-                OneMoreActionQueueConfigurationTable::construct(record, 1).export(_xmlDoc, _rootElement);
+                OneMoreActionQueueConfigurationTable::construct(record, 1, tableLink.parmContext()).export(_xmlDoc, _rootElement);
             }
         }
     }
@@ -292,7 +328,10 @@ abstract internal class OneMoreActionQueueConfigurationTable
             
             OneMoreActionQueueConfigurationTableLink tableLink = le.current();
             
-            this.deleteRelatedRecords(_rootRecord, tableLink);
+            if (tableLink.parmDeleteRelatedRecords())
+            {
+                this.deleteRelatedRecords(_rootRecord, tableLink);
+            }
             
             TableName relatedTableName = tableId2Name(tableLink.parmTableId());
 
@@ -312,7 +351,7 @@ abstract internal class OneMoreActionQueueConfigurationTable
                     {
                         OneMoreActionQueueConfigurationTableLinkFieldPair fieldPair = leFieldPair.current();
 
-                        keyFieldValuesContainer += [_rootRecord.(fieldPair.parmParentField())];
+                        keyFieldValuesContainer += [fieldPair.parentValue(_rootRecord)];
                     }
                 }
                 
@@ -449,7 +488,7 @@ abstract internal class OneMoreActionQueueConfigurationTable
         {
             OneMoreActionQueueConfigurationTableLinkFieldPair fieldPair = le.current();
 
-            qbds.addRange(fieldPair.parmThisField()).value(queryValue(_rootRecord.(fieldPair.parmParentField())));
+            qbds.addRange(fieldPair.parmThisField()).value(queryValue(fieldPair.parentValue(_rootRecord)));
         }
 
         return q;
@@ -470,6 +509,36 @@ abstract internal class OneMoreActionQueueConfigurationTable
 
             record.delete();
         }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>preWrite</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Pre-write logic
+    /// </summary>
+    /// <param name = "_newRecord">A new record</param>
+    [Hookable(false)]
+    protected void preWrite(Common _newRecord)
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>recordCaption</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Record caption
+    /// </summary>
+    /// <param name = "_newRecord">A new record</param>
+    /// <returns>Record caption</returns>
+    [Hookable(false)]
+    protected str recordCaption(Common _newRecord)
+    {
+        return _newRecord.caption();
     }
 
 ]]></Source>

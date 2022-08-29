@@ -78,6 +78,12 @@ internal class OneMoreActionQueueConfigurationTableActionQueueTypeTable extends 
 
         ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeDocumentCorrelation))
             .addLink(fieldNum(OneMoreActionQueueTypeDocumentCorrelation, TypeId), fieldNum(OneMoreActionQueueTypeTable, TypeId)));
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueBusinessEventsEndpoint), false)
+            .addLink(fieldNum(OneMoreActionQueueBusinessEventsEndpoint, TypeId), fieldNum(OneMoreActionQueueTypeTable, TypeId)));
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(BusinessEventsConfiguration), true, 'BusinessEventsConfigurationOutbound')
+            .addLinkMethod(fieldNum(BusinessEventsConfiguration, BusinessEventsTable), tableMethodStr(OneMoreActionQueueTypeTable, businessEventsId)));
         
         return ret;
     }

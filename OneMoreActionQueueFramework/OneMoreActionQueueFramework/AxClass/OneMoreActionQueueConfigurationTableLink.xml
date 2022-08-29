@@ -9,7 +9,9 @@
 internal class OneMoreActionQueueConfigurationTableLink
 {
     private TableId tableId;
-    private List linkList = new List(Types::Class);
+    private str context;
+    private boolean deleteRelatedRecords;
+    private List linkList = new List(Types::Class);    
 
 }
 ]]></Declaration>
@@ -23,6 +25,32 @@ internal class OneMoreActionQueueConfigurationTableLink
         tableId = _tableId;
 
         return tableId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmContext</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmContext(str _context = context)
+    {
+        context = _context;
+
+        return context;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmDeleteRelatedRecords</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public boolean parmDeleteRelatedRecords(boolean _deleteRelatedRecords = deleteRelatedRecords)
+    {
+        deleteRelatedRecords = _deleteRelatedRecords;
+
+        return deleteRelatedRecords;
     }
 
 ]]></Source>
@@ -58,19 +86,42 @@ internal class OneMoreActionQueueConfigurationTableLink
 ]]></Source>
 			</Method>
 			<Method>
+				<Name>addLinkMethod</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add link with method as parent
+    /// </summary>
+    /// <param name = "_thisField">This field</param>
+    /// <param name = "_parentMethod">Parent method</param>
+    /// <returns>This object</returns>
+    [Hookable(false)]
+    public OneMoreActionQueueConfigurationTableLink addLinkMethod(FieldId _thisField, str _parentMethod)
+    {
+        linkList.addEnd(OneMoreActionQueueConfigurationTableLinkFieldPair::newFromPairMethod(_thisField, _parentMethod));
+
+        return this;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
 				<Name>newFromTableId</Name>
 				<Source><![CDATA[
     /// <summary>
     /// New from table id
     /// </summary>
     /// <param name = "_tableId">Table id</param>
+    /// <param name = "_deleteRelatedRecords">Re-create records?</param>
+    /// <param name = "_context">Context value</param>
     /// <returns>A created object of <c>OneMoreActionQueueConfigurationTableLink</c></returns>
     [Hookable(false)]
-    public static OneMoreActionQueueConfigurationTableLink newFromTableId(TableId _tableId)
+    public static OneMoreActionQueueConfigurationTableLink newFromTableId(TableId _tableId, boolean _deleteRelatedRecords = true, str _context = '')
     {
         OneMoreActionQueueConfigurationTableLink ret = new OneMoreActionQueueConfigurationTableLink();
 
         ret.parmTableId(_tableId);
+        ret.parmDeleteRelatedRecords(_deleteRelatedRecords);
+        ret.parmContext(_context);
 
         return ret;
     }

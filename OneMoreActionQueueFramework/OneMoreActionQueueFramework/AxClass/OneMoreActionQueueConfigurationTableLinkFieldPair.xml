@@ -10,6 +10,7 @@ internal class OneMoreActionQueueConfigurationTableLinkFieldPair
 {
     private FieldId     thisField;
     private FieldId     parentField;
+    private str         parentMethod;
 
 }
 ]]></Declaration>
@@ -30,6 +31,28 @@ internal class OneMoreActionQueueConfigurationTableLinkFieldPair
 
         ret.parmThisField(_thisField);
         ret.parmParentField(_parentField);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>newFromPairMethod</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// New from field pair with method as parent
+    /// </summary>
+    /// <param name = "_thisField">This field</param>
+    /// <param name = "_parentMethod">Parent method</param>
+    /// <returns>A created object of <c>OneMoreActionQueueConfigurationTableLinkFieldPair</c></returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueConfigurationTableLinkFieldPair newFromPairMethod(FieldId _thisField, str _parentMethod)
+    {
+        OneMoreActionQueueConfigurationTableLinkFieldPair ret = new OneMoreActionQueueConfigurationTableLinkFieldPair();
+
+        ret.parmThisField(_thisField);
+        ret.parmParentMethod(_parentMethod);
 
         return ret;
     }
@@ -58,6 +81,42 @@ internal class OneMoreActionQueueConfigurationTableLinkFieldPair
         parentField = _parentField;
 
         return parentField;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmParentMethod</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmParentMethod(str _parentMethod = parentMethod)
+    {
+        parentMethod = _parentMethod;
+
+        return parentMethod;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parentValue</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Get parent value
+    /// </summary>
+    /// <param name = "_rootRecord">Root record</param>
+    /// <returns>Parent value</returns>
+    [Hookable(false)]
+    public anytype parentValue(Common _rootRecord)
+    {
+        if (this.parmParentMethod())
+        {
+            SysDictTable dictTable = new SysDictTable(_rootRecord.TableId);
+            
+            return dictTable.callObject(this.parmParentMethod(), _rootRecord);
+        }
+
+        return _rootRecord.(this.parmParentField());
     }
 
 ]]></Source>

@@ -233,6 +233,8 @@ internal class OneMoreActionQueueConfigurationImport extends RunBase
         {
             ttsbegin;
 
+            setPrefix(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImportTypePrefix", typeId));
+
             OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable = OneMoreActionQueueTypeTable::find(typeId, true, ConcurrencyModel::Pessimistic);
 
             if (oneMoreActionQueueTypeTable.RecId != 0 && oneMoreActionQueueTypeTable.Enabled)
