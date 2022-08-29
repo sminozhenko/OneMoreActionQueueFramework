@@ -86,5 +86,27 @@
       <Moniker>BPCheckSkipStatementValidation</Moniker>
       <Justification>By design</Justification>
     </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/OneMoreActionQueueMenuItemRunBaseBehavior/Method/executeMenuItem</Path>
+      <Moniker>BPUpgradeCodeRunBaseRunCalled</Moniker>
+      <Message>Methods should call the explosionAdapter.runOperation() method instead of the explosionAdapter.run() method on Runbase derived classes. Change the code from calling run to call runOperation.</Message>
+      <Justification>The method is already executed in context of new session.</Justification>
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>BestPractices</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Table/OneMoreActionQueueTypeMenuItemParameterMethodCallSequence/TableIndex/ActionQueueTypeMenuItemParameterTableRecIdSortingIdx/TableIndexField/Sorting</Path>
+      <Moniker>BPErrorTablePrimaryKeyEditable</Moniker>
+      <Justification>By design</Justification>	  
+    </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>ExternalReference</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Reference/Microsoft.Commerce.Flighting.Common</Path>
+      <Moniker>AssemblyFileNotFound</Moniker>
+      <Justification>Caused by standard code?</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>

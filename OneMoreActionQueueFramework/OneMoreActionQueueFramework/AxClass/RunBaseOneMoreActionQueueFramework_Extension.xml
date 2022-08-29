@@ -42,7 +42,7 @@ public final class RunBaseOneMoreActionQueueFramework_Extension
             //If dialog canceled we don't want to save changes
             if (!dialogCanceled)
             {
-                OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable, classId2Name(classIdGet(this)), this.pack());
+                OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable, classId2Name(classIdGet(this)), OneMoreActionQueueContext::oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack ? conNull() : this.pack());
 
                 //Cancel dialog to prevent execution of logic
                 dialogCanceled = true;

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeTransformation</Name>
+	<Name>OneMoreActionQueueConfigurationTableTransformation</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
 /// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeTransformation</c>
 /// </summary>
 [OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeTransformation), 1)]
-internal class OneMoreActionQueueConfigurationTableActionQueueTypeTransformation extends OneMoreActionQueueConfigurationTable
+internal class OneMoreActionQueueConfigurationTableTransformation extends OneMoreActionQueueConfigurationTable
 {
 }
+
 ]]></Declaration>
 		<Methods>
 			<Method>

@@ -10,6 +10,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 {
     private OneMoreActionQueueMenuItemName              menuItemName;
     private ClassName                                   jobClassName;
+    private OneMoreActionQueueMenuItemSkipPackUnpack    skipPackUnpack;
     
     private OneMoreActionQueueTypeTable                 oneMoreActionQueueTypeTable;
     
@@ -59,6 +60,18 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
     {
         jobClassName = _jobClassName;
         return jobClassName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSkipPackUnpack</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public OneMoreActionQueueMenuItemSkipPackUnpack parmSkipPackUnpack(OneMoreActionQueueMenuItemSkipPackUnpack _skipPackUnpack = skipPackUnpack)
+    {
+        skipPackUnpack = _skipPackUnpack;
+        return skipPackUnpack;
     }
 
 ]]></Source>
@@ -128,6 +141,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
         {
             oneMoreActionQueueMenuItemParametersSet.parmMenuItemName(oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName);
             oneMoreActionQueueMenuItemParametersSet.parmJobClassName(oneMoreActionQueueTypeMenuItemParameterTable.className());
+            oneMoreActionQueueMenuItemParametersSet.parmSkipPackUnpack(oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack);
         }
 
         if (oneMoreActionQueueTypeMenuItemParameterTable.RecId != 0 || oneMoreActionQueueMenuItemParametersSet.prompt())
@@ -161,6 +175,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
                 oneMoreActionQueueTypeMenuItemParameterTable.TypeId         = oneMoreActionQueueTypeTable.TypeId;
                 oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName   = menuItemName;
                 oneMoreActionQueueTypeMenuItemParameterTable.ClassName      = jobClassName;
+                oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack = skipPackUnpack;
             }
 
             if (oneMoreActionQueueTypeMenuItemParameterTable.RecId == 0 && menuItemName)
@@ -187,7 +202,7 @@ internal class OneMoreActionQueueMenuItemParametersSet extends RunBase
 
                 if (menuItemBehavior.promptDialog() && menuItemBehavior.promptDialogPost())
                 {
-                    OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(oneMoreActionQueueTypeMenuItemParameterTable, jobClassName, menuItemBehavior.packParameters());
+                    OneMoreActionQueueTypeMenuItemParameterTable::updateParameters(oneMoreActionQueueTypeMenuItemParameterTable, jobClassName, oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack ? conNull() : menuItemBehavior.packParameters());
                 }
             }
         }

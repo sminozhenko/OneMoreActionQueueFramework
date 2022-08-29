@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable</Name>
+	<Name>OneMoreActionQueueConfigurationTableMenuItemParameterTable</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
 /// <summary>
 /// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeMenuItemParameterTable</c>
 /// </summary>
 [OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeMenuItemParameterTable), 1)]
-internal class OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParameterTable extends OneMoreActionQueueConfigurationTable
+internal class OneMoreActionQueueConfigurationTableMenuItemParameterTable extends OneMoreActionQueueConfigurationTable
 {
 }
 ]]></Declaration>
@@ -25,7 +25,8 @@ internal class OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParame
         return [
                 fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, PackedParameters),
                 fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, ClassName),
-                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, MenuItemName)
+                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, MenuItemName),
+                fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, SkipPackUnpack)
                ];
     }
 
@@ -42,6 +43,26 @@ internal class OneMoreActionQueueConfigurationTableActionQueueTypeMenuItemParame
     protected container keyFieldList()
     {
         return [fieldStr(OneMoreActionQueueTypeMenuItemParameterTable, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>tableList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Table list
+    /// </summary>
+    /// <returns>Table list</returns>
+    [Hookable(false)]
+    protected List tableList()
+    {
+        List ret = super();
+
+        ret.addEnd(OneMoreActionQueueConfigurationTableLink::newFromTableId(tableNum(OneMoreActionQueueTypeMenuItemParameterMethodCallSequence))
+            .addLink(fieldNum(OneMoreActionQueueTypeMenuItemParameterMethodCallSequence, ActionQueueTypeMenuItemParameterTableRecId), fieldNum(OneMoreActionQueueTypeMenuItemParameterTable, RecId)));
+        
+        return ret;
     }
 
 ]]></Source>

@@ -55,6 +55,7 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 
         oneMoreActionQueueTypeMenuItemParameterTable.TypeId             = _oneMoreActionQueueTypeMenuItemParameterTable.TypeId;
         oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName       = _oneMoreActionQueueTypeMenuItemParameterTable.MenuItemName;
+        oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack     = _oneMoreActionQueueTypeMenuItemParameterTable.SkipPackUnpack;
         oneMoreActionQueueTypeMenuItemParameterTable.PackedParameters   = _packedParameters;
         oneMoreActionQueueTypeMenuItemParameterTable.ClassName          = _className;        
         oneMoreActionQueueTypeMenuItemParameterTable.write();
@@ -183,6 +184,9 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 				<AxTableFieldGroupField>
 					<DataField>MenuItemName</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SkipPackUnpack</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 		<AxTableFieldGroup>
@@ -216,6 +220,9 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 				<AxTableFieldGroupField>
 					<DataField>ClassName</DataField>
 				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SkipPackUnpack</DataField>
+				</AxTableFieldGroupField>
 			</Fields>
 		</AxTableFieldGroup>
 	</FieldGroups>
@@ -246,6 +253,12 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>ClassName</ExtendedDataType>
 			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>SkipPackUnpack</Name>
+			<ExtendedDataType>OneMoreActionQueueMenuItemSkipPackUnpack</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
