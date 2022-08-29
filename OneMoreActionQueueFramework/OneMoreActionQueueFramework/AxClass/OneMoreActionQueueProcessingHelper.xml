@@ -153,22 +153,29 @@ public static class OneMoreActionQueueProcessingHelper
                             break;
 
                         case OneMoreActionQueueProcessingType::Synchronous:
-                            OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::Synchronous);
-
-                            _oneMoreActionQueue.reread();
-
-                            switch (_oneMoreActionQueue.Status)
+                            try
                             {
-                                case OneMoreActionQueueStatus::Processed:
-                                    responseType = OneMoreActionQueueResponseType::OK;
-                                    notes = _oneMoreActionQueue.ProcessingNotes;
-                                    break;
+                                OneMoreActionQueueProcessingHelper::processActionQueueInController(_oneMoreActionQueue, _oneMoreActionQueueTypeTable, OneMoreActionQueueProcessingStage::Processing, SysOperationExecutionMode::Synchronous);
+                            }
+                            catch
+                            {
+                                exceptionTextFallThrough();
+                            }
+                            finally
+                            {
+                                _oneMoreActionQueue.reread();
 
-                                case OneMoreActionQueueStatus::Error:
-                                    throw error(_oneMoreActionQueue.ProcessingNotes);
+                                switch (_oneMoreActionQueue.Status)
+                                {
+                                    case OneMoreActionQueueStatus::Processed:
+                                        responseType = OneMoreActionQueueResponseType::OK;
+                                        notes = _oneMoreActionQueue.ProcessingNotes;
+                                        break;
 
-                                default:
-                                    throw error("@OneMoreActionQueueFramework:OneMoreActionQueueUnknownError");
+                                    default:
+                                        responseType = OneMoreActionQueueResponseType::Error;
+                                        notes = _oneMoreActionQueue.ProcessingNotes;
+                                }
                             }
                             break;
                     }
