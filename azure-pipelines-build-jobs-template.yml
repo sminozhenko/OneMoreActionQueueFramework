@@ -103,3 +103,16 @@ jobs:
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
+
+  - job: Build_10_0_29_PEAP
+    displayName: 'Build for 10.0.29 (PEAP)'
+    pool:
+      vmImage: 'windows-2019'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6545.22'      
+      Platform.CompilerPackage.Version: '7.0.6545.22'
+      Application.BuildXpp.Version: '10.0.1326.18'
+      ApplicationSuite.BuildXpp.Version: '10.0.1326.18'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
