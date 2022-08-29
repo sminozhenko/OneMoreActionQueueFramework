@@ -666,6 +666,17 @@ public class OneMoreActionQueueTypeTable extends common
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>businessEventsId</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    internal display BusinessEventsId businessEventsId()
+    {
+        return OneMoreActionQueueBusinessEventsCatalogHelper::generateActionQueueBusinessEventId(this.TypeId);
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueType</DeveloperDocumentation>

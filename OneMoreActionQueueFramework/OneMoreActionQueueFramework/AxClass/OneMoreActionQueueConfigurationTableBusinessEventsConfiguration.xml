@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableBusinessEventsConfiguration</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>BusinessEventsConfiguration</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(BusinessEventsConfiguration), 1)]
+internal class OneMoreActionQueueConfigurationTableBusinessEventsConfiguration extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(BusinessEventsConfiguration, BusinessEventsTable),
+                fieldStr(BusinessEventsConfiguration, LegalEntity),
+                fieldStr(BusinessEventsConfiguration, Disabled),
+                fieldStr(BusinessEventsConfiguration, BusinessEventsEndpoint)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(BusinessEventsConfiguration, BusinessEventsEndpoint)];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>recordCaption</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Record caption
+    /// </summary>
+    /// <param name = "_newRecord">A new record</param>
+    /// <returns>Record caption</returns>
+    [Hookable(false)]
+    protected str recordCaption(Common _newRecord)
+    {
+        BusinessEventsConfiguration newRecord = _newRecord as BusinessEventsConfiguration;
+        BusinessEventsEndpoint businessEventsEndpoint;
+
+        select firstonly businessEventsEndpoint
+            where businessEventsEndpoint.RecId == newRecord.BusinessEventsEndpoint;
+        
+        return strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImportBusinessEventsConfigurationCaption", businessEventsEndpoint.Name, newRecord.BusinessEventsTable, newRecord.LegalEntity);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

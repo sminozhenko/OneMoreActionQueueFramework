@@ -10,6 +10,7 @@ internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribut
 {
     private TableName configurationTableName;
     private int version;
+    private str context;
 
 }
 ]]></Declaration>
@@ -17,10 +18,11 @@ internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribut
 			<Method>
 				<Name>new</Name>
 				<Source><![CDATA[
-    public void new(TableName _configurationTableName, int _version)
+    public void new(TableName _configurationTableName, int _version, str _context = '')
     {
         configurationTableName = _configurationTableName;
         version = _version;
+        context = _context;
     }
 
 ]]></Source>
@@ -42,7 +44,7 @@ internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribut
     [Hookable(false)]
     public str parmCacheKey()
     {
-        return classStr(OneMoreActionQueueConfigurationTableAttribute) + ';' + configurationTableName + ';' + int2Str(version);
+        return classStr(OneMoreActionQueueConfigurationTableAttribute) + ';' + configurationTableName + ';' + int2Str(version) + ';' + context;
     }
 
 ]]></Source>
@@ -65,6 +67,17 @@ internal class OneMoreActionQueueConfigurationTableAttribute extends SysAttribut
     public int parmVersion()
     {
         return version;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmContext</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public str parmContext()
+    {
+        return context;
     }
 
 ]]></Source>
