@@ -78,6 +78,7 @@ public static class OneMoreActionQueueProcessingHelper
                 
                 BatchInfo batchInfo = controller.batchInfo();
                 batchInfo.parmBatchHeader().parmStartDateTime(DateTimeUtil::addSeconds(batchInfo.parmBatchHeader().parmStartDateTime(), _retryAttemptInterval));
+                batchInfo.parmRetriesOnFailure(0);
                 
                 if (_oneMoreActionQueueTypeTable.RunAsUserId)
                 {
