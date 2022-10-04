@@ -141,7 +141,10 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 
         ret = super();
 
-        ret = OneMoreActionQueueTypeMenuItemParameterTable::checkMenuItemName(this.MenuItemName) && ret;
+        if (this.ClassName)
+        {
+            ret = ret && OneMoreActionQueueTypeMenuItemParameterTable::isClassSupported(this.ClassName);
+        }
 
         return ret;
     }
@@ -252,7 +255,6 @@ public class OneMoreActionQueueTypeMenuItemParameterTable extends common
 			<AllowEdit>No</AllowEdit>
 			<AllowEditOnCreate>No</AllowEditOnCreate>
 			<ExtendedDataType>ClassName</ExtendedDataType>
-			<Mandatory>Yes</Mandatory>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldEnum">
