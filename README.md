@@ -81,7 +81,7 @@ Commonly used resources that I find helpful are listed in the acknowledgments.
 
 ### Prerequisites
 
-OneMore Action Queue framework utilizes the standard process automation framework. The minimum required version of the system is **10.0.21**.
+OneMore Action Queue framework utilizes the standard process automation framework. The minimum required version of the system is **10.0.31**.
 
 ### Installation with source code on development VM
 
