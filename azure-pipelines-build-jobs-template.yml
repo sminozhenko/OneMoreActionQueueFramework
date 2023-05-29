@@ -12,3 +12,16 @@ jobs:
 
     steps:
     - template: azure-pipelines-build-steps-template.yml
+    
+  - job: Build_10_0_32
+    displayName: 'Build for 10.0.33'
+    pool:
+      vmImage: 'windows-2019'
+    variables:
+      Platform.BuildXpp.Version: '7.0.6801.37'      
+      Platform.CompilerPackage.Version: '7.0.6801.37'
+      Application.BuildXpp.Version: '10.0.1515.44'
+      ApplicationSuite.BuildXpp.Version: '10.0.1515.44'
+
+    steps:
+    - template: azure-pipelines-build-steps-template.yml
