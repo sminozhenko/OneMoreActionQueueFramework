@@ -14,7 +14,7 @@ jobs:
     - template: azure-pipelines-build-steps-template.yml
     
   - job: Build_10_0_32
-    displayName: 'Build for 10.0.33'
+    displayName: 'Build for 10.0.32'
     pool:
       vmImage: 'windows-2019'
     variables:
