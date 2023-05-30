@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueTypeBusinessEvent</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class OneMoreActionQueueTypeBusinessEvent extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Finds <c>OneMoreActionQueueTypeBusinessEvent</c> record by <c>OneMoreActionQueueTypeId</c> and <c>OneMoreActionQueueStatus</c>
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name = "_status">An <c>OneMoreActionQueueStatus</c> value</param>
+    /// <param name = "_forUpdate">Select record for update?</param>
+    /// <returns>Found <c>OneMoreActionQueueTypeBusinessEvent</c> record</returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueTypeBusinessEvent find(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueStatus _status, boolean _forUpdate = false)
+    {
+        OneMoreActionQueueTypeBusinessEvent ret;
+
+        ret.selectForUpdate(_forUpdate);
+
+        if (_typeId)
+        {
+            select firstonly ret
+                where ret.TypeId            == _typeId
+                   && ret.ActionQueueStatus == _status;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exist</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if record <c>OneMoreActionQueueTypeBusinessEvent</c> exists by <c>OneMoreActionQueueTypeId</c> and <c>OneMoreActionQueueStatus</c>
+    /// </summary>
+    /// <param name = "_typeId">An <c>OneMoreActionQueueTypeId</c> value</param>
+    /// <param name = "_status">An <c>OneMoreActionQueueStatus</c> value</param>
+    /// <returns>True if a record in <c>OneMoreActionQueueTypeBusinessEvent</c> exists, otherwise False</returns>
+    [Hookable(false)]
+    public static boolean exist(OneMoreActionQueueTypeId _typeId, OneMoreActionQueueStatus _status)
+    {
+        boolean ret;
+
+        if (_typeId)
+        {
+            ret = (select firstonly RecId
+                   from OneMoreActionQueueTypeBusinessEvent
+                   where OneMoreActionQueueTypeBusinessEvent.TypeId            == _typeId
+                      && OneMoreActionQueueTypeBusinessEvent.ActionQueueStatus == _status).RecId != 0;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createDefaultParameters</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Create default business event parameters
+    /// </summary>
+    /// <param name = "_oneMoreActionQueueTypeTable">An <c>OneMoreActionQueueTypeTable</c> record</param>
+    [Hookable(false)]
+    public static void createDefaultParameters(OneMoreActionQueueTypeTable _oneMoreActionQueueTypeTable)
+    {
+        if (!OneMoreActionQueueTypeBusinessEvent::exist(_oneMoreActionQueueTypeTable.TypeId, OneMoreActionQueueStatus::Processed))
+        {
+            OneMoreActionQueueTypeBusinessEvent oneMoreActionQueueTypeBusinessEvent;
+
+            oneMoreActionQueueTypeBusinessEvent.clear();
+            oneMoreActionQueueTypeBusinessEvent.initValue();
+
+            oneMoreActionQueueTypeBusinessEvent.TypeId = _oneMoreActionQueueTypeTable.TypeId;
+            oneMoreActionQueueTypeBusinessEvent.ActionQueueStatus = OneMoreActionQueueStatus::Processed;
+
+            if (!oneMoreActionQueueTypeBusinessEvent.validateWrite())
+            {
+                throw error("@OneMoreActionQueueFramework:OneMoreActionQueueTypeBusinessEventDefaultError");
+            }
+
+            oneMoreActionQueueTypeBusinessEvent.insert();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>allowedStatuses</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Set of allowed statuses
+    /// </summary>
+    /// <returns>Set of allowed statuses</returns>
+    [Hookable(false)]
+    public static Set allowedStatuses()
+    {
+        Set ret = new Set(Types::Enum);
+
+        ret.add(OneMoreActionQueueStatus::Processed);
+        ret.add(OneMoreActionQueueStatus::Error);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateWrite</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Validate write
+    /// </summary>
+    /// <returns>True if write is allowed otherwise False</returns>
+    public boolean validateWrite()
+    {
+        boolean ret;
+
+        ret = super();
+
+        if (!OneMoreActionQueueTypeBusinessEvent::allowedStatuses().in(this.ActionQueueStatus))
+        {
+            ret = checkFailed(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueTypeBusinessEventStatusIsNotAllowed", this.ActionQueueStatus));
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<DeveloperDocumentation>@OneMoreActionQueueFramework:OneMoreActionQueueTypeBusinessEvent</DeveloperDocumentation>
+	<FormRef>OneMoreActionQueueTypeTable</FormRef>
+	<Label>@OneMoreActionQueueFramework:OneMoreActionQueueTypeBusinessEvent</Label>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<TableGroup>Main</TableGroup>
+	<TitleField1>TypeId</TitleField1>
+	<TitleField2>ActionQueueStatus</TitleField2>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>TypeIdActionQueueStatusIdx</ClusteredIndex>
+	<ReplacementKey>TypeIdActionQueueStatusIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueStatus</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>TypeId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueStatus</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Overview</Name>
+			<Label>@SYS9039</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>ActionQueueStatus</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TypeId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>OneMoreActionQueueTypeId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ActionQueueStatus</Name>
+			<EnumType>OneMoreActionQueueStatus</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>TypeIdActionQueueStatusIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>TypeId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>ActionQueueStatus</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>OneMoreActionQueueTypeTable</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<OnDelete>Cascade</OnDelete>
+			<RelatedTable>OneMoreActionQueueTypeTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>TypeId</Name>
+					<Field>TypeId</Field>
+					<RelatedField>TypeId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

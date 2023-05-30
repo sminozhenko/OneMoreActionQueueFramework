@@ -456,6 +456,11 @@ public class OneMoreActionQueueTypeTable extends common
 
         OneMoreActionQueueBusinessEventsCatalogHelper::addActionQueueEvent(this);
 
+        if (OneMoreActionQueueBusinessEventParameterFeature::isEnabled())
+        {
+            OneMoreActionQueueTypeBusinessEvent::createDefaultParameters(this);
+        }
+
         ttscommit;
     }
 

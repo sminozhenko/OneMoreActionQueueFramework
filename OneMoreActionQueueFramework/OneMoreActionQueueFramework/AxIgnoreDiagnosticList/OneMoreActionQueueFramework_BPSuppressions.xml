@@ -108,5 +108,13 @@
       <Moniker>AssemblyFileNotFound</Moniker>
       <Justification>Caused by standard code?</Justification>
     </Diagnostic>
+	<Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/OneMoreActionQueueBusinessEventParameterFeature/Method/isEnabled</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
+      <Justification>Feature class</Justification>
+    </Diagnostic>
   </Items>
 </IgnoreDiagnostics>

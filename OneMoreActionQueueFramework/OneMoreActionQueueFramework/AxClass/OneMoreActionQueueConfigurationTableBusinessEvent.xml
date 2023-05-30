@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueConfigurationTableBusinessEvent</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// One more action queue configuration table parameters class for table <c>OneMoreActionQueueTypeBusinessEvent</c>
+/// </summary>
+[OneMoreActionQueueConfigurationTableAttribute(tableStr(OneMoreActionQueueTypeBusinessEvent), 1)]
+internal class OneMoreActionQueueConfigurationTableBusinessEvent extends OneMoreActionQueueConfigurationTable
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>fieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Field list
+    /// </summary>
+    /// <returns>Field list</returns>
+    [Hookable(false)]
+    protected container fieldList()
+    {
+        return [
+                fieldStr(OneMoreActionQueueTypeBusinessEvent, ActionQueueStatus)
+               ];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>keyFieldList</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Key field list
+    /// </summary>
+    /// <returns>Key field list</returns>
+    [Hookable(false)]
+    protected container keyFieldList()
+    {
+        return [fieldStr(OneMoreActionQueueTypeBusinessEvent, TypeId)];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>skipWrite</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Skip writing a record
+    /// </summary>
+    /// <param name = "_newRecord">A new record</param>
+    /// <returns>True if record should not be writted into database otherwise False</returns>
+    protected boolean skipWrite(Common _newRecord)
+    {
+        OneMoreActionQueueTypeBusinessEvent newOneMoreActionQueueTypeBusinessEvent = _newRecord;
+
+        return OneMoreActionQueueTypeBusinessEvent::exist(newOneMoreActionQueueTypeBusinessEvent.TypeId, newOneMoreActionQueueTypeBusinessEvent.ActionQueueStatus);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>write</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Writes record to database
+    /// </summary>
+    /// <param name = "_newRecord">A new record</param>
+    /// <returns>Returns written record</returns>
+    [Hookable(false)]
+    protected Common write(Common _newRecord)
+    {
+        OneMoreActionQueueTypeBusinessEvent newOneMoreActionQueueTypeBusinessEvent = _newRecord;
+
+        OneMoreActionQueueTypeBusinessEvent newRecord =  OneMoreActionQueueTypeBusinessEvent::find(newOneMoreActionQueueTypeBusinessEvent.TypeId, newOneMoreActionQueueTypeBusinessEvent.ActionQueueStatus, true);
+
+        if (newRecord.RecId == 0)
+        {
+            newRecord = super(_newRecord);
+        }
+
+        return newRecord;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
