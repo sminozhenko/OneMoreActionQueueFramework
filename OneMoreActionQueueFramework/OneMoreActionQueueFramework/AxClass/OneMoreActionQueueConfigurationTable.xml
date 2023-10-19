@@ -206,14 +206,7 @@ abstract internal class OneMoreActionQueueConfigurationTable
 
         this.preWrite(newRecord);
 
-        if (!newRecord.validateWrite())
-        {
-            throw Exception::Error;
-        }
-        
-        newRecord.write();
-        
-        info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImportRecordCreatedPrefix", this.recordCaption(newRecord)));
+        newRecord = this.write(newRecord);
 
         this.readRelatedTables(newRecord, _rootElement);
     }
@@ -539,6 +532,31 @@ abstract internal class OneMoreActionQueueConfigurationTable
     protected str recordCaption(Common _newRecord)
     {
         return _newRecord.caption();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>write</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Writes record to database
+    /// </summary>
+    /// <param name = "_newRecord">A new record</param>
+    /// <returns>Returns written record</returns>
+    [Hookable(false)]
+    protected Common write(Common _newRecord)
+    {
+        if (!_newRecord.validateWrite())
+        {
+            throw Exception::Error;
+        }
+        
+        _newRecord.write();
+        
+        info(strFmt("@OneMoreActionQueueFramework:OneMoreActionQueueConfigurationImportRecordCreatedPrefix", this.recordCaption(_newRecord)));
+
+        return _newRecord;
     }
 
 ]]></Source>

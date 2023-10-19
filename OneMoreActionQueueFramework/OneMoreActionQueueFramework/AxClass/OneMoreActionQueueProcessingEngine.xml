@@ -149,11 +149,22 @@ internal class OneMoreActionQueueProcessingEngine extends OneMoreActionQueueProc
 
         super();
 
-        //Invoke Business Event if status changes to processed
-        if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
+        if (OneMoreActionQueueBusinessEventParameterFeature::isEnabled())
         {
-            OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
-            oneMoreActionQueueBusinessEvent.sendOnUserConnection(userConnection);
+            if (OneMoreActionQueueTypeBusinessEvent::exist(oneMoreActionQueueUpd.TypeId, oneMoreActionQueueUpd.Status))
+            {
+                OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
+                oneMoreActionQueueBusinessEvent.sendOnUserConnection(userConnection);
+            }
+        }
+        else 
+        {
+            //Invoke Business Event if status changes to processed
+            if (oneMoreActionQueueUpd.Status == OneMoreActionQueueStatus::Processed)
+            {
+                OneMoreActionQueueBusinessEvent oneMoreActionQueueBusinessEvent = OneMoreActionQueueBusinessEvent::construct(oneMoreActionQueueUpd, oneMoreActionQueueTypeTable);
+                oneMoreActionQueueBusinessEvent.sendOnUserConnection(userConnection);
+            }
         }
     }
 

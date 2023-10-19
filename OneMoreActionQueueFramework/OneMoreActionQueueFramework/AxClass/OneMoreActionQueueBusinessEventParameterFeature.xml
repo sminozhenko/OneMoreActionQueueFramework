@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>OneMoreActionQueueBusinessEventParameterFeature</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.ComponentModel.Composition;
+using Microsoft.Dynamics.ApplicationPlatform.FeatureExposure;
+using Microsoft.Dynamics.BusinessPlatform.SharedTypes;
+
+/// <summary>
+/// The <c>OneMoreActionQueueBusinessEventParameterFeature</c> class enables the enhanced business events parameters for OneMoreActionQueue framework feature management.
+/// </summary>
+[ExportAttribute(identifierStr(Microsoft.Dynamics.ApplicationPlatform.FeatureExposure.IFeatureMetadata))]
+internal final class OneMoreActionQueueBusinessEventParameterFeature implements IFeatureMetadata, IFeatureMetadataEnablementNotifiable
+{
+    private static OneMoreActionQueueBusinessEventParameterFeature instance;
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    private void new()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>typeNew</Name>
+				<Source><![CDATA[
+    private static void typeNew()
+    {
+        instance = new OneMoreActionQueueBusinessEventParameterFeature();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>instance</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Obtains the singleton object instance.
+    /// </summary>
+    /// <returns>The <c>OneMoreActionQueueBusinessEventParameterFeature</c> instance.</returns>
+    [Hookable(false)]
+    public static OneMoreActionQueueBusinessEventParameterFeature instance()
+    {
+        return OneMoreActionQueueBusinessEventParameterFeature::instance;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>label</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Gets the <c>FeatureLabelId</c> for the feature.
+    /// </summary>
+    /// <returns>The label for the feature.</returns>
+    [Hookable(false)]
+    public FeatureLabelId label()
+    {
+        return literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueBusinessEventParameterFeatureName");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>module</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Gets the <c>FeatureModuleV0</c> for the feature.
+    /// </summary>
+    /// <returns>The module for the feature.</returns>
+    [Hookable(false)]
+    public int module()
+    {
+        return FeatureModuleV0::ISV;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>summary</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Gets the <c>FeatureLabelId</c> for the feature.
+    /// </summary>
+    /// <returns>The summary for the feature.</returns>
+    [Hookable(false)]
+    public FeatureLabelId summary()
+    {
+        return literalStr("@OneMoreActionQueueFramework:OneMoreActionQueueBusinessEventParameterFeatureSummary");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>learnMoreUrl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Gets the <c>WebSiteURL</c> for the feature.
+    /// </summary>
+    /// <returns>The URL for the feature.</returns>
+    [Hookable(false)]
+    public WebSiteURL learnMoreUrl()
+    {
+        return '';
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isEnabledByDefault</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Determines if the feature is enabled by default.
+    /// </summary>
+    /// <returns>true if the feature is enabled by default; otherwise, false.</returns>
+    [Hookable(false)]
+    public boolean isEnabledByDefault()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canDisable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Determines if the feature can be disabled.
+    /// </summary>
+    /// <returns>true if the feature can be disabled; otherwise, false.</returns>
+    [Hookable(false)]
+    public boolean canDisable()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>onEnabled</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// On enabled
+    /// </summary>
+    [Hookable(false)]
+    public void onEnabled()
+    {
+        ttsbegin;
+
+        OneMoreActionQueueTypeTable oneMoreActionQueueTypeTable;
+
+        while select oneMoreActionQueueTypeTable
+        {
+            OneMoreActionQueueTypeBusinessEvent::createDefaultParameters(oneMoreActionQueueTypeTable);
+        }
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>onDisabled</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Method thats called when feature gets disabled
+    /// </summary>
+    [Hookable(false)]
+    void onDisabled()
+    {
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isEnabled</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Determines whether the feature is enabled.
+    /// </summary>
+    /// <returns>true if the feature is enabled; otherwise, false.</returns>
+    [Hookable(false)]
+    public static boolean isEnabled()
+    {
+        return Dynamics.AX.Application.FeatureStateProvider::isFeatureEnabled(OneMoreActionQueueBusinessEventParameterFeature::instance());
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

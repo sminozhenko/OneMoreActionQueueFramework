@@ -89,6 +89,18 @@ public class OneMoreActionQueueTypeTable extends FormRun
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    public void init()
+    {
+        super();
+
+        BusinessEventTabPage.visible(OneMoreActionQueueBusinessEventParameterFeature::isEnabled());
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 		<DataSources xmlns="">
 			<DataSource>
@@ -460,6 +472,33 @@ public class OneMoreActionQueueTypeTable extends FormRun
 			</Fields>
 			<ReferencedDataSources />
 			<JoinSource>OneMoreActionQueueTypeMenuItemParameterTable</JoinSource>
+			<InsertAtEnd>No</InsertAtEnd>
+			<InsertIfEmpty>No</InsertIfEmpty>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+		<AxFormDataSource xmlns="">
+			<Name>OneMoreActionQueueTypeBusinessEvent</Name>
+			<Table>OneMoreActionQueueTypeBusinessEvent</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>ActionQueueStatus</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TypeId</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>OneMoreActionQueueTypeTable</JoinSource>
 			<InsertAtEnd>No</InsertAtEnd>
 			<InsertIfEmpty>No</InsertIfEmpty>
 			<DataSourceLinks />
@@ -1176,6 +1215,87 @@ public class OneMoreActionQueueTypeTable extends FormRun
 							</AxFormControl>
 						</Controls>
 						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeMenuItemParameterMethodCallSequence</Caption>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormTabPageControl">
+						<Name>BusinessEventTabPage</Name>
+						<AutoDeclaration>Yes</AutoDeclaration>
+						<Pattern>ToolbarList</Pattern>
+						<PatternVersion>1.2</PatternVersion>
+						<Type>TabPage</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormActionPaneControl">
+								<Name>BusinessEventToolbar</Name>
+								<Type>ActionPane</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormButtonGroupControl">
+										<Name>BusinessEventNewDeleteButtonGroup</Name>
+										<Type>ButtonGroup</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls>
+											<AxFormControl xmlns=""
+												i:type="AxFormCommandButtonControl">
+												<Name>BusinessEventNew</Name>
+												<Type>CommandButton</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Command>New</Command>
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormCommandButtonControl">
+												<Name>BusinessEventDelete</Name>
+												<Type>CommandButton</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Command>DeleteRecord</Command>
+												<NeedsRecord>Yes</NeedsRecord>
+											</AxFormControl>
+										</Controls>
+									</AxFormControl>
+								</Controls>
+								<DataSource>OneMoreActionQueueTypeBusinessEvent</DataSource>
+								<Style>Strip</Style>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormGridControl">
+								<Name>BusinessEventList</Name>
+								<Type>Grid</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormGroupControl">
+										<Name>BusinessEventListOverview</Name>
+										<Type>Group</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls>
+											<AxFormControl xmlns=""
+												i:type="AxFormComboBoxControl">
+												<Name>Overview_ActionQueueStatus</Name>
+												<Type>ComboBox</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<DataField>ActionQueueStatus</DataField>
+												<DataSource>OneMoreActionQueueTypeBusinessEvent</DataSource>
+												<Items />
+											</AxFormControl>
+										</Controls>
+										<DataGroup>Overview</DataGroup>
+										<DataSource>OneMoreActionQueueTypeBusinessEvent</DataSource>
+									</AxFormControl>
+								</Controls>
+								<DataSource>OneMoreActionQueueTypeBusinessEvent</DataSource>
+							</AxFormControl>
+						</Controls>
+						<Caption>@OneMoreActionQueueFramework:OneMoreActionQueueTypeBusinessEvent</Caption>
 					</AxFormControl>
 				</Controls>
 				<Style>FastTabs</Style>
